@@ -21,8 +21,6 @@ Main goal: parse/edit `mafiaXXX.YYY` save files safely (with original `G_Stream`
 - `docs/REVERSE_NOTES.md` - reverse-engineering notes and findings.
 - `docs/reverse/` - reference reverse files and notes (`IDA_SaveData.txt`, etc.).
 - `data/` - sample files and reports.
-- `experiments/` - test artifacts and historical in-game experiments.
-- `savegame/` - working save collection used during analysis.
 
 ## Build (Windows, MinGW g++)
 
