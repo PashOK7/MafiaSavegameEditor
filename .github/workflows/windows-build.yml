@@ -25,7 +25,7 @@ jobs:
       - name: Build GUI (MinGW)
         shell: msys2 {0}
         run: |
-          g++ -std=c++17 -O2 -Wall -Wextra mafia_save.cpp mafia_editor_gui.cpp -o "Mafia Savegame Editor.exe" -mwindows -lcomdlg32 -lcomctl32
+          g++ -std=c++17 -O2 -Wall -Wextra -static -static-libgcc -static-libstdc++ mafia_save.cpp mafia_editor_gui.cpp -o "Mafia Savegame Editor.exe" -mwindows -lcomdlg32 -lcomctl32
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

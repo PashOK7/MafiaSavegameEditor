@@ -9,7 +9,7 @@ Minimal Windows GUI editor for Mafia 1 (2002) saves.
 ## Build
 
 ```powershell
-g++ -std=c++17 -O2 -Wall -Wextra mafia_save.cpp mafia_editor_gui.cpp -o "bin/gui/Mafia Savegame Editor.exe" -mwindows -lcomdlg32 -lcomctl32
+g++ -std=c++17 -O2 -Wall -Wextra -static -static-libgcc -static-libstdc++ mafia_save.cpp mafia_editor_gui.cpp -o "bin/gui/Mafia Savegame Editor.exe" -mwindows -lcomdlg32 -lcomctl32
 ```
 
 ## Usage

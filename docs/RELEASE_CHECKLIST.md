@@ -6,7 +6,7 @@ This checklist is for publishing `MafiaSavegame` as a public GitHub project and 
 
 1. Ensure build passes:
 ```powershell
-g++ -std=c++17 -O2 -Wall -Wextra mafia_save.cpp mafia_editor_gui.cpp -o "bin/gui/Mafia Savegame Editor.exe" -mwindows -lcomdlg32 -lcomctl32
+g++ -std=c++17 -O2 -Wall -Wextra -static -static-libgcc -static-libstdc++ mafia_save.cpp mafia_editor_gui.cpp -o "bin/gui/Mafia Savegame Editor.exe" -mwindows -lcomdlg32 -lcomctl32
 ```
 2. Ensure `git status` has only intended changes.
 3. Ensure private/local folders are ignored (`Mafia/`, `archive/`, `dist/`).
