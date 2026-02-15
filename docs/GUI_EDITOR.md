@@ -83,6 +83,7 @@ g++ -std=c++17 -O2 -Wall -Wextra mafia_save.cpp mafia_editor_gui.cpp -o "bin/gui
 - `Actors` tab has a right-side vertical scroll for actor detail fields when height is limited.
 - Unsupported parameter groups are hidden automatically for the selected actor payload type.
 - `Garage` tab edits the same `info264` area that game save/load uses for persistent garage arrays (`G_LoadSaveClass` internals).
+- `Garage` tab includes embedded car-name catalog for standalone `.exe` usage; external `Mafia/tables/carindex.def` is optional.
 - `Mission/Script` tab parses and edits the first `67` bytes of `game_payload` (`C_game::SaveGameSave` header) and detects `C_program` block heuristically in `game_payload` and `actor_payload_*` segments.
 - Script variable is an internal float from mission script (`C_program::m_fVariables`); index meaning depends on mission scripts.
 - Script variable editing uses `Script var #` and `Script value`; value is written on `Save As...`.

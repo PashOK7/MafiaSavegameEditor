@@ -40,6 +40,7 @@ Detailed usage is in `docs/GUI_EDITOR.md`.
 
 - This repository does **not** include bundled game binaries or large unpacked game folder.
 - Local unpacked Mafia folder should be placed as `Mafia/` and is ignored by git.
+- Garage car names work in standalone mode via embedded catalog (no external `carindex.def` required).
 - Save editing can break scripts/mission state if values are invalid. Keep backups.
 
 ## Public Release Workflow

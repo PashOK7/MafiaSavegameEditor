@@ -194,6 +194,7 @@ struct AppState {
     int selectedCar = -1;
     int selectedGarageSlot = -1;
     bool garageCatalogLoaded = false;
+    bool garageCatalogEmbedded = false;
     fs::path garageCatalogPath;
     std::string filterName;
     std::optional<std::uint32_t> filterType;
@@ -2178,6 +2179,89 @@ void FillCarsList() {
 constexpr std::size_t kGarageSlotCount = 25;
 constexpr std::size_t kGaragePrimaryOff = 40;
 constexpr std::size_t kGarageSecondaryOff = 140;
+constexpr const char* kEmbeddedGarageCarNames[] = {
+    "Bolt Ace Tudor",
+    "Bolt Ace Touring",
+    "Bolt Ace Runabout",
+    "Bolt Ace Pickup",
+    "Bolt Ace Fordor",
+    "Bolt Ace Coupe",
+    "Bolt Model B Tudor",
+    "Bolt Model B Roadster",
+    "Bolt Model B Pickup",
+    "Bolt Model B Fordor",
+    "Bolt Model B Delivery",
+    "Bolt Model B Coupe",
+    "Bolt Model B Cabriolet",
+    "Schubert Six",
+    "Bolt V8 Coupe",
+    "Bolt V8 Fordor",
+    "Bolt V8 Roadster",
+    "Bolt V8 Touring",
+    "Bolt V8 Tudor",
+    "Schubert Extra Six Fordor",
+    "Schubert Extra Six Tudor",
+    "Falconer",
+    "Falconer Yellowcar",
+    "Crusader Chromium Fordor",
+    "Crusader Chromium Tudor",
+    "Guardian Terraplane Coupe",
+    "Guardian Terraplane Fordor",
+    "Guardian Terraplane Tudor",
+    "Thor 812 Cabriolet FWD",
+    "Thor 810 Phaeton FWD",
+    "Thor 810 Sedan FWD",
+    "Wright Coupe",
+    "Wright Fordor",
+    "Bruno Speedster 851",
+    "Celeste Marque 500",
+    "Lassiter V16 Fordor",
+    "Lassiter V16 Phaeton",
+    "Lassiter V16 Roadster",
+    "Silver Fletcher",
+    "Lassiter V16 Appolyon",
+    "Manta Prototype",
+    "Trautenberg Model J",
+    "Carrozella C-Otto 4WD",
+    "Brubaker 4WD",
+    "Trautenberg Racer 4WD",
+    "Caesar 8C Mostro",
+    "Bolt Ambulance",
+    "Bolt Firetruck",
+    "Bolt Hearse",
+    "Lassiter V16 Charon",
+    "Ulver Airstream Fordor",
+    "Ulver Airstream Tudor",
+    "Lassiter V16 Police",
+    "Schubert Six Police",
+    "Schubert Extra 6 Police Fordor",
+    "Schubert Extra 6 Police Tudor",
+    "Bolt Truck Flatbed",
+    "Bolt Truck Covered",
+    "Caesar 8C 2300 Racing",
+    "Bolt-Thrower",
+    "Bolt Truck",
+    "HotRod",
+    "Wright Coupe Gangster",
+    "Falconer Gangster",
+    "Trautenberg Model J",
+    "Black Dragon 4WD",
+    "Mutagen FWD",
+    "Flamer",
+    "Masseur",
+    "Masseur Taxi",
+    "Demoniac",
+    "Crazy Horse",
+    "Bob Mylan 4WD",
+    "Disorder 4WD",
+    "Speedee 4WD",
+    "Luciferion FWD",
+    "Black Metal 4WD",
+    "Hillbilly 5.1 FWD",
+    "Flower Power",
+    "Flame Spear 4WD",
+    "Manta Taxi FWD",
+};
 
 bool IsGarageCodeToken(const std::string& s) {
     if (s.size() < 3 || s.size() > 24) {
@@ -2268,9 +2352,24 @@ bool ParseGarageCatalogFromFile(const fs::path& path, std::vector<GarageCarCatal
     return true;
 }
 
+void LoadEmbeddedGarageCatalog(std::vector<GarageCarCatalogEntry>* out) {
+    if (out == nullptr) {
+        return;
+    }
+    out->clear();
+    out->reserve(sizeof(kEmbeddedGarageCarNames) / sizeof(kEmbeddedGarageCarNames[0]));
+    for (std::size_t i = 0; i < (sizeof(kEmbeddedGarageCarNames) / sizeof(kEmbeddedGarageCarNames[0])); ++i) {
+        GarageCarCatalogEntry e;
+        e.index = static_cast<std::uint32_t>(i);
+        e.displayName = kEmbeddedGarageCarNames[i];
+        out->push_back(std::move(e));
+    }
+}
+
 void RefreshGarageCatalog() {
     g_garageCatalog.clear();
     g_state.garageCatalogLoaded = false;
+    g_state.garageCatalogEmbedded = false;
     g_state.garageCatalogPath.clear();
 
     auto addUnique = [](std::vector<fs::path>* out, const fs::path& p) {
@@ -2322,9 +2421,17 @@ void RefreshGarageCatalog() {
         if (ParseGarageCatalogFromFile(p, &parsed, &err)) {
             g_garageCatalog = std::move(parsed);
             g_state.garageCatalogLoaded = true;
+            g_state.garageCatalogEmbedded = false;
             g_state.garageCatalogPath = p;
             return;
         }
+    }
+
+    LoadEmbeddedGarageCatalog(&g_garageCatalog);
+    if (!g_garageCatalog.empty()) {
+        g_state.garageCatalogLoaded = true;
+        g_state.garageCatalogEmbedded = true;
+        g_state.garageCatalogPath.clear();
     }
 }
 
@@ -2342,7 +2449,10 @@ const GarageCarCatalogEntry* FindGarageCarByIndex(std::uint32_t idx) {
 
 std::string GarageCatalogEntryText(const GarageCarCatalogEntry& e) {
     std::ostringstream oss;
-    oss << "[" << e.index << "] " << e.displayName << " (" << e.code << ")";
+    oss << "[" << e.index << "] " << e.displayName;
+    if (!e.code.empty()) {
+        oss << " (" << e.code << ")";
+    }
     return oss.str();
 }
 
@@ -2521,7 +2631,12 @@ void FillGarageEditor() {
     std::ostringstream hint;
     hint << "Garage: info264 [40..139]=A, [140..239]=B";
     if (g_state.garageCatalogLoaded) {
-        hint << " | carindex loaded: " << g_garageCatalog.size() << " cars (" << g_state.garageCatalogPath.string() << ")";
+        if (g_state.garageCatalogEmbedded) {
+            hint << " | catalog: embedded (" << g_garageCatalog.size() << " cars)";
+        } else {
+            hint << " | carindex loaded: " << g_garageCatalog.size() << " cars (" << g_state.garageCatalogPath.string()
+                 << ")";
+        }
     } else {
         hint << " | carindex not loaded";
     }
