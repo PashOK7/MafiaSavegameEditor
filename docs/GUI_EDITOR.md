@@ -51,6 +51,7 @@ g++ -std=c++17 -O2 -Wall -Wextra -static -static-libgcc -static-libstdc++ mafia_
 - `25` slots (`slot_0 .. slot_24`)
 - `Primary A (u32)` from offsets `40..139`
 - `Secondary B (u32)` from offsets `140..239`
+- editable `Primary color` / `Secondary color` (mid byte `bits 16..23` of A/B value)
 - automatic decode to car name (`idx -> name`) using `Mafia/tables/carindex.def` (fallback `carcyclopedia.def`)
 - car pickers for `Primary` / `Secondary` values
 - editable per-slot high-byte flags (`Primary flag`, `Secondary flag`)

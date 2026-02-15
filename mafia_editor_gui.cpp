@@ -176,6 +176,8 @@ constexpr int ID_EDIT_GARAGE_B_FLAGS = 1536;
 constexpr int ID_BTN_GARAGE_SYNC_B = 1537;
 constexpr int ID_EDIT_GARAGE_A_DECODED = 1538;
 constexpr int ID_EDIT_GARAGE_B_DECODED = 1539;
+constexpr int ID_EDIT_GARAGE_A_COLOR = 1540;
+constexpr int ID_EDIT_GARAGE_B_COLOR = 1541;
 constexpr int ID_SCROLL_ACTORS = 1701;
 constexpr int ID_STATIC_PATH = 1601;
 constexpr int ID_STATIC_INFO = 1602;
@@ -334,6 +336,8 @@ struct Ui {
     HWND garageBHi8 = nullptr;
     HWND garageAFlags = nullptr;
     HWND garageBFlags = nullptr;
+    HWND garageAColor = nullptr;
+    HWND garageBColor = nullptr;
     HWND garageACar = nullptr;
     HWND garageBCar = nullptr;
     HWND garageADecoded = nullptr;
@@ -353,6 +357,8 @@ struct Ui {
     HWND garageBHi8Label = nullptr;
     HWND garageAFlagsLabel = nullptr;
     HWND garageBFlagsLabel = nullptr;
+    HWND garageAColorLabel = nullptr;
+    HWND garageBColorLabel = nullptr;
     HWND garageACarLabel = nullptr;
     HWND garageBCarLabel = nullptr;
     HWND garageADecodedLabel = nullptr;
@@ -2462,7 +2468,7 @@ std::string GarageDecodedText(std::uint32_t value) {
     }
     const std::uint32_t idx = value & 0xFFFFu;
     const std::uint32_t hi = (value >> 24) & 0xFFu;
-    const std::uint32_t mid = (value >> 16) & 0xFFu;
+    const std::uint32_t color = (value >> 16) & 0xFFu;
     std::ostringstream oss;
     oss << "idx=" << idx;
     if (const auto* car = FindGarageCarByIndex(idx); car != nullptr) {
@@ -2470,10 +2476,8 @@ std::string GarageDecodedText(std::uint32_t value) {
     } else {
         oss << " <unknown>";
     }
+    oss << " | color=" << color;
     oss << " | flag=" << hi;
-    if (mid != 0u) {
-        oss << " | mid=" << mid;
-    }
     return oss.str();
 }
 
@@ -2482,12 +2486,16 @@ std::string GarageRowSummary(std::uint32_t value) {
         return "empty";
     }
     const std::uint32_t idx = value & 0xFFFFu;
+    const std::uint32_t color = (value >> 16) & 0xFFu;
     const std::uint32_t flag = (value >> 24) & 0xFFu;
     std::ostringstream oss;
     if (const auto* car = FindGarageCarByIndex(idx); car != nullptr) {
         oss << "#" << idx << " " << car->displayName;
     } else {
         oss << "#" << idx;
+    }
+    if (color != 0u) {
+        oss << " c=" << color;
     }
     if (flag != 0u) {
         oss << " f=" << flag;
@@ -2592,6 +2600,8 @@ void FillGarageEditor() {
         SetText(g_ui.garageBHi8, "");
         SetText(g_ui.garageAFlags, "");
         SetText(g_ui.garageBFlags, "");
+        SetText(g_ui.garageAColor, "");
+        SetText(g_ui.garageBColor, "");
         SetText(g_ui.garageADecoded, "");
         SetText(g_ui.garageBDecoded, "");
         SendMessageA(g_ui.garageACar, CB_SETCURSEL, 0, 0);
@@ -2620,6 +2630,8 @@ void FillGarageEditor() {
     SetText(g_ui.garageBHi8, std::to_string((b >> 24) & 0xFFu));
     SetText(g_ui.garageAFlags, std::to_string((a >> 24) & 0xFFu));
     SetText(g_ui.garageBFlags, std::to_string((b >> 24) & 0xFFu));
+    SetText(g_ui.garageAColor, std::to_string((a >> 16) & 0xFFu));
+    SetText(g_ui.garageBColor, std::to_string((b >> 16) & 0xFFu));
     SetText(g_ui.garageADecoded, GarageDecodedText(a));
     SetText(g_ui.garageBDecoded, GarageDecodedText(b));
 
@@ -2653,10 +2665,18 @@ void RefreshGaragePreviewFromFields() {
 
     std::uint8_t aFlag = static_cast<std::uint8_t>((a >> 24) & 0xFFu);
     std::uint8_t bFlag = static_cast<std::uint8_t>((b >> 24) & 0xFFu);
+    std::uint8_t aColor = static_cast<std::uint8_t>((a >> 16) & 0xFFu);
+    std::uint8_t bColor = static_cast<std::uint8_t>((b >> 16) & 0xFFu);
     err.clear();
     ParseByteField(GetText(g_ui.garageAFlags), &aFlag, &err, "Garage A flag", 255);
     err.clear();
     ParseByteField(GetText(g_ui.garageBFlags), &bFlag, &err, "Garage B flag", 255);
+    err.clear();
+    ParseByteField(GetText(g_ui.garageAColor), &aColor, &err, "Garage A color", 255);
+    err.clear();
+    ParseByteField(GetText(g_ui.garageBColor), &bColor, &err, "Garage B color", 255);
+    a = (a & 0xFF00FFFFu) | (static_cast<std::uint32_t>(aColor) << 16);
+    b = (b & 0xFF00FFFFu) | (static_cast<std::uint32_t>(bColor) << 16);
     a = (a & 0x00FFFFFFu) | (static_cast<std::uint32_t>(aFlag) << 24);
     b = (b & 0x00FFFFFFu) | (static_cast<std::uint32_t>(bFlag) << 24);
 
@@ -2741,12 +2761,22 @@ bool ApplyGarageEdits(std::string* err) {
 
     std::uint8_t aFlag = 0;
     std::uint8_t bFlag = 0;
+    std::uint8_t aColor = 0;
+    std::uint8_t bColor = 0;
     if (!ParseByteField(GetText(g_ui.garageAFlags), &aFlag, err, "Garage A flag", 255)) {
         return false;
     }
     if (!ParseByteField(GetText(g_ui.garageBFlags), &bFlag, err, "Garage B flag", 255)) {
         return false;
     }
+    if (!ParseByteField(GetText(g_ui.garageAColor), &aColor, err, "Garage A color", 255)) {
+        return false;
+    }
+    if (!ParseByteField(GetText(g_ui.garageBColor), &bColor, err, "Garage B color", 255)) {
+        return false;
+    }
+    a = (a & 0xFF00FFFFu) | (static_cast<std::uint32_t>(aColor) << 16);
+    b = (b & 0xFF00FFFFu) | (static_cast<std::uint32_t>(bColor) << 16);
     a = (a & 0x00FFFFFFu) | (static_cast<std::uint32_t>(aFlag) << 24);
     b = (b & 0x00FFFFFFu) | (static_cast<std::uint32_t>(bFlag) << 24);
 
@@ -2826,6 +2856,7 @@ void SetEnabledGarage(bool enabled) {
     const HWND arr[] = {g_ui.garageList,  g_ui.garageSlot,  g_ui.garageA,      g_ui.garageB,
                         g_ui.garageAHex,  g_ui.garageBHex,  g_ui.garageALow16, g_ui.garageBLow16,
                         g_ui.garageAHi8,  g_ui.garageBHi8,  g_ui.garageAFlags, g_ui.garageBFlags,
+                        g_ui.garageAColor, g_ui.garageBColor,
                         g_ui.garageACar,  g_ui.garageBCar,  g_ui.garageADecoded, g_ui.garageBDecoded,
                         g_ui.applyGarage, g_ui.clearGarage, g_ui.syncGarageB};
     for (HWND h : arr) {
@@ -4236,6 +4267,8 @@ void LayoutGaragePage() {
     y += 2;
     placeRow(g_ui.garageALabel, g_ui.garageA, 190);
     placeRow(g_ui.garageBLabel, g_ui.garageB, 190);
+    placeRow(g_ui.garageAColorLabel, g_ui.garageAColor, 90);
+    placeRow(g_ui.garageBColorLabel, g_ui.garageBColor, 90);
     placeRow(g_ui.garageAFlagsLabel, g_ui.garageAFlags, 90);
     placeRow(g_ui.garageBFlagsLabel, g_ui.garageBFlags, 90);
     y += 2;
@@ -4477,6 +4510,10 @@ void CreatePages(HWND hwnd) {
     g_ui.garageA = MakeEdit(g_ui.pageGarage, "", 614, 140, 190, 24, ID_EDIT_GARAGE_A);
     g_ui.garageBLabel = MakeLabel(g_ui.pageGarage, "Secondary B (u32):", 476, 174, 130, 20);
     g_ui.garageB = MakeEdit(g_ui.pageGarage, "", 614, 172, 190, 24, ID_EDIT_GARAGE_B);
+    g_ui.garageAColorLabel = MakeLabel(g_ui.pageGarage, "Primary color:", 476, 206, 130, 20);
+    g_ui.garageAColor = MakeEdit(g_ui.pageGarage, "", 614, 204, 90, 24, ID_EDIT_GARAGE_A_COLOR);
+    g_ui.garageBColorLabel = MakeLabel(g_ui.pageGarage, "Secondary color:", 476, 238, 130, 20);
+    g_ui.garageBColor = MakeEdit(g_ui.pageGarage, "", 614, 236, 90, 24, ID_EDIT_GARAGE_B_COLOR);
     g_ui.garageAFlagsLabel = MakeLabel(g_ui.pageGarage, "Primary flag:", 476, 206, 130, 20);
     g_ui.garageAFlags = MakeEdit(g_ui.pageGarage, "", 614, 204, 90, 24, ID_EDIT_GARAGE_A_FLAGS);
     g_ui.garageBFlagsLabel = MakeLabel(g_ui.pageGarage, "Secondary flag:", 476, 238, 130, 20);
@@ -4744,7 +4781,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             RefreshGaragePreviewFromFields();
             return 0;
         }
-        if ((id == ID_EDIT_GARAGE_A || id == ID_EDIT_GARAGE_B || id == ID_EDIT_GARAGE_A_FLAGS || id == ID_EDIT_GARAGE_B_FLAGS) &&
+        if ((id == ID_EDIT_GARAGE_A || id == ID_EDIT_GARAGE_B || id == ID_EDIT_GARAGE_A_FLAGS ||
+             id == ID_EDIT_GARAGE_B_FLAGS || id == ID_EDIT_GARAGE_A_COLOR || id == ID_EDIT_GARAGE_B_COLOR) &&
             code == EN_CHANGE) {
             RefreshGaragePreviewFromFields();
             return 0;
@@ -4820,6 +4858,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             }
             SetText(g_ui.garageA, "0");
             SetText(g_ui.garageB, "0");
+            SetText(g_ui.garageAColor, "0");
+            SetText(g_ui.garageBColor, "0");
             SetText(g_ui.garageAFlags, "0");
             SetText(g_ui.garageBFlags, "0");
             std::string err;
@@ -4833,6 +4873,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         }
         if (id == ID_BTN_GARAGE_SYNC_B && code == BN_CLICKED) {
             SetText(g_ui.garageB, GetText(g_ui.garageA));
+            SetText(g_ui.garageBColor, GetText(g_ui.garageAColor));
             SetText(g_ui.garageBFlags, GetText(g_ui.garageAFlags));
             const LRESULT selA = SendMessageA(g_ui.garageACar, CB_GETCURSEL, 0, 0);
             if (selA != CB_ERR) {
