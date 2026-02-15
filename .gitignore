@@ -1,0 +1,17 @@
+# Build outputs
+bin/**/*.exe
+*.obj
+*.o
+*.pdb
+
+# Local scratch files
+savegame/*.autotest_backup
+savegame/
+experiments/
+Mafia/
+archive/
+dist/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db

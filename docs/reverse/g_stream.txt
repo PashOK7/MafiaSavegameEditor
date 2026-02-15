@@ -1,0 +1,186 @@
+G_Stream *__thiscall G_Stream::G_Stream(G_Stream *this)
+{
+  G_Stream *result; // eax
+
+  result = this;
+  this->m_bUnk3 = 0;
+  this->m_bUnk2 = 0;
+  this->m_uUnk = 0;
+  this->m_uTempBufSize = 0;
+  this->m_hFile = 0;
+  this->m_pTempBuf = 0;
+  this->m_uKey1 = 0x23101976;
+  this->m_uKey2 = 0x10072002;
+  return result;
+}
+
+
+// attributes: thunk
+bool __thiscall G_Stream::Close(G_Stream *this)
+{
+  return Close__8G_StreamFv(this);
+}
+
+void __thiscall G_Stream::SetParams(G_Stream *this, uint32_t signature, bool isEncrypted, bool unk)
+{
+  this->m_uSignature = signature;
+  this->m_bIsEncrypted = isEncrypted;
+  this->m_bUnk = unk;
+}
+
+char __thiscall G_Stream::OpenRead(G_Stream *this, char *szFileName)
+{
+  FILE *file; // eax
+
+  this->m_uKey1 = 0x23101976;
+  this->m_uKey2 = 0x10072002;
+  file = fopen(szFileName, "rb");
+  this->m_hFile = file;
+  if ( !file )
+    return 0;
+  fread(this->m_bHeader, 1u, 24u, file);
+  return 1;
+}
+
+char __thiscall G_Stream::OpenWrite(G_Stream *this, char *szFileName)
+{
+  FILE *file; // eax
+
+  this->m_uKey1 = 0x23101976;
+  this->m_uKey2 = 0x10072002;
+  memset(this->m_bHeader, 0, sizeof(this->m_bHeader));
+  *this->m_bHeader = this->m_uSignature;
+  *&this->m_bHeader[8] = 1;
+  file = fopen(szFileName, "wb");
+  this->m_hFile = file;
+  if ( !file )
+    return 0;
+  fwrite(this->m_bHeader, 1u, 24u, file);
+  return 1;
+}
+
+bool __thiscall G_Stream::Close(G_Stream *this)
+{
+  bool m_bUnk3; // al
+
+  if ( this->m_hFile )
+    fclose(this->m_hFile);
+  m_bUnk3 = this->m_bUnk3;
+  this->m_hFile = 0;
+  return m_bUnk3 || this->m_bUnk2;
+}
+
+LPVOID __thiscall G_Stream::WantWrite(G_Stream *this, size_t size)
+{
+  LPVOID tempBuf; // eax
+
+  if ( !size )
+    return 0;
+  tempBuf = operator new(size);
+  this->m_uTempBufSize = size;
+  this->m_pTempBuf = tempBuf;
+  return tempBuf;
+}
+
+void __thiscall G_Stream::Write(G_Stream *this)
+{
+  if ( this->m_bIsEncrypted )
+    G_Stream::Crypt(this, this->m_pTempBuf, this->m_uTempBufSize);
+  fwrite(this->m_pTempBuf, 1u, this->m_uTempBufSize, this->m_hFile);
+  operator delete(this->m_pTempBuf);
+  this->m_uTempBufSize = 0;
+}
+
+void *__thiscall G_Stream::Read(G_Stream *this, size_t size)
+{
+  void *tempBuf; // eax
+  FILE *m_hFile; // ecx
+
+  if ( !size )
+    return 0;
+  tempBuf = operator new(size);
+  m_hFile = this->m_hFile;
+  this->m_pTempBuf = tempBuf;
+  fread(tempBuf, 1u, size, m_hFile);
+  if ( this->m_bIsEncrypted )
+    G_Stream::Decrypt(this, this->m_pTempBuf, size);
+  return this->m_pTempBuf;
+}
+
+unsigned int __thiscall G_Stream::Crypt(G_Stream *this, void *buf, unsigned int size)
+{
+  unsigned int i; // eax
+  uint32_t m_uKey2; // edx
+  uint32_t v5; // ebx
+  uint32_t m_uKey1; // edx
+
+  i = 0;
+  if ( size >> 2 )
+  {
+    m_uKey2 = this->m_uKey2;
+    do
+    {
+      v5 = m_uKey2 + *(buf + i);
+      m_uKey1 = this->m_uKey1;
+      this->m_uKey2 = v5;
+      *(buf + i) ^= m_uKey1;
+      m_uKey2 = this->m_uKey2;
+      ++i;
+      this->m_uKey1 += m_uKey2;
+    }
+    while ( i < size >> 2 );
+  }
+  return i;
+}
+
+unsigned int __thiscall G_Stream::Decrypt(G_Stream *this, void *buf, unsigned int size)
+{
+  unsigned int i; // eax
+  uint32_t v4; // ebx
+  uint32_t v5; // ebx
+
+  for ( i = 0; i < size >> 2; this->m_uKey1 += v5 )
+  {
+    v4 = this->m_uKey1 ^ *(buf + i);
+    *(buf + i) = v4;
+    v5 = v4 + this->m_uKey2;
+    this->m_uKey2 = v5;
+    ++i;
+  }
+  return i;
+}
+
+size_t __thiscall G_Stream::WriteAdr(G_Stream *this, void *buf, size_t size)
+{
+  LPVOID tempBuf; // ebx
+  int v5; // ecx
+  size_t v6; // esi
+
+  if ( !size )
+    return 0;
+  if ( !this->m_bIsEncrypted )
+    return fwrite(buf, 1u, size, this->m_hFile);
+  tempBuf = operator new(size);
+  qmemcpy(tempBuf, buf, size);
+  G_Stream::Crypt(this, tempBuf, size);
+  v6 = fwrite(tempBuf, 1u, size, *(v5 + 40));
+  operator delete(tempBuf);
+  return v6;
+}
+
+size_t __thiscall G_Stream::ReadAdr(G_Stream *this, void *buf, size_t size)
+{
+  void *tempBuf; // ebx
+  size_t totalBytes; // ebp
+
+  if ( !size )
+    return 0;
+  if ( !this->m_bIsEncrypted )
+    return fread(buf, 1u, size, this->m_hFile);
+  tempBuf = operator new(size);
+  totalBytes = fread(tempBuf, 1u, size, this->m_hFile);
+  G_Stream::Decrypt(this, tempBuf, size);
+  qmemcpy(buf, tempBuf, size);
+  operator delete(tempBuf);
+  return totalBytes;
+}

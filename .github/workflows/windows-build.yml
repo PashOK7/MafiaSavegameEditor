@@ -1,0 +1,34 @@
+name: Windows Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build-gui:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSYS2 (MinGW-w64)
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          msystem: UCRT64
+          install: mingw-w64-ucrt-x86_64-gcc
+
+      - name: Build GUI (MinGW)
+        shell: msys2 {0}
+        run: |
+          g++ -std=c++17 -O2 -Wall -Wextra mafia_save.cpp mafia_editor_gui.cpp -o mafia_editor_gui.exe -mwindows -lcomdlg32 -lcomctl32
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mafia_editor_gui
+          path: mafia_editor_gui.exe

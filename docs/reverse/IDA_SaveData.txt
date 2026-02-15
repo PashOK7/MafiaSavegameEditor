@@ -1,0 +1,6241 @@
+unsigned int __thiscall C_actor::Actor_SaveGameGetSize(C_actor *this)
+{
+  I3D_frame *m_pFrame; // edx
+  char *m_pSzName; // eax
+  char *v3; // edx
+
+  if ( !this )
+    return 8;
+  m_pFrame = this->m_pFrame;
+  if ( !m_pFrame )
+    return 8;
+  m_pSzName = m_pFrame->m_pSzName;
+  if ( !m_pSzName )
+    m_pSzName = g_szUnk;
+  if ( !strlen(m_pSzName) )
+    return 8;
+  v3 = m_pFrame->m_pSzName;
+  if ( !v3 )
+    v3 = g_szUnk;
+  return strlen(v3) + 9;
+}
+
+char __fastcall C_actor::Actor_SaveGameSave(C_actor *a1, int a2)
+{
+  int v3; // esi
+  char *v4; // eax
+  char *v5; // edi
+  unsigned int v6; // kr08_4
+  _DWORD *v7; // edi
+  char *v8; // esi
+  _DWORD *m_pVTable; // eax
+
+  if ( !a2 )
+    goto LABEL_11;
+  v3 = *(a2 + 104);
+  if ( !v3 )
+    goto LABEL_11;
+  v4 = *(v3 + 256);
+  if ( !v4 )
+    v4 = g_szUnk;
+  if ( strlen(v4) )
+  {
+    v5 = *(v3 + 256);
+    if ( !v5 )
+      v5 = g_szUnk;
+    v6 = strlen(v5) + 1;
+    v7 = (a1->m_pVTable + 8);
+    *(v7 - 2) = v6;
+    *(v7 - 1) = *(a2 + 16);
+    v8 = *(*(a2 + 104) + 256);
+    if ( !v8 )
+      v8 = g_szUnk;
+    qmemcpy(v7, v8, v6);
+    a1->m_pVTable += v6 + 8;
+    return 1;
+  }
+  else
+  {
+LABEL_11:
+    m_pVTable = a1->m_pVTable;
+    a1->m_pVTable += 8;
+    *m_pVTable = 0;
+    m_pVTable[1] = 0;
+    return 1;
+  }
+}
+
+int __thiscall C_actor::SaveGameGetSize(C_actor *this)
+{
+  I3D_frame *m_pFrame; // eax
+  int v2; // esi
+  float z; // ebx
+  float x; // ebp
+  int v5; // eax
+  char *v6; // ecx
+  char *v7; // eax
+  int v8; // esi
+  int v9; // edx
+  int v10; // esi
+  char *v11; // eax
+  int v12; // edx
+  unsigned int v13; // esi
+  char *v14; // edx
+  char v16[256]; // [esp+Ch] [ebp-100h] BYREF
+
+  m_pFrame = this->m_pFrame;
+  v2 = 13;
+  if ( m_pFrame )
+  {
+    if ( this->m_eActorType == ACT_Car )
+    {
+      z = m_pFrame->m_uDummyBBOX.m_aMin.z;
+      x = m_pFrame->m_uDummyBBOX.m_aMin.x;
+      while ( z != 0.0 )
+      {
+        v5 = *(LODWORD(x) + 4 * LODWORD(z)-- - 4);
+        if ( *(v5 + 272) == 9 )
+        {
+          v6 = *(v5 + 340);
+          if ( !v6 )
+            v6 = g_szUnk;
+          strcpy(v16, v6);
+          v7 = strrchr(v16, 92);
+          if ( v7 )
+            ++v7;
+          v8 = v2 + 2;
+          if ( v7 )
+            v8 += strlen(v7);
+          v9 = *(LODWORD(x) + 4 * LODWORD(z));
+          v10 = v8 + 2;
+          v11 = *(v9 + 256);
+          if ( !v11 )
+            v11 = g_szUnk;
+          v12 = *(v9 + 288);
+          v13 = v10 + strlen(v11) + 2;
+          if ( v12 )
+          {
+            v14 = *(v12 + 256);
+            if ( !v14 )
+              v14 = g_szUnk;
+            v13 += strlen(v14);
+          }
+          v2 = v13 + 40;
+        }
+      }
+    }
+  }
+  return v2;
+}
+
+char __thiscall C_actor::SaveGameSave(C_actor *this, void **a2)
+{
+  char *v2; // eax
+  I3D_frame *m_pFrame; // esi
+  I3D_frame *v4; // edx
+  float z; // ebx
+  float x; // ecx
+  int v7; // edx
+  char *v8; // ecx
+  char *v9; // eax
+  const char *v10; // esi
+  unsigned int v11; // kr04_4
+  char *v12; // edx
+  unsigned int v13; // eax
+  float v14; // edx
+  char *v15; // esi
+  unsigned int v16; // kr08_4
+  char *v17; // edi
+  unsigned int v18; // eax
+  int v19; // eax
+  char *v20; // esi
+  unsigned int v21; // kr0C_4
+  char *v22; // edi
+  unsigned int v23; // eax
+  _DWORD *v24; // eax
+  _DWORD *v25; // ecx
+  _DWORD *v26; // eax
+  _DWORD *v27; // ecx
+  int v28; // esi
+  int v29; // eax
+  _DWORD *v30; // ecx
+  _DWORD *v31; // esi
+  float v33; // [esp+10h] [ebp-108h]
+  char *v34; // [esp+14h] [ebp-104h]
+  char v35[256]; // [esp+18h] [ebp-100h] BYREF
+
+  v2 = *a2;
+  v34 = v2;
+  *v2 = 3;
+  v2[1] = this->m_iState;
+  *(v2 + 2) = this->m_uID;
+  v2[7] = this->m_bDoRemove;
+  v2[6] = this->m_bIsActive;
+  *(v2 + 9) = 0;
+  m_pFrame = this->m_pFrame;
+  if ( m_pFrame )
+    v2[8] = m_pFrame->m_uFlags & 1;
+  else
+    v2[8] = 0;
+  *a2 = *a2 + 13;
+  v4 = this->m_pFrame;
+  if ( v4 )
+  {
+    if ( this->m_eActorType == ACT_Car )
+    {
+      z = v4->m_uDummyBBOX.m_aMin.z;
+      x = v4->m_uDummyBBOX.m_aMin.x;
+      v33 = x;
+      while ( z != 0.0 )
+      {
+        v7 = *(LODWORD(x) + 4 * LODWORD(z)-- - 4);
+        if ( *(v7 + 272) == 9 )
+        {
+          ++*(v2 + 9);
+          v8 = *(*(LODWORD(x) + 4 * LODWORD(z)) + 340);
+          if ( !v8 )
+            v8 = g_szUnk;
+          strcpy(v35, v8);
+          v9 = strrchr(v35, 92);
+          v10 = v9;
+          if ( v9 )
+            v10 = v9 + 1;
+          v11 = strlen(v10) + 1;
+          **a2 = v11 - 1;
+          v12 = *a2 + 2;
+          *a2 = v12;
+          if ( v10 )
+          {
+            v13 = (v11 - 1);
+            qmemcpy(v12, v10, v13);
+            *a2 = *a2 + v13;
+          }
+          v14 = v33;
+          v15 = *(*(LODWORD(v33) + 4 * LODWORD(z)) + 256);
+          if ( !v15 )
+            v15 = g_szUnk;
+          v16 = strlen(v15) + 1;
+          **a2 = v16 - 1;
+          v17 = *a2 + 2;
+          *a2 = v17;
+          if ( v15 )
+          {
+            v18 = (v16 - 1);
+            qmemcpy(v17, v15, v18);
+            v14 = v33;
+            *a2 = *a2 + v18;
+          }
+          v19 = *(*(LODWORD(v14) + 4 * LODWORD(z)) + 288);
+          if ( v19 )
+          {
+            v20 = *(v19 + 256);
+            if ( !v20 )
+              v20 = g_szUnk;
+            v21 = strlen(v20) + 1;
+            **a2 = v21 - 1;
+            v22 = *a2 + 2;
+            *a2 = v22;
+            if ( v20 )
+            {
+              v23 = (v21 - 1);
+              qmemcpy(v22, v20, v23);
+              v14 = v33;
+              *a2 = *a2 + v23;
+            }
+          }
+          else
+          {
+            **a2 = 0;
+            *a2 = *a2 + 2;
+          }
+          v24 = *a2;
+          v25 = (*(LODWORD(v14) + 4 * LODWORD(z)) + 144);
+          *v24 = *v25;
+          v24[1] = v25[1];
+          v24[2] = v25[2];
+          v26 = *a2 + 12;
+          *a2 = v26;
+          v27 = (*(LODWORD(v14) + 4 * LODWORD(z)) + 128);
+          *v26 = *v27;
+          v26[1] = v27[1];
+          v26[2] = v27[2];
+          *a2 = *a2 + 12;
+          v28 = *(LODWORD(v14) + 4 * LODWORD(z));
+          v29 = *(v28 + 172);
+          if ( (v29 & 8) == 0 )
+          {
+            LOBYTE(v29) = v29 | 8;
+            *(v28 + 172) = v29;
+            S_quat::Make((v28 + 156), (v28 + 0x50));
+          }
+          v30 = *a2;
+          v31 = (v28 + 0x9C);
+          *v30 = *v31;
+          v30[1] = v31[1];
+          v30[2] = v31[2];
+          v30[3] = v31[3];
+          x = v33;
+          *a2 = *a2 + 16;
+          v2 = v34;
+        }
+      }
+    }
+  }
+  return 1;
+}
+
+char __userpurge C_actor::SaveGameLoad@<al>(C_actor *a1@<ecx>, int a2@<ebp>, unsigned __int16 **a3)
+{
+  _BYTE *v3; // esi
+  int v6; // eax
+  int v7; // ebp
+  I3D_frame *m_pFrame; // eax
+  unsigned __int16 *v9; // esi
+  unsigned __int16 v10; // ax
+  unsigned __int16 *v11; // edx
+  int v12; // ebp
+  unsigned int v13; // eax
+  unsigned int v14; // eax
+  int v15; // eax
+  unsigned __int16 *v16; // eax
+  unsigned __int16 *v17; // edx
+  unsigned __int16 *v18; // eax
+  unsigned __int16 *v20; // [esp+4Ch] [ebp-108h]
+  unsigned __int16 *v21; // [esp+4Ch] [ebp-108h]
+  int v22; // [esp+54h] [ebp-100h] BYREF
+  char v23[252]; // [esp+58h] [ebp-FCh] BYREF
+
+  v3 = *a3;
+  if ( **a3 != 3 )
+    return 0;
+  v6 = v3[1];
+  a1->m_uID = *(v3 + 2);
+  v7 = v6;
+  a1->m_bDoRemove = v3[7];
+  a1->m_bIsActive = v3[6];
+  m_pFrame = a1->m_pFrame;
+  if ( m_pFrame )
+    m_pFrame->m_pVtable->SetOn(m_pFrame, v3[8]);
+  C_actor::SetActState(a1, v7);
+  *a3 = (*a3 + 0xD);
+  v9 = *(v3 + 9);
+  if ( v9 )
+  {
+    v20 = v9;
+    do
+    {
+      v10 = **a3;
+      v11 = *a3 + 1;
+      *a3 = v11;
+      if ( v10 )
+      {
+        qmemcpy(&v22, v11, v10);
+        v23[v10 - 4] = 0;
+        *a3 = (v11 + v10);
+        v12 = (g_pI3DDriver->m_pVTable->CreateFrame)(g_pI3DDriver, 9, a2);
+        (*(**(v22 + 104) + 88))(*(v22 + 104), v12);
+        (**v12)(v12);
+        C_I3D_cache_9I3D_model_::Open(&vtable_105936, v12, v23, 0, 0, 0, 0);
+        v13 = **a3;
+        v21 = *a3 + 1;
+        *a3 = v21;
+        qmemcpy(v23, v21, v13);
+        v23[v13] = 0;
+        *a3 = (v21 + v13);
+        (*(*v12 + 0x28))(v12, v23);
+        v14 = **a3;
+        v20 = *a3 + 1;
+        *a3 = v20;
+        qmemcpy(v23, v20, v14);
+        v23[v14] = 0;
+        *a3 = (v20 + v14);
+        v15 = (g_pMission->m_pScene->pVtbl->Render)(g_pMission->m_pScene, v23, 0xFFFF);
+        (*(*v12 + 44))(v12, v15, 0);
+        v16 = *a3;
+        *(v12 + 0x90) = **a3;
+        *(v12 + 148) = *(v16 + 1);
+        *(v12 + 152) = *(v16 + 2);
+        if ( (*(v12 + 172) & 8) == 0 )
+          S_quat::Make((v12 + 0x9C), (v12 + 0x50));
+        *(v12 + 172) = *(v12 + 172) & 0xBFFFFEC3 | 0x40000008;
+        v17 = *a3 + 6;
+        *a3 = v17;
+        if ( *(v12 + 172) >= 0 )
+        {
+          *(v12 + 0x80) = *v17;
+          *(v12 + 132) = *(v17 + 1);
+          *(v12 + 136) = *(v17 + 2);
+          *(v12 + 172) = *(v12 + 172) & 0xBFFFFEDF | 0x40000000;
+        }
+        v18 = *a3 + 6;
+        *a3 = v18;
+        *(v12 + 156) = *v18;
+        *(v12 + 160) = *(v18 + 1);
+        *(v12 + 164) = *(v18 + 2);
+        *(v12 + 168) = *(v18 + 3);
+        S_quat::Normalize((v12 + 156));
+        a2 = v12;
+        *(v12 + 172) = *(v12 + 172) & 0xBFFFFEC3 | 0x40000008;
+        *a3 += 8;
+        (*(*v12 + 0x18))();
+      }
+      v20 = (v20 - 1);
+    }
+    while ( v20 );
+  }
+  return 1;
+}
+
+void __thiscall C_actor::SaveGameLoadGuid(void *this, int a2)
+{
+  if ( **a2 == 3 )
+    *(this + 6) = *(*a2 + 2);                   // To je ale děsná píčovina. :|
+}
+
+char __thiscall C_airplane::SaveData(char *this, int a2)
+{
+  char v3; // al
+  char v5; // [esp+1h] [ebp-1h] BYREF
+
+  v5 = HIBYTE(this);
+  v3 = *(a2 + 16);
+  v5 = 1;
+  if ( v3 )
+  {
+    if ( *(a2 + 24) )
+      dtaWrite(*(a2 + 20), &v5, 1);
+    if ( *(a2 + 16) )
+    {
+      if ( *(a2 + 24) )
+        dtaWrite(*(a2 + 20), this + 112, 4);
+      if ( *(a2 + 16) )
+      {
+        if ( *(a2 + 24) )
+          dtaWrite(*(a2 + 20), this + 116, 4);
+        if ( *(a2 + 16) )
+        {
+          if ( *(a2 + 24) )
+            dtaWrite(*(a2 + 20), this + 120, 4);
+          if ( *(a2 + 16) )
+          {
+            if ( *(a2 + 24) )
+              dtaWrite(*(a2 + 20), this + 132, 4);
+            if ( *(a2 + 16) )
+            {
+              if ( *(a2 + 24) )
+                dtaWrite(*(a2 + 20), this + 136, 4);
+              if ( *(a2 + 16) )
+              {
+                if ( *(a2 + 24) )
+                  dtaWrite(*(a2 + 20), this + 140, 4);
+                if ( *(a2 + 16) )
+                {
+                  if ( *(a2 + 24) )
+                    dtaWrite(*(a2 + 20), this + 144, 12);
+                  if ( *(a2 + 16) )
+                  {
+                    if ( *(a2 + 24) )
+                      dtaWrite(*(a2 + 20), this + 156, 4);
+                    if ( *(a2 + 16) )
+                    {
+                      if ( *(a2 + 24) )
+                        dtaWrite(*(a2 + 20), this + 160, 4);
+                      if ( *(a2 + 16) )
+                      {
+                        if ( *(a2 + 24) )
+                          dtaWrite(*(a2 + 20), this + 164, 4);
+                        if ( *(a2 + 16) )
+                        {
+                          if ( *(a2 + 24) )
+                            dtaWrite(*(a2 + 20), this + 168, 4);
+                          if ( *(a2 + 16) )
+                          {
+                            if ( *(a2 + 24) )
+                              dtaWrite(*(a2 + 20), this + 172, 4);
+                            if ( *(a2 + 16) )
+                            {
+                              if ( *(a2 + 24) )
+                                dtaWrite(*(a2 + 20), this + 176, 4);
+                              if ( *(a2 + 16) )
+                              {
+                                if ( *(a2 + 24) )
+                                  dtaWrite(*(a2 + 20), this + 124, 4);
+                                if ( *(a2 + 16) && *(a2 + 24) )
+                                  dtaWrite(*(a2 + 20), this + 128, 4);
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return 1;
+}
+
+C_car *__thiscall C_car::WriteSaveStruct(C_car *this, STCar *pCarStruct, S_CARINIT *pCarInit, bool a4)
+{
+  float *p_m_fForwardForce; // ecx
+  uint8_t *v7; // eax
+  int v8; // edx
+  int v9; // ebp
+  uint8_t *v10; // ebp
+  int v11; // eax
+  float *p_m_fBalance2; // ecx
+  uint8_t *v13; // ebx
+  int v14; // edx
+  int v15; // eax
+  _DWORD *v16; // edx
+  uint8_t *v17; // ebp
+  uint8_t *i; // eax
+  uint8_t *v19; // ebp
+  uint8_t *j; // eax
+  uint8_t *v21; // ebp
+  uint8_t *v22; // eax
+  uint8_t *v23; // ebp
+  uint8_t *k; // eax
+  float *p_m_fSpeedMin; // ebp
+  uint8_t *m; // eax
+  float *v27; // ebp
+  uint8_t *n; // eax
+  float *p_m_fEngineNeutralFade; // ebp
+  char *m_szSoundEngineNeutral; // eax
+  char *m_szDoorsCloseSound; // ebp
+  char *ii; // eax
+  C_car *result; // eax
+  STCar *pCarStructa; // [esp+18h] [ebp+4h]
+  STCar *pCarStructb; // [esp+18h] [ebp+4h]
+  int pCarStructc; // [esp+18h] [ebp+4h]
+  STCar *pCarStructd; // [esp+18h] [ebp+4h]
+  STCar *pCarStructe; // [esp+18h] [ebp+4h]
+  STCar *pCarStructf; // [esp+18h] [ebp+4h]
+  int pCarStructg; // [esp+18h] [ebp+4h]
+  STCar *pCarStructh; // [esp+18h] [ebp+4h]
+  S_CARINIT *lpString2a; // [esp+1Ch] [ebp+8h]
+  S_CARINIT *lpString2b; // [esp+1Ch] [ebp+8h]
+  S_CARINIT *lpString2c; // [esp+1Ch] [ebp+8h]
+  S_CARINIT *lpString2d; // [esp+1Ch] [ebp+8h]
+  S_CARINIT *lpString2e; // [esp+1Ch] [ebp+8h]
+  S_CARINIT *lpString2f; // [esp+1Ch] [ebp+8h]
+  S_CARINIT *lpString2g; // [esp+1Ch] [ebp+8h]
+  S_CARINIT *lpString2h; // [esp+1Ch] [ebp+8h]
+  S_CARINIT *lpString2i; // [esp+1Ch] [ebp+8h]
+  int v52; // [esp+20h] [ebp+Ch]
+  int v53; // [esp+20h] [ebp+Ch]
+  uint8_t *v54; // [esp+20h] [ebp+Ch]
+  int v55; // [esp+20h] [ebp+Ch]
+  int v56; // [esp+20h] [ebp+Ch]
+  int v57; // [esp+20h] [ebp+Ch]
+  uint8_t *v58; // [esp+20h] [ebp+Ch]
+  int v59; // [esp+20h] [ebp+Ch]
+
+  pCarStruct->pad0[0] = (this->m_sVehicle.m_iEnumCarPropA & 0x20) == 0;
+  pCarStruct->m_sLogic.m_fMass = pCarInit->m_fMass;
+  pCarStruct->m_sLogic.m_fEngineEffectPower = pCarInit->m_fEngineEffectPower;
+  pCarStruct->m_sLogic.m_fEngineRedLinePower = pCarInit->m_fEngineRedLinePower;
+  pCarStruct->m_sLogic.m_fEngineRedLineRpmMin = pCarInit->m_fEngineRedLineRpmMin;
+  pCarStruct->m_sLogic.m_fEngineRedLineRpmMax = pCarInit->m_fEngineRedLineRpmMax;
+  pCarStruct->m_sLogic.m_fEngineIdleRpm = pCarInit->m_fEngineIdleRpm;
+  pCarStruct->m_sLogic.m_fEngineTorqueStart = pCarInit->m_fEngineTorqueStart;
+  pCarStruct->m_sLogic.m_fEngineTorqueMax = pCarInit->m_fEngineTorqueMax;
+  pCarStruct->m_sLogic.m_fEngineTorqueEnd = pCarInit->m_fEngineTorqueEnd;
+  pCarStruct->m_sLogic.m_fEngineEffectRpmMin = pCarInit->m_fEngineEffectRpmMin;
+  pCarStruct->m_sLogic.m_fEngineEffectRpmMax = pCarInit->m_fEngineEffectRpmMax;
+  pCarStruct->m_sLogic.m_fEngineStarterRpm = pCarInit->m_fEngineStarterRpm;
+  pCarStruct->m_sLogic.m_fEngineStarterTime = pCarInit->m_fEngineStarterTime;
+  pCarStruct->m_sLogic.m_fEngineFlywheelRpm = pCarInit->m_fEngineFlywheelRpm;
+  pCarStruct->m_sLogic.m_fGearboxShiftTransmissionTime = pCarInit->m_fGearboxShiftTransmissionTime;
+  pCarStruct->m_sLogic.m_fGearboxClutchTime = pCarInit->m_fGearboxClutchTime;
+  *pCarStruct->m_sLogic.pad0 = *pCarInit->pad0;
+  pCarStruct->m_sLogic.m_fEngineStartRpmMin = pCarInit->m_fEngineStartRpmMin;
+  pCarStruct->m_sLogic.m_fEngineStartRpmMax = pCarInit->m_fEngineStartRpmMax;
+  pCarStruct->m_sLogic.m_fNumGears = pCarInit->m_fNumGears;
+  p_m_fForwardForce = &pCarStruct->m_sLogic.m_fForwardForce;
+  v7 = &pCarInit->pad1[88];
+  v8 = 11;
+  do
+  {
+    v9 = *(v7 - 12);
+    v7 -= 4;
+    p_m_fForwardForce -= 3;
+    --v8;
+    *(p_m_fForwardForce - 1) = v9;
+    *p_m_fForwardForce = *v7;
+    p_m_fForwardForce[1] = *(v7 + 11);
+  }
+  while ( v8 );
+  v10 = &pCarInit->pad2[980];
+  pCarStruct->m_sLogic.m_fSideForce = pCarInit->m_fSideForce;
+  pCarStruct->m_sLogic.m_fForwardForce = pCarInit->m_fForwardForce;
+  pCarStruct->m_sLogic.m_fOversteerFactorMin = pCarInit->m_fOversteerFactorMin;
+  pCarStruct->m_sLogic.m_fOversteerFactorMax = pCarInit->m_fOversteerFactorMax;
+  pCarStruct->m_sLogic.m_fUndersteerFactorMin = pCarInit->m_fUndersteerFactorMin;
+  pCarStruct->m_sLogic.m_fUndersteerFactorMax = pCarInit->m_fUndersteerFactorMax;
+  pCarStruct->m_sLogic.m_fSteeringMaxAngle = pCarInit->m_fSteeringMaxAngle;
+  pCarStruct->m_sLogic.m_fSteeringMaxAngleInHighestSpeed = pCarInit->m_fSteeringMaxAngleInHighestSpeed;
+  pCarStruct->m_sLogic.m_fSteeringDifferentialAngle = pCarInit->m_fSteeringDifferentialAngle;
+  pCarStruct->m_sLogic.m_fSteeringAngleChange = pCarInit->m_fSteeringAngleChange;
+  pCarStruct->m_sLogic.m_fSteeringAngleChangeBack = pCarInit->m_fSteeringAngleChangeDestroyed;
+  pCarStruct->m_sLogic.m_fSteeringAngleChangeDestroyed = pCarInit->m_fSteeringAngleChangeBack;
+  pCarStruct->m_sLogic.m_fSteeringAngleChangeBackDestroyed = pCarInit->m_fSteeringAngleChangeBackDestroyed;
+  pCarStruct->m_sLogic.m_vCenter = pCarInit->m_vCenter;
+  pCarStruct->m_sLogic.m_fGravity = pCarInit->m_fGravity;
+  pCarStruct->m_sLogic.m_fFuelConsumption = pCarInit->m_fFuelConsumption;
+  pCarStruct->m_sLogic.m_fFuelTank = pCarInit->m_fFuelTank;
+  v11 = -1258 - pCarInit;
+  p_m_fBalance2 = &pCarStruct->m_sLogic.m_fBalance2;
+  v13 = &pCarInit->pad2[80];
+  lpString2a = (-1258 - pCarInit);
+  do
+  {
+    v14 = *(v13 - 11);
+    v13 -= 4;
+    p_m_fBalance2 = (p_m_fBalance2 - 119);
+    --v10;
+    *(p_m_fBalance2 - 1) = v14;
+    *p_m_fBalance2 = *v13;
+    p_m_fBalance2[1] = *(v13 + 10);
+    p_m_fBalance2[2] = *(v13 + 20);
+    if ( a4 )
+    {
+      if ( tyresArrayPtr )
+      {
+        v15 = (dword_63D9CC - tyresArrayPtr) / 40;
+        if ( v15 )
+        {
+          v16 = tyresArrayPtr + 40 * v15;
+          while ( 1 )
+          {
+            v16 -= 10;
+            --v15;
+            if ( *(v13 + 30) == *v16 )
+              break;
+            if ( !v15 )
+              goto LABEL_11;
+          }
+        }
+        else
+        {
+LABEL_11:
+          --v15;
+        }
+      }
+      else
+      {
+        v15 = -1;
+      }
+      if ( v15 < 0 )
+        v15 = 0;
+      *(p_m_fBalance2 + 3) = v15;
+      v11 = lpString2a;
+    }
+    else
+    {
+      p_m_fBalance2[3] = *(v13 + 30);
+    }
+    p_m_fBalance2[4] = *(v13 + 40);
+    p_m_fBalance2[5] = *(v13 + 50);
+    p_m_fBalance2[6] = *(v13 + 60);
+    p_m_fBalance2[7] = *(v13 + 70);
+    p_m_fBalance2[8] = *(v13 + 80);
+    p_m_fBalance2[9] = *(v13 + 90);
+    p_m_fBalance2[10] = *(v13 + 100);
+    p_m_fBalance2[11] = *(v13 + 110);
+    p_m_fBalance2[12] = *(v13 + 120);
+    p_m_fBalance2[13] = *(v13 + 130);
+    p_m_fBalance2[14] = *(v13 + 140);
+    p_m_fBalance2[15] = *(v13 + 150);
+    p_m_fBalance2[16] = *(v13 + 160);
+    p_m_fBalance2[17] = *(v13 + 170);
+    p_m_fBalance2[18] = *(v13 + 180);
+    p_m_fBalance2[19] = *(v13 + 190);
+    p_m_fBalance2[20] = *(v13 + 200);
+    p_m_fBalance2[21] = *(v13 + 210);
+    p_m_fBalance2[22] = *(v13 + 220);
+    *(p_m_fBalance2 + 92) = *(v10 - 10);
+    *(p_m_fBalance2 + 93) = *v10;
+    *(p_m_fBalance2 + 94) = v10[10];
+    *(p_m_fBalance2 + 95) = *(v13 + 238);
+    *(p_m_fBalance2 + 99) = *(v13 + 248);
+    *(p_m_fBalance2 + 103) = *(v13 + 258);
+    *(p_m_fBalance2 + 107) = *(v13 + 268);
+    *(p_m_fBalance2 + 111) = *(v13 + 278);
+  }
+  while ( &v10[v11] );
+  pCarStruct->m_sLogic.m_fBalance1 = pCarInit->m_fBalance1;
+  pCarStruct->m_sLogic.m_fBalance2 = pCarInit->m_fBalance2;
+  pCarStruct->m_sLogic.m_fBalance3 = pCarInit->m_fBalance3;
+  pCarStruct->m_sLogic.m_fBrakeEfficiency = pCarInit->m_fBrakeEfficiency;
+  pCarStruct->m_sLogic.m_fBrakeEfficiencyRestriction = pCarInit->m_fBrakeEfficiencyRestriction;
+  pCarStruct->m_sLogic.m_fHandbrakeEfficiency = pCarInit->m_fHandbrakeEfficiency;
+  pCarStruct->m_sLogic.m_fHandbrakeEfficiencyRestriction = pCarInit->m_fHandbrakeEfficiencyRestriction;
+  pCarStruct->m_sLogic.m_bUseCrashMultipliers = pCarInit->m_bUseCrashMultipliers;
+  pCarStruct->m_sLogic.m_fCrashForceMultiplier = pCarInit->m_fCrashForceMultiplier;
+  pCarStruct->m_sLogic.m_fCrashForceBackMultiplier = pCarInit->m_fCrashForceBackMultiplier;
+  pCarStruct->m_sLogic.m_iLooseAdhesionFactor = pCarInit->m_iLooseAdhesionFactor;
+  pCarStruct->m_sLogic.m_bABS = pCarInit->m_bABS;
+  pCarStruct->m_sLogic.m_bESP = pCarInit->m_bESP;
+  pCarStruct->m_sLogic.m_bSteeringIsInvisible = pCarInit->m_bSteeringIsInvisible;
+  *pCarStruct->m_sLogic.pad1 = *&pCarInit->pad3[1];
+  pCarStruct->m_sLogic.m_bIgnoreHeadCollision = pCarInit->m_bIgnoreHeadCollision;
+  pCarStruct->m_sLogic.m_iExhaustParticleID = pCarInit->m_iExhaustParticleID;
+  pCarStruct->m_sLogic.m_fExhaustParticleOff = pCarInit->m_fExhaustParticleOff;
+  pCarStruct->m_sLogic.m_fExhaustParticleVelocityIdle = pCarInit->m_fExhaustParticleVelocityIdle;
+  pCarStruct->m_sLogic.m_fExhaustParticleVelocityDriving = pCarInit->m_fExhaustParticleVelocityDriving;
+  *pCarStruct->m_sLogic.pad2 = *pCarInit->pad4;
+  *&pCarStruct->m_sLogic.pad2[4] = *&pCarInit->pad4[4];
+  *&pCarStruct->m_sLogic.pad2[8] = *&pCarInit->pad4[8];
+  *&pCarStruct->m_sLogic.pad2[12] = *&pCarInit->pad4[12];
+  pCarStruct->m_sLogic.m_bHasRoughness = pCarInit->m_bHasRoughness;
+  pCarStruct->m_sLogic.m_sRoughness = pCarInit->m_sRoughness;
+  pCarStruct->m_sPhysics.m_sEngine = pCarInit->m_sEnginePart;
+  pCarStruct->m_sPhysics.m_fEngineControlFuelAfterCrash = pCarInit->m_fEngineControlFuelAfterCrash;
+  pCarStruct->m_sPhysics.m_fEngineParticle1On = pCarInit->m_fEngineParticle1On;
+  pCarStruct->m_sPhysics.m_fEngineParticle2On = pCarInit->m_fEngineParticle2On;
+  pCarStruct->m_sPhysics.m_fEngineParticleOff = pCarInit->m_fEngineParticle2Off;
+  pCarStruct->m_sPhysics.m_iEngineParticle1Id = pCarInit->m_iEngineParticle1Id;
+  pCarStruct->m_sPhysics.m_iEngineParticle2Id = pCarInit->m_iEngineParticle2Id;
+  pCarStruct->m_sPhysics.m_sGearbox = pCarInit->m_sGearboxPart;
+  pCarStruct->m_sPhysics.m_sWheels = pCarInit->m_sWheelsPart;
+  pCarStruct->m_sPhysics.m_fWheelsSemiDestroyedAngle = pCarInit->m_fWheelsSemiDestroyedAngle;
+  pCarStruct->m_sPhysics.m_fWheelsDamangeToSemiDestroy = pCarInit->m_fWheelsDamageToSemiDestroy;
+  pCarStruct->m_sPhysics.m_sBody.m_vDirection = pCarInit->m_vBodyDeformDir;
+  pCarStruct->m_sPhysics.m_vResistanceDir = pCarInit->m_vResistanceDir;
+  pCarStruct->m_sPhysics.m_sBumpers = pCarInit->m_sBumpersPart;
+  pCarStruct->m_sPhysics.m_sWindows = pCarInit->m_sWindowsPart;
+  pCarStruct->m_sPhysics.m_fWindowsCrack = pCarInit->m_fWindowsCrack;
+  lstrcpyA(pCarStruct->m_sPhysics.m_szWindowsBrokenTexture, pCarInit->m_szWindowsBrokenTexture);
+  lstrcpyA(pCarStruct->m_sPhysics.m_szWindowsBrokenTextureAlpha, pCarInit->m_szWindowsBrokenTextureAlpha);
+  pCarStruct->m_sPhysics.m_sLights = pCarInit->m_sLights;
+  *pCarStruct->m_sPhysics.pad0 = *pCarInit->pad6;
+  pCarStruct->m_sPhysics.m_vLightsDir = pCarInit->m_vLightsDir;
+  pCarStruct->m_sPhysics.m_sLicencePlates = pCarInit->m_sLicencePlatesPart;
+  pCarStruct->m_sPhysics.m_sMirrors = pCarInit->m_sMirrorsPart;
+  pCarStruct->m_sPhysics.m_sWings = pCarInit->m_sWingsPart;
+  pCarStruct->m_sPhysics.m_sDoors = pCarInit->m_sDoorsPart;
+  pCarStruct->m_sPhysics.m_sRoof = pCarInit->m_sRoofPart;
+  pCarStruct->m_sPhysics.m_sUnkPart = pCarInit->m_sUnkPart;
+  lstrcpyA(&pCarStruct->pad0[1], pCarInit->pad7);
+  lstrcpyA(&pCarStruct->pad0[17], &pCarInit->pad7[16]);
+  lstrcpyA(&pCarStruct->pad0[33], &pCarInit->pad7[32]);
+  lstrcpyA(&pCarStruct->pad0[779], &pCarInit->pad7[288]);
+  lstrcpyA(&pCarStruct->pad0[803], &pCarInit->pad7[304]);
+  lstrcpyA(&pCarStruct->pad0[839], &pCarInit->pad7[320]);
+  lstrcpyA(&pCarStruct->pad0[855], &pCarInit->pad7[336]);
+  lstrcpyA(&pCarStruct->pad0[871], &pCarInit->pad7[352]);
+  lstrcpyA(&pCarStruct->pad0[887], &pCarInit->pad7[368]);
+  lstrcpyA(&pCarStruct->pad0[903], &pCarInit->pad7[384]);
+  lstrcpyA(&pCarStruct->pad0[919], &pCarInit->pad7[400]);
+  lstrcpyA(&pCarStruct->pad0[935], &pCarInit->pad7[416]);
+  lstrcpyA(&pCarStruct->pad0[951], &pCarInit->pad7[432]);
+  lstrcpyA(&pCarStruct->pad0[967], &pCarInit->pad7[448]);
+  lstrcpyA(&pCarStruct->pad0[983], &pCarInit->pad7[464]);
+  v52 = 5;
+  pCarStructa = &pCarInit->pad7[680];
+  v17 = &pCarStruct->pad0[310];
+  for ( i = &pCarInit->pad7[128]; ; i = lpString2b )
+  {
+    v17 -= 49;
+    pCarStructa = (pCarStructa - 4);
+    --v52;
+    lpString2b = (i - 16);
+    lstrcpyA(v17 - 16, i - 16);
+    *v17 = *&pCarStructa[-1].m_sSounds.m_szDoorsCloseSound[15];
+    *(v17 + 1) = LODWORD(pCarStructa->m_sLogic.m_fMass);
+    *(v17 + 2) = LODWORD(pCarStructa->m_sLogic.m_fEngineIdleRpm);
+    *(v17 + 3) = LODWORD(pCarStructa->m_sLogic.m_fEngineEffectRpmMax);
+    *(v17 + 4) = LODWORD(pCarStructa->m_sLogic.m_fGearboxClutchTime);
+    *(v17 + 5) = LODWORD(pCarStructa->m_sLogic.m_sGears[0].m_fRatio);
+    *(v17 + 6) = LODWORD(pCarStructa->m_sLogic.m_sGears[1].m_fRpmGearDown);
+    *(v17 + 7) = LODWORD(pCarStructa->m_sLogic.m_sGears[3].m_fRpmGearUp);
+    v17[32] = pCarInit->pad7[v52 + 800];
+    if ( !v52 )
+      break;
+  }
+  v53 = 5;
+  pCarStructb = &pCarInit->pad7[848];
+  v19 = &pCarStruct->pad0[555];
+  for ( j = &pCarInit->pad7[208]; ; j = lpString2c )
+  {
+    v19 -= 49;
+    lpString2c = (j - 16);
+    --v53;
+    pCarStructb = (pCarStructb - 4);
+    lstrcpyA(v19 - 16, j - 16);
+    *v19 = *&pCarStructb[-1].m_sSounds.m_szDoorsCloseSound[15];
+    *(v19 + 1) = LODWORD(pCarStructb->m_sLogic.m_fMass);
+    *(v19 + 2) = LODWORD(pCarStructb->m_sLogic.m_fEngineIdleRpm);
+    *(v19 + 3) = LODWORD(pCarStructb->m_sLogic.m_fEngineEffectRpmMax);
+    *(v19 + 4) = LODWORD(pCarStructb->m_sLogic.m_fGearboxClutchTime);
+    *(v19 + 5) = LODWORD(pCarStructb->m_sLogic.m_sGears[0].m_fRatio);
+    *(v19 + 6) = LODWORD(pCarStructb->m_sLogic.m_sGears[1].m_fRpmGearDown);
+    *(v19 + 7) = LODWORD(pCarStructb->m_sLogic.m_sGears[3].m_fRpmGearUp);
+    v19[32] = pCarInit->pad7[v53 + 968];
+    if ( !v53 )
+      break;
+  }
+  v21 = &pCarStruct->pad0[795];
+  v54 = &pCarInit->pad7[1016];
+  v22 = &pCarInit->pad7[288];
+  pCarStructc = 5;
+  while ( 1 )
+  {
+    v21 -= 48;
+    lpString2d = (v22 - 16);
+    v54 -= 4;
+    lstrcpyA(v21 - 16, v22 - 16);
+    *v21 = *(v54 - 5);
+    *(v21 + 1) = *v54;
+    *(v21 + 2) = *(v54 + 5);
+    *(v21 + 3) = *(v54 + 10);
+    *(v21 + 4) = *(v54 + 15);
+    *(v21 + 5) = *(v54 + 20);
+    *(v21 + 6) = *(v54 + 25);
+    *(v21 + 7) = *(v54 + 30);
+    if ( !--pCarStructc )
+      break;
+    v22 = lpString2d;
+  }
+  v55 = 4;
+  *&pCarStruct->pad0[795] = *&pCarInit->pad7[1136];
+  *&pCarStruct->pad0[799] = *&pCarInit->pad7[1140];
+  *&pCarStruct->pad0[819] = *&pCarInit->pad7[1144];
+  *&pCarStruct->pad0[823] = *&pCarInit->pad7[1148];
+  *&pCarStruct->pad0[827] = *&pCarInit->pad7[1152];
+  *&pCarStruct->pad0[831] = *&pCarInit->pad7[1156];
+  *&pCarStruct->pad0[835] = *&pCarInit->pad7[1160];
+  pCarStructd = &pCarInit->pad7[1180];
+  v23 = &pCarStruct->pad0[1163];
+  for ( k = &pCarInit->pad7[608]; ; k = lpString2e )
+  {
+    v23 -= 37;
+    lpString2e = (k - 16);
+    --v55;
+    pCarStructd = (pCarStructd - 4);
+    lstrcpyA(v23 - 16, k - 80);
+    lstrcpyA(v23, lpString2e);
+    *(v23 + 4) = LODWORD(pCarStructd->m_sLogic.m_fMass);
+    v23[20] = pCarInit->pad7[v55 + 1180];
+    if ( !v55 )
+      break;
+  }
+  lstrcpyA(&pCarStruct->pad0[1147], &pCarInit->pad7[608]);
+  lstrcpyA(&pCarStruct->pad0[1163], &pCarInit->pad7[624]);
+  lstrcpyA(pCarStruct->m_sSounds.m_szEngineStartSound, pCarInit->m_szSoundEngineOn);
+  lstrcpyA(pCarStruct->m_sSounds.m_szEngineStopSound, pCarInit->m_szSoundEngineOff);
+  lstrcpyA(pCarStruct->m_sSounds.m_szEngineStartBadSound, pCarInit->m_szSoundEngineBad);
+  lstrcpyA(pCarStruct->m_sSounds.m_sEngineNPC.m_szFileName, pCarInit->m_szSoundEngineNpc);
+  lstrcpyA(pCarStruct->m_sSounds.m_szEngineNeutralSound, pCarInit->m_szSoundEngineNeutral);
+  lstrcpyA(pCarStruct->m_sSounds.m_sTyreDrivingSound.m_szFileName, pCarInit->m_szTyreDrivingSound);
+  lstrcpyA(pCarStruct->m_sSounds.m_szHornSound, pCarInit->m_szSoundHorn);
+  lstrcpyA(pCarStruct->m_sSounds.m_szSirenSound, pCarInit->m_szSoundSiren);
+  lstrcpyA(pCarStruct->m_sSounds.m_szHandbrakeSound, pCarInit->m_szSoundHandbrake);
+  lstrcpyA(pCarStruct->m_sSounds.m_szGearboxChangeGearSound, pCarInit->m_szSoundGearNext);
+  lstrcpyA(pCarStruct->m_sSounds.m_szGearboxChangeGearSound1, pCarInit->m_szSoundGearPrev);
+  lstrcpyA(pCarStruct->m_sSounds.m_szTyreSlipSound, pCarInit->m_szSoundDrift);
+  lstrcpyA(pCarStruct->m_sSounds.pad0, pCarInit->m_szSoundUnk);
+  lstrcpyA(pCarStruct->m_sSounds.m_szShockAbsorberSound, pCarInit->m_szSoundCrashAbsorber);
+  lstrcpyA(pCarStruct->m_sSounds.m_szWheelsPunctureSound, pCarInit->m_szSoundShotInWheel);
+  lstrcpyA(pCarStruct->m_sSounds.m_szWindowsBreakSound, pCarInit->m_szSoundGlassBreak);
+  v56 = 5;
+  pCarStruct->m_sSounds.m_sEngineNPC.m_fSpeedMin = pCarInit->m_fEngineNPCSoundSpeedMin;
+  pCarStruct->m_sSounds.m_sEngineNPC.m_fSpeedMax = pCarInit->m_fEngineNPCSoundSpeedMax;
+  pCarStruct->m_sSounds.m_sEngineNPC.m_fVolumeIdle = pCarInit->m_fEngineNPCSoundVolumeIdle;
+  pCarStruct->m_sSounds.m_sEngineNPC.m_fVolumeDriving = pCarInit->m_fEngineNPCSoundVolumeDriving;
+  pCarStructe = &pCarInit->pad9[40];
+  p_m_fSpeedMin = &pCarStruct->m_sSounds.m_sEngineForwardSounds[5].m_fSpeedMin;
+  for ( m = &pCarInit->pad8[80]; ; m = lpString2f )
+  {
+    p_m_fSpeedMin = (p_m_fSpeedMin - 49);
+    pCarStructe = (pCarStructe - 4);
+    --v56;
+    lpString2f = (m - 16);
+    lstrcpyA(p_m_fSpeedMin - 16, m - 16);
+    *p_m_fSpeedMin = *&pCarStructe[-1].m_sSounds.m_szDoorsCloseSound[15];
+    p_m_fSpeedMin[1] = pCarStructe->m_sLogic.m_fMass;
+    p_m_fSpeedMin[2] = pCarStructe->m_sLogic.m_fEngineIdleRpm;
+    p_m_fSpeedMin[3] = pCarStructe->m_sLogic.m_fEngineEffectRpmMax;
+    p_m_fSpeedMin[4] = pCarStructe->m_sLogic.m_fGearboxClutchTime;
+    p_m_fSpeedMin[5] = pCarStructe->m_sLogic.m_sGears[0].m_fRatio;
+    p_m_fSpeedMin[6] = pCarStructe->m_sLogic.m_sGears[1].m_fRpmGearDown;
+    p_m_fSpeedMin[7] = pCarStructe->m_sLogic.m_sGears[3].m_fRpmGearUp;
+    *(p_m_fSpeedMin + 32) = pCarInit->pad9[v56 + 160];
+    if ( !v56 )
+      break;
+  }
+  v57 = 5;
+  pCarStructf = &pCarInit->pad9[208];
+  v27 = &pCarStruct->m_sSounds.m_sEngineBackwardSounds[0].m_fSpeedMin;
+  for ( n = &pCarInit->pad8[160]; ; n = lpString2g )
+  {
+    v27 = (v27 - 49);
+    lpString2g = (n - 16);
+    --v57;
+    pCarStructf = (pCarStructf - 4);
+    lstrcpyA(v27 - 16, n - 16);
+    *v27 = *&pCarStructf[-1].m_sSounds.m_szDoorsCloseSound[15];
+    v27[1] = pCarStructf->m_sLogic.m_fMass;
+    v27[2] = pCarStructf->m_sLogic.m_fEngineIdleRpm;
+    v27[3] = pCarStructf->m_sLogic.m_fEngineEffectRpmMax;
+    v27[4] = pCarStructf->m_sLogic.m_fGearboxClutchTime;
+    v27[5] = pCarStructf->m_sLogic.m_sGears[0].m_fRatio;
+    v27[6] = pCarStructf->m_sLogic.m_sGears[1].m_fRpmGearDown;
+    v27[7] = pCarStructf->m_sLogic.m_sGears[3].m_fRpmGearUp;
+    *(v27 + 32) = pCarInit->pad9[v57 + 328];
+    if ( !v57 )
+      break;
+  }
+  p_m_fEngineNeutralFade = &pCarStruct->m_sSounds.m_fEngineNeutralFade;
+  v58 = &pCarInit->pad9[376];
+  m_szSoundEngineNeutral = pCarInit->m_szSoundEngineNeutral;
+  pCarStructg = 5;
+  while ( 1 )
+  {
+    p_m_fEngineNeutralFade -= 12;
+    lpString2h = (m_szSoundEngineNeutral - 16);
+    v58 -= 4;
+    lstrcpyA(p_m_fEngineNeutralFade - 16, m_szSoundEngineNeutral - 16);
+    *p_m_fEngineNeutralFade = *(v58 - 5);
+    p_m_fEngineNeutralFade[1] = *v58;
+    p_m_fEngineNeutralFade[2] = *(v58 + 5);
+    p_m_fEngineNeutralFade[3] = *(v58 + 10);
+    p_m_fEngineNeutralFade[4] = *(v58 + 15);
+    p_m_fEngineNeutralFade[5] = *(v58 + 20);
+    p_m_fEngineNeutralFade[6] = *(v58 + 25);
+    p_m_fEngineNeutralFade[7] = *(v58 + 30);
+    if ( !--pCarStructg )
+      break;
+    m_szSoundEngineNeutral = lpString2h;
+  }
+  v59 = 4;
+  pCarStruct->m_sSounds.m_fEngineNeutralFade = pCarInit->m_fEngineNeutralFade;
+  pCarStruct->m_sSounds.m_fEngineNeutralVolume = pCarInit->m_fEngineNeutralVolume;
+  pCarStruct->m_sSounds.m_sTyreDrivingSound.m_fSpeedMin = pCarInit->m_fTyreDrivingSoundSpeedMin;
+  pCarStruct->m_sSounds.m_sTyreDrivingSound.m_fSpeedMax = pCarInit->m_fTyreDrivingSoundSpeedMax;
+  pCarStruct->m_sSounds.m_sTyreDrivingSound.m_fCarSpeedMin = pCarInit->m_fTyreDrivingSoundCarSpeedMin;
+  pCarStruct->m_sSounds.m_sTyreDrivingSound.m_fCarSpeedMax = pCarInit->m_fTyreDrivingSoundCarSpeedMax;
+  pCarStruct->m_sSounds.m_sTyreDrivingSound.m_fVolume = pCarInit->m_fTyreDrivingSoundVolume;
+  pCarStructh = &pCarInit->pad10[16];
+  m_szDoorsCloseSound = pCarStruct->m_sSounds.m_szDoorsCloseSound;
+  for ( ii = pCarInit->m_szSoundDoorOpen; ; ii = lpString2i )
+  {
+    m_szDoorsCloseSound -= 37;
+    lpString2i = (ii - 16);
+    --v59;
+    pCarStructh = (pCarStructh - 4);
+    lstrcpyA(m_szDoorsCloseSound - 16, ii - 80);
+    lstrcpyA(m_szDoorsCloseSound, lpString2i);
+    *(m_szDoorsCloseSound + 4) = LODWORD(pCarStructh->m_sLogic.m_fMass);
+    m_szDoorsCloseSound[20] = pCarInit->pad10[v59 + 16];
+    if ( !v59 )
+      break;
+  }
+  lstrcpyA(pCarStruct->m_sSounds.m_szDoorsOpenSound, pCarInit->m_szSoundDoorOpen);
+  lstrcpyA(pCarStruct->m_sSounds.m_szDoorsCloseSound, pCarInit->m_szSoundDoorClose);
+  result = this;
+  pCarStruct->m_sPhysics.m_sBody.m_sPart.m_fHealth = this->m_sVehicle.m_fFuelTankHealth;
+  pCarStruct->m_sPhysics.m_sBody.m_sPart.m_fResistanceMelee = 3.5999999
+                                                            / this->m_sVehicle.m_fMass
+                                                            * this->m_sVehicle.m_fFuelTankResistanceMelee;
+  pCarStruct->m_sPhysics.m_sBody.m_sPart.m_fResistanceGun = 3.5999999
+                                                          / this->m_sVehicle.m_fMass
+                                                          * this->m_sVehicle.m_fFuelTankResistanceGun;
+  pCarStruct->m_sPhysics.m_sBody.m_sPart.m_fAbsoluteHealth = this->m_sVehicle.m_fFuelTankAbsoluteHealth;
+  return result;
+}
+
+C_car *__thiscall C_car::ReadSaveStruct(C_car *this, STCar *pCarStruct, S_CARINIT *pCarInit, bool bUnk)
+{
+  uint8_t *v6; // eax
+  float *p_m_fForwardForce; // ecx
+  int v8; // edx
+  int v9; // ebp
+  uint8_t *v10; // ebp
+  uint8_t *v11; // ebx
+  float *p_m_fBrakeEfficiencyRestriction; // ecx
+  int v13; // eax
+  int v14; // eax
+  uint8_t *v15; // ebx
+  uint8_t *i; // eax
+  uint8_t *v17; // ebx
+  uint8_t *j; // eax
+  uint8_t *v19; // ebx
+  uint8_t *v20; // eax
+  uint8_t *v21; // eax
+  uint8_t *v22; // ebx
+  float *p_m_fSpeedMin; // ebx
+  uint8_t *k; // eax
+  float *v25; // ebx
+  uint8_t *m; // eax
+  float *p_m_fEngineNeutralFade; // ebx
+  char *m_szSoundEngineNeutral; // eax
+  char *m_szSoundDoorOpen; // eax
+  char *m_szDoorsCloseSound; // ebx
+  C_car *result; // eax
+  STCar *pSTCars; // [esp+18h] [ebp+4h]
+  STCar *pSTCarsa; // [esp+18h] [ebp+4h]
+  int pSTCarsb; // [esp+18h] [ebp+4h]
+  STCar *pSTCarsc; // [esp+18h] [ebp+4h]
+  STCar *pSTCarsd; // [esp+18h] [ebp+4h]
+  STCar *pSTCarse; // [esp+18h] [ebp+4h]
+  int pSTCarsf; // [esp+18h] [ebp+4h]
+  STCar *pSTCarsg; // [esp+18h] [ebp+4h]
+  S_CARINIT *pCarInita; // [esp+1Ch] [ebp+8h]
+  S_CARINIT *lpString1b; // [esp+1Ch] [ebp+8h]
+  S_CARINIT *lpString1c; // [esp+1Ch] [ebp+8h]
+  S_CARINIT *lpString1d; // [esp+1Ch] [ebp+8h]
+  S_CARINIT *lpString1e; // [esp+1Ch] [ebp+8h]
+  S_CARINIT *lpString1f; // [esp+1Ch] [ebp+8h]
+  S_CARINIT *lpString1g; // [esp+1Ch] [ebp+8h]
+  S_CARINIT *lpString1h; // [esp+1Ch] [ebp+8h]
+  int bUnka; // [esp+20h] [ebp+Ch]
+  int bUnkb; // [esp+20h] [ebp+Ch]
+  uint8_t *bUnkc; // [esp+20h] [ebp+Ch]
+  int bUnkd; // [esp+20h] [ebp+Ch]
+  int bUnke; // [esp+20h] [ebp+Ch]
+  int bUnkf; // [esp+20h] [ebp+Ch]
+  uint8_t *bUnkg; // [esp+20h] [ebp+Ch]
+  int bUnkh; // [esp+20h] [ebp+Ch]
+
+  pCarInit->m_fMass = pCarStruct->m_sLogic.m_fMass;
+  pCarInit->m_fEngineEffectPower = pCarStruct->m_sLogic.m_fEngineEffectPower;
+  pCarInit->m_fEngineRedLinePower = pCarStruct->m_sLogic.m_fEngineRedLinePower;
+  pCarInit->m_fEngineRedLineRpmMin = pCarStruct->m_sLogic.m_fEngineRedLineRpmMin;
+  pCarInit->m_fEngineRedLineRpmMax = pCarStruct->m_sLogic.m_fEngineRedLineRpmMax;
+  pCarInit->m_fEngineIdleRpm = pCarStruct->m_sLogic.m_fEngineIdleRpm;
+  pCarInit->m_fEngineTorqueStart = pCarStruct->m_sLogic.m_fEngineTorqueStart;
+  pCarInit->m_fEngineTorqueMax = pCarStruct->m_sLogic.m_fEngineTorqueMax;
+  pCarInit->m_fEngineTorqueEnd = pCarStruct->m_sLogic.m_fEngineTorqueEnd;
+  pCarInit->m_fEngineEffectRpmMin = pCarStruct->m_sLogic.m_fEngineEffectRpmMin;
+  pCarInit->m_fEngineEffectRpmMax = pCarStruct->m_sLogic.m_fEngineEffectRpmMax;
+  pCarInit->m_fEngineStarterRpm = pCarStruct->m_sLogic.m_fEngineStarterRpm;
+  pCarInit->m_fEngineStarterTime = pCarStruct->m_sLogic.m_fEngineStarterTime;
+  pCarInit->m_fEngineFlywheelRpm = pCarStruct->m_sLogic.m_fEngineFlywheelRpm;
+  pCarInit->m_fGearboxShiftTransmissionTime = pCarStruct->m_sLogic.m_fGearboxShiftTransmissionTime;
+  pCarInit->m_fGearboxClutchTime = pCarStruct->m_sLogic.m_fGearboxClutchTime;
+  *pCarInit->pad0 = *pCarStruct->m_sLogic.pad0;
+  pCarInit->m_fEngineStartRpmMin = pCarStruct->m_sLogic.m_fEngineStartRpmMin;
+  pCarInit->m_fEngineStartRpmMax = pCarStruct->m_sLogic.m_fEngineStartRpmMax;
+  pCarInit->m_fNumGears = pCarStruct->m_sLogic.m_fNumGears;
+  v6 = &pCarInit->pad1[88];
+  p_m_fForwardForce = &pCarStruct->m_sLogic.m_fForwardForce;
+  v8 = 11;
+  do
+  {
+    v9 = *(p_m_fForwardForce - 4);
+    p_m_fForwardForce -= 3;
+    v6 -= 4;
+    --v8;
+    *(v6 - 11) = v9;
+    *v6 = *p_m_fForwardForce;
+    *(v6 + 11) = p_m_fForwardForce[1];
+  }
+  while ( v8 );
+  v10 = &pCarInit->pad2[80];
+  pCarInit->m_fSideForce = pCarStruct->m_sLogic.m_fSideForce;
+  pCarInit->m_fForwardForce = pCarStruct->m_sLogic.m_fForwardForce;
+  pCarInit->m_fOversteerFactorMin = pCarStruct->m_sLogic.m_fOversteerFactorMin;
+  pCarInit->m_fOversteerFactorMax = pCarStruct->m_sLogic.m_fOversteerFactorMax;
+  pCarInit->m_fUndersteerFactorMin = pCarStruct->m_sLogic.m_fUndersteerFactorMin;
+  pCarInit->m_fUndersteerFactorMax = pCarStruct->m_sLogic.m_fUndersteerFactorMax;
+  pCarInit->m_fSteeringMaxAngle = pCarStruct->m_sLogic.m_fSteeringMaxAngle;
+  pCarInit->m_fSteeringMaxAngleInHighestSpeed = pCarStruct->m_sLogic.m_fSteeringMaxAngleInHighestSpeed;
+  pCarInit->m_fSteeringDifferentialAngle = pCarStruct->m_sLogic.m_fSteeringDifferentialAngle;
+  pCarInit->m_fSteeringAngleChange = pCarStruct->m_sLogic.m_fSteeringAngleChange;
+  pCarInit->m_fSteeringAngleChangeBack = pCarStruct->m_sLogic.m_fSteeringAngleChangeDestroyed;
+  pCarInit->m_fSteeringAngleChangeDestroyed = pCarStruct->m_sLogic.m_fSteeringAngleChangeBack;
+  pCarInit->m_fSteeringAngleChangeBackDestroyed = pCarStruct->m_sLogic.m_fSteeringAngleChangeBackDestroyed;
+  pCarInit->m_vCenter = pCarStruct->m_sLogic.m_vCenter;
+  pCarInit->m_fGravity = pCarStruct->m_sLogic.m_fGravity;
+  pCarInit->m_fFuelConsumption = pCarStruct->m_sLogic.m_fFuelConsumption;
+  pCarInit->m_fFuelTank = pCarStruct->m_sLogic.m_fFuelTank;
+  v11 = &pCarInit->pad2[980];
+  p_m_fBrakeEfficiencyRestriction = &pCarStruct->m_sLogic.m_fBrakeEfficiencyRestriction;
+  do
+  {
+    v13 = *(p_m_fBrakeEfficiencyRestriction - 135);
+    p_m_fBrakeEfficiencyRestriction = (p_m_fBrakeEfficiencyRestriction - 119);
+    v10 -= 4;
+    --v11;
+    *(v10 - 10) = v13;
+    *v10 = *(p_m_fBrakeEfficiencyRestriction - 3);
+    *(v10 + 10) = *(p_m_fBrakeEfficiencyRestriction - 2);
+    *(v10 + 20) = *(p_m_fBrakeEfficiencyRestriction - 1);
+    if ( bUnk )
+    {
+      if ( tyresArrayPtr
+        && (v14 = *p_m_fBrakeEfficiencyRestriction,
+            *p_m_fBrakeEfficiencyRestriction < ((dword_63D9CC - tyresArrayPtr) / 40))
+        && v14 >= 0 )
+      {
+        *(v10 + 30) = *(tyresArrayPtr + 10 * v14);
+      }
+      else
+      {
+        *(v10 + 30) = 0;
+      }
+    }
+    else
+    {
+      *(v10 + 30) = *p_m_fBrakeEfficiencyRestriction;
+    }
+    *(v10 + 40) = p_m_fBrakeEfficiencyRestriction[1];
+    *(v10 + 50) = p_m_fBrakeEfficiencyRestriction[2];
+    *(v10 + 60) = p_m_fBrakeEfficiencyRestriction[3];
+    *(v10 + 70) = p_m_fBrakeEfficiencyRestriction[4];
+    *(v10 + 80) = p_m_fBrakeEfficiencyRestriction[5];
+    *(v10 + 90) = p_m_fBrakeEfficiencyRestriction[6];
+    *(v10 + 100) = p_m_fBrakeEfficiencyRestriction[7];
+    *(v10 + 110) = p_m_fBrakeEfficiencyRestriction[8];
+    *(v10 + 120) = p_m_fBrakeEfficiencyRestriction[9];
+    *(v10 + 130) = p_m_fBrakeEfficiencyRestriction[10];
+    *(v10 + 140) = p_m_fBrakeEfficiencyRestriction[11];
+    *(v10 + 150) = p_m_fBrakeEfficiencyRestriction[12];
+    *(v10 + 160) = p_m_fBrakeEfficiencyRestriction[13];
+    *(v10 + 170) = p_m_fBrakeEfficiencyRestriction[14];
+    *(v10 + 180) = p_m_fBrakeEfficiencyRestriction[15];
+    *(v10 + 190) = p_m_fBrakeEfficiencyRestriction[16];
+    *(v10 + 200) = p_m_fBrakeEfficiencyRestriction[17];
+    *(v10 + 210) = p_m_fBrakeEfficiencyRestriction[18];
+    *(v10 + 220) = p_m_fBrakeEfficiencyRestriction[19];
+    *(v11 - 10) = *(p_m_fBrakeEfficiencyRestriction + 80);
+    *v11 = *(p_m_fBrakeEfficiencyRestriction + 81);
+    v11[10] = *(p_m_fBrakeEfficiencyRestriction + 82);
+    *(v10 + 238) = *(p_m_fBrakeEfficiencyRestriction + 83);
+    *(v10 + 248) = *(p_m_fBrakeEfficiencyRestriction + 87);
+    *(v10 + 258) = *(p_m_fBrakeEfficiencyRestriction + 91);
+    *(v10 + 268) = *(p_m_fBrakeEfficiencyRestriction + 95);
+    *(v10 + 278) = *(p_m_fBrakeEfficiencyRestriction + 99);
+  }
+  while ( &v11[-1258 - pCarInit] );
+  pCarInit->m_fBalance1 = pCarStruct->m_sLogic.m_fBalance1;
+  pCarInit->m_fBalance2 = pCarStruct->m_sLogic.m_fBalance2;
+  pCarInit->m_fBalance3 = pCarStruct->m_sLogic.m_fBalance3;
+  pCarInit->m_fBrakeEfficiency = pCarStruct->m_sLogic.m_fBrakeEfficiency;
+  pCarInit->m_fBrakeEfficiencyRestriction = pCarStruct->m_sLogic.m_fBrakeEfficiencyRestriction;
+  pCarInit->m_fHandbrakeEfficiency = pCarStruct->m_sLogic.m_fHandbrakeEfficiency;
+  pCarInit->m_fHandbrakeEfficiencyRestriction = pCarStruct->m_sLogic.m_fHandbrakeEfficiencyRestriction;
+  pCarInit->m_bUseCrashMultipliers = pCarStruct->m_sLogic.m_bUseCrashMultipliers;
+  pCarInit->m_fCrashForceMultiplier = pCarStruct->m_sLogic.m_fCrashForceMultiplier;
+  pCarInit->m_fCrashForceBackMultiplier = pCarStruct->m_sLogic.m_fCrashForceBackMultiplier;
+  pCarInit->m_iLooseAdhesionFactor = pCarStruct->m_sLogic.m_iLooseAdhesionFactor;
+  pCarInit->m_bABS = pCarStruct->m_sLogic.m_bABS;
+  pCarInit->m_bESP = pCarStruct->m_sLogic.m_bESP;
+  pCarInit->m_bSteeringIsInvisible = pCarStruct->m_sLogic.m_bSteeringIsInvisible;
+  *&pCarInit->pad3[1] = *pCarStruct->m_sLogic.pad1;
+  pCarInit->m_bIgnoreHeadCollision = pCarStruct->m_sLogic.m_bIgnoreHeadCollision;
+  pCarInit->m_iExhaustParticleID = pCarStruct->m_sLogic.m_iExhaustParticleID;
+  pCarInit->m_fExhaustParticleOff = pCarStruct->m_sLogic.m_fExhaustParticleOff;
+  pCarInit->m_fExhaustParticleVelocityIdle = pCarStruct->m_sLogic.m_fExhaustParticleVelocityIdle;
+  pCarInit->m_fExhaustParticleVelocityDriving = pCarStruct->m_sLogic.m_fExhaustParticleVelocityDriving;
+  *pCarInit->pad4 = *pCarStruct->m_sLogic.pad2;
+  *&pCarInit->pad4[4] = *&pCarStruct->m_sLogic.pad2[4];
+  *&pCarInit->pad4[8] = *&pCarStruct->m_sLogic.pad2[8];
+  *&pCarInit->pad4[12] = *&pCarStruct->m_sLogic.pad2[12];
+  pCarInit->m_bHasRoughness = pCarStruct->m_sLogic.m_bHasRoughness;
+  pCarInit->m_sRoughness = pCarStruct->m_sLogic.m_sRoughness;
+  pCarInit->m_sEnginePart = pCarStruct->m_sPhysics.m_sEngine;
+  pCarInit->m_fEngineControlFuelAfterCrash = pCarStruct->m_sPhysics.m_fEngineControlFuelAfterCrash;
+  pCarInit->m_fEngineParticle1On = pCarStruct->m_sPhysics.m_fEngineParticle1On;
+  pCarInit->m_fEngineParticle2On = pCarStruct->m_sPhysics.m_fEngineParticle2On;
+  pCarInit->m_fEngineParticle2Off = pCarStruct->m_sPhysics.m_fEngineParticleOff;
+  pCarInit->m_iEngineParticle1Id = pCarStruct->m_sPhysics.m_iEngineParticle1Id;
+  pCarInit->m_iEngineParticle2Id = pCarStruct->m_sPhysics.m_iEngineParticle2Id;
+  pCarInit->m_sGearboxPart = pCarStruct->m_sPhysics.m_sGearbox;
+  pCarInit->m_sWheelsPart = pCarStruct->m_sPhysics.m_sWheels;
+  pCarInit->m_fWheelsSemiDestroyedAngle = pCarStruct->m_sPhysics.m_fWheelsSemiDestroyedAngle;
+  pCarInit->m_fWheelsDamageToSemiDestroy = pCarStruct->m_sPhysics.m_fWheelsDamangeToSemiDestroy;
+  pCarInit->m_vBodyDeformDir = pCarStruct->m_sPhysics.m_sBody.m_vDirection;
+  pCarInit->m_vResistanceDir = pCarStruct->m_sPhysics.m_vResistanceDir;
+  pCarInit->m_sBumpersPart = pCarStruct->m_sPhysics.m_sBumpers;
+  pCarInit->m_sWindowsPart = pCarStruct->m_sPhysics.m_sWindows;
+  pCarInit->m_fWindowsCrack = pCarStruct->m_sPhysics.m_fWindowsCrack;
+  pCarInit->m_sLights = pCarStruct->m_sPhysics.m_sLights;
+  *pCarInit->pad6 = *pCarStruct->m_sPhysics.pad0;
+  pCarInit->m_vLightsDir = pCarStruct->m_sPhysics.m_vLightsDir;
+  pCarInit->m_sLicencePlatesPart = pCarStruct->m_sPhysics.m_sLicencePlates;
+  pCarInit->m_sMirrorsPart = pCarStruct->m_sPhysics.m_sMirrors;
+  pCarInit->m_sWingsPart = pCarStruct->m_sPhysics.m_sWings;
+  pCarInit->m_sDoorsPart = pCarStruct->m_sPhysics.m_sDoors;
+  pCarInit->m_sRoofPart = pCarStruct->m_sPhysics.m_sRoof;
+  lstrcpyA(pCarInit->m_szWindowsBrokenTexture, pCarStruct->m_sPhysics.m_szWindowsBrokenTexture);
+  lstrcpyA(pCarInit->m_szWindowsBrokenTextureAlpha, pCarStruct->m_sPhysics.m_szWindowsBrokenTextureAlpha);
+  pCarInit->m_sUnkPart = pCarStruct->m_sPhysics.m_sUnkPart;
+  lstrcpyA(pCarInit->pad7, &pCarStruct->pad0[1]);
+  lstrcpyA(&pCarInit->pad7[16], &pCarStruct->pad0[17]);
+  lstrcpyA(&pCarInit->pad7[32], &pCarStruct->pad0[33]);
+  lstrcpyA(&pCarInit->pad7[288], &pCarStruct->pad0[779]);
+  lstrcpyA(&pCarInit->pad7[304], &pCarStruct->pad0[803]);
+  lstrcpyA(&pCarInit->pad7[320], &pCarStruct->pad0[839]);
+  lstrcpyA(&pCarInit->pad7[336], &pCarStruct->pad0[855]);
+  lstrcpyA(&pCarInit->pad7[352], &pCarStruct->pad0[871]);
+  lstrcpyA(&pCarInit->pad7[368], &pCarStruct->pad0[887]);
+  lstrcpyA(&pCarInit->pad7[384], &pCarStruct->pad0[903]);
+  lstrcpyA(&pCarInit->pad7[400], &pCarStruct->pad0[919]);
+  lstrcpyA(&pCarInit->pad7[416], &pCarStruct->pad0[935]);
+  lstrcpyA(&pCarInit->pad7[432], &pCarStruct->pad0[951]);
+  lstrcpyA(&pCarInit->pad7[448], &pCarStruct->pad0[967]);
+  lstrcpyA(&pCarInit->pad7[464], &pCarStruct->pad0[983]);
+  bUnka = 5;
+  pSTCars = &pCarInit->pad7[680];
+  v15 = &pCarStruct->pad0[310];
+  for ( i = &pCarInit->pad7[128]; ; i = pCarInita )
+  {
+    v15 -= 49;
+    pSTCars = (pSTCars - 4);
+    --bUnka;
+    pCarInita = (i - 16);
+    lstrcpyA(i - 16, v15 - 16);
+    *&pSTCars[-1].m_sSounds.m_szDoorsCloseSound[15] = *v15;
+    pSTCars->m_sLogic.m_fMass = *(v15 + 1);
+    pSTCars->m_sLogic.m_fEngineIdleRpm = *(v15 + 2);
+    pSTCars->m_sLogic.m_fEngineEffectRpmMax = *(v15 + 3);
+    pSTCars->m_sLogic.m_fGearboxClutchTime = *(v15 + 4);
+    pSTCars->m_sLogic.m_sGears[0].m_fRatio = *(v15 + 5);
+    pSTCars->m_sLogic.m_sGears[1].m_fRpmGearDown = *(v15 + 6);
+    pSTCars->m_sLogic.m_sGears[3].m_fRpmGearUp = *(v15 + 7);
+    pCarInit->pad7[bUnka + 800] = v15[32];
+    if ( !bUnka )
+      break;
+  }
+  bUnkb = 5;
+  pSTCarsa = &pCarInit->pad7[848];
+  v17 = &pCarStruct->pad0[555];
+  for ( j = &pCarInit->pad7[208]; ; j = lpString1b )
+  {
+    v17 -= 49;
+    pSTCarsa = (pSTCarsa - 4);
+    --bUnkb;
+    lpString1b = (j - 16);
+    lstrcpyA(j - 16, v17 - 16);
+    *&pSTCarsa[-1].m_sSounds.m_szDoorsCloseSound[15] = *v17;
+    pSTCarsa->m_sLogic.m_fMass = *(v17 + 1);
+    pSTCarsa->m_sLogic.m_fEngineIdleRpm = *(v17 + 2);
+    pSTCarsa->m_sLogic.m_fEngineEffectRpmMax = *(v17 + 3);
+    pSTCarsa->m_sLogic.m_fGearboxClutchTime = *(v17 + 4);
+    pSTCarsa->m_sLogic.m_sGears[0].m_fRatio = *(v17 + 5);
+    pSTCarsa->m_sLogic.m_sGears[1].m_fRpmGearDown = *(v17 + 6);
+    pSTCarsa->m_sLogic.m_sGears[3].m_fRpmGearUp = *(v17 + 7);
+    pCarInit->pad7[bUnkb + 968] = v17[32];
+    if ( !bUnkb )
+      break;
+  }
+  v19 = &pCarStruct->pad0[795];
+  bUnkc = &pCarInit->pad7[1016];
+  v20 = &pCarInit->pad7[288];
+  pSTCarsb = 5;
+  while ( 1 )
+  {
+    v19 -= 48;
+    bUnkc -= 4;
+    lpString1c = (v20 - 16);
+    lstrcpyA(v20 - 16, v19 - 16);
+    *(bUnkc - 5) = *v19;
+    *bUnkc = *(v19 + 1);
+    *(bUnkc + 5) = *(v19 + 2);
+    *(bUnkc + 10) = *(v19 + 3);
+    *(bUnkc + 15) = *(v19 + 4);
+    *(bUnkc + 20) = *(v19 + 5);
+    *(bUnkc + 25) = *(v19 + 6);
+    *(bUnkc + 30) = *(v19 + 7);
+    if ( !--pSTCarsb )
+      break;
+    v20 = lpString1c;
+  }
+  bUnkd = 4;
+  *&pCarInit->pad7[1136] = *&pCarStruct->pad0[795];
+  *&pCarInit->pad7[1140] = *&pCarStruct->pad0[799];
+  *&pCarInit->pad7[1144] = *&pCarStruct->pad0[819];
+  *&pCarInit->pad7[1148] = *&pCarStruct->pad0[823];
+  *&pCarInit->pad7[1152] = *&pCarStruct->pad0[827];
+  *&pCarInit->pad7[1156] = *&pCarStruct->pad0[831];
+  *&pCarInit->pad7[1160] = *&pCarStruct->pad0[835];
+  pSTCarsc = &pCarInit->pad7[1180];
+  v21 = &pCarInit->pad7[608];
+  v22 = &pCarStruct->pad0[1163];
+  while ( 1 )
+  {
+    v22 -= 37;
+    pSTCarsc = (pSTCarsc - 4);
+    lpString1d = (v21 - 16);
+    --bUnkd;
+    lstrcpyA(v21 - 80, v22 - 16);
+    lstrcpyA(lpString1d, v22);
+    pSTCarsc->m_sLogic.m_fMass = *(v22 + 4);
+    pCarInit->pad7[bUnkd + 1180] = v22[20];
+    if ( !bUnkd )
+      break;
+    v21 = lpString1d;
+  }
+  lstrcpyA(&pCarInit->pad7[608], &pCarStruct->pad0[1147]);
+  lstrcpyA(&pCarInit->pad7[624], &pCarStruct->pad0[1163]);
+  lstrcpyA(pCarInit->m_szSoundEngineOn, pCarStruct->m_sSounds.m_szEngineStartSound);
+  lstrcpyA(pCarInit->m_szSoundEngineOff, pCarStruct->m_sSounds.m_szEngineStopSound);
+  lstrcpyA(pCarInit->m_szSoundEngineBad, pCarStruct->m_sSounds.m_szEngineStartBadSound);
+  lstrcpyA(pCarInit->m_szSoundEngineNpc, pCarStruct->m_sSounds.m_sEngineNPC.m_szFileName);
+  lstrcpyA(pCarInit->m_szSoundEngineNeutral, pCarStruct->m_sSounds.m_szEngineNeutralSound);
+  lstrcpyA(pCarInit->m_szTyreDrivingSound, pCarStruct->m_sSounds.m_sTyreDrivingSound.m_szFileName);
+  lstrcpyA(pCarInit->m_szSoundHorn, pCarStruct->m_sSounds.m_szHornSound);
+  lstrcpyA(pCarInit->m_szSoundSiren, pCarStruct->m_sSounds.m_szSirenSound);
+  lstrcpyA(pCarInit->m_szSoundHandbrake, pCarStruct->m_sSounds.m_szHandbrakeSound);
+  lstrcpyA(pCarInit->m_szSoundGearNext, pCarStruct->m_sSounds.m_szGearboxChangeGearSound);
+  lstrcpyA(pCarInit->m_szSoundGearPrev, pCarStruct->m_sSounds.m_szGearboxChangeGearSound1);
+  lstrcpyA(pCarInit->m_szSoundDrift, pCarStruct->m_sSounds.m_szTyreSlipSound);
+  lstrcpyA(pCarInit->m_szSoundUnk, pCarStruct->m_sSounds.pad0);
+  lstrcpyA(pCarInit->m_szSoundCrashAbsorber, pCarStruct->m_sSounds.m_szShockAbsorberSound);
+  lstrcpyA(pCarInit->m_szSoundShotInWheel, pCarStruct->m_sSounds.m_szWheelsPunctureSound);
+  lstrcpyA(pCarInit->m_szSoundGlassBreak, pCarStruct->m_sSounds.m_szWindowsBreakSound);
+  bUnke = 5;
+  pCarInit->m_fEngineNPCSoundSpeedMin = pCarStruct->m_sSounds.m_sEngineNPC.m_fSpeedMin;
+  pCarInit->m_fEngineNPCSoundSpeedMax = pCarStruct->m_sSounds.m_sEngineNPC.m_fSpeedMax;
+  pCarInit->m_fEngineNPCSoundVolumeIdle = pCarStruct->m_sSounds.m_sEngineNPC.m_fVolumeIdle;
+  pCarInit->m_fEngineNPCSoundVolumeDriving = pCarStruct->m_sSounds.m_sEngineNPC.m_fVolumeDriving;
+  pSTCarsd = &pCarInit->pad9[40];
+  p_m_fSpeedMin = &pCarStruct->m_sSounds.m_sEngineForwardSounds[5].m_fSpeedMin;
+  for ( k = &pCarInit->pad8[80]; ; k = lpString1e )
+  {
+    p_m_fSpeedMin = (p_m_fSpeedMin - 49);
+    pSTCarsd = (pSTCarsd - 4);
+    --bUnke;
+    lpString1e = (k - 16);
+    lstrcpyA(k - 16, p_m_fSpeedMin - 16);
+    *&pSTCarsd[-1].m_sSounds.m_szDoorsCloseSound[15] = *p_m_fSpeedMin;
+    pSTCarsd->m_sLogic.m_fMass = p_m_fSpeedMin[1];
+    pSTCarsd->m_sLogic.m_fEngineIdleRpm = p_m_fSpeedMin[2];
+    pSTCarsd->m_sLogic.m_fEngineEffectRpmMax = p_m_fSpeedMin[3];
+    pSTCarsd->m_sLogic.m_fGearboxClutchTime = p_m_fSpeedMin[4];
+    pSTCarsd->m_sLogic.m_sGears[0].m_fRatio = p_m_fSpeedMin[5];
+    pSTCarsd->m_sLogic.m_sGears[1].m_fRpmGearDown = p_m_fSpeedMin[6];
+    pSTCarsd->m_sLogic.m_sGears[3].m_fRpmGearUp = p_m_fSpeedMin[7];
+    pCarInit->pad9[bUnke + 160] = *(p_m_fSpeedMin + 32);
+    if ( !bUnke )
+      break;
+  }
+  bUnkf = 5;
+  pSTCarse = &pCarInit->pad9[208];
+  v25 = &pCarStruct->m_sSounds.m_sEngineBackwardSounds[0].m_fSpeedMin;
+  for ( m = &pCarInit->pad8[160]; ; m = lpString1f )
+  {
+    v25 = (v25 - 49);
+    pSTCarse = (pSTCarse - 4);
+    --bUnkf;
+    lpString1f = (m - 16);
+    lstrcpyA(m - 16, v25 - 16);
+    *&pSTCarse[-1].m_sSounds.m_szDoorsCloseSound[15] = *v25;
+    pSTCarse->m_sLogic.m_fMass = v25[1];
+    pSTCarse->m_sLogic.m_fEngineIdleRpm = v25[2];
+    pSTCarse->m_sLogic.m_fEngineEffectRpmMax = v25[3];
+    pSTCarse->m_sLogic.m_fGearboxClutchTime = v25[4];
+    pSTCarse->m_sLogic.m_sGears[0].m_fRatio = v25[5];
+    pSTCarse->m_sLogic.m_sGears[1].m_fRpmGearDown = v25[6];
+    pSTCarse->m_sLogic.m_sGears[3].m_fRpmGearUp = v25[7];
+    pCarInit->pad9[bUnkf + 328] = *(v25 + 32);
+    if ( !bUnkf )
+      break;
+  }
+  p_m_fEngineNeutralFade = &pCarStruct->m_sSounds.m_fEngineNeutralFade;
+  bUnkg = &pCarInit->pad9[376];
+  m_szSoundEngineNeutral = pCarInit->m_szSoundEngineNeutral;
+  pSTCarsf = 5;
+  while ( 1 )
+  {
+    p_m_fEngineNeutralFade -= 12;
+    bUnkg -= 4;
+    lpString1g = (m_szSoundEngineNeutral - 16);
+    lstrcpyA(m_szSoundEngineNeutral - 16, p_m_fEngineNeutralFade - 16);
+    *(bUnkg - 5) = *p_m_fEngineNeutralFade;
+    *bUnkg = p_m_fEngineNeutralFade[1];
+    *(bUnkg + 5) = p_m_fEngineNeutralFade[2];
+    *(bUnkg + 10) = p_m_fEngineNeutralFade[3];
+    *(bUnkg + 15) = p_m_fEngineNeutralFade[4];
+    *(bUnkg + 20) = p_m_fEngineNeutralFade[5];
+    *(bUnkg + 25) = p_m_fEngineNeutralFade[6];
+    *(bUnkg + 30) = p_m_fEngineNeutralFade[7];
+    if ( !--pSTCarsf )
+      break;
+    m_szSoundEngineNeutral = lpString1g;
+  }
+  bUnkh = 4;
+  pCarInit->m_fEngineNeutralFade = pCarStruct->m_sSounds.m_fEngineNeutralFade;
+  pCarInit->m_fEngineNeutralVolume = pCarStruct->m_sSounds.m_fEngineNeutralVolume;
+  pCarInit->m_fTyreDrivingSoundSpeedMin = pCarStruct->m_sSounds.m_sTyreDrivingSound.m_fSpeedMin;
+  pCarInit->m_fTyreDrivingSoundSpeedMax = pCarStruct->m_sSounds.m_sTyreDrivingSound.m_fSpeedMax;
+  pCarInit->m_fTyreDrivingSoundCarSpeedMin = pCarStruct->m_sSounds.m_sTyreDrivingSound.m_fCarSpeedMin;
+  pCarInit->m_fTyreDrivingSoundCarSpeedMax = pCarStruct->m_sSounds.m_sTyreDrivingSound.m_fCarSpeedMax;
+  pCarInit->m_fTyreDrivingSoundVolume = pCarStruct->m_sSounds.m_sTyreDrivingSound.m_fVolume;
+  pSTCarsg = &pCarInit->pad10[16];
+  m_szSoundDoorOpen = pCarInit->m_szSoundDoorOpen;
+  m_szDoorsCloseSound = pCarStruct->m_sSounds.m_szDoorsCloseSound;
+  while ( 1 )
+  {
+    m_szDoorsCloseSound -= 37;
+    pSTCarsg = (pSTCarsg - 4);
+    lpString1h = (m_szSoundDoorOpen - 16);
+    --bUnkh;
+    lstrcpyA(m_szSoundDoorOpen - 80, m_szDoorsCloseSound - 16);
+    lstrcpyA(lpString1h, m_szDoorsCloseSound);
+    pSTCarsg->m_sLogic.m_fMass = *(m_szDoorsCloseSound + 4);
+    pCarInit->pad10[bUnkh + 16] = m_szDoorsCloseSound[20];
+    if ( !bUnkh )
+      break;
+    m_szSoundDoorOpen = lpString1h;
+  }
+  lstrcpyA(pCarInit->m_szSoundDoorOpen, pCarStruct->m_sSounds.m_szDoorsOpenSound);
+  lstrcpyA(pCarInit->m_szSoundDoorClose, pCarStruct->m_sSounds.m_szDoorsCloseSound);
+  result = this;
+  this->m_sVehicle.m_fFuelTankHealth = pCarStruct->m_sPhysics.m_sBody.m_sPart.m_fHealth;
+  this->m_sVehicle.m_fFuelTankResistanceMelee = pCarStruct->m_sPhysics.m_sBody.m_sPart.m_fResistanceMelee
+                                              * this->m_sVehicle.m_fMass
+                                              * 0.27777779;
+  this->m_sVehicle.m_fFuelTankResistanceGun = pCarStruct->m_sPhysics.m_sBody.m_sPart.m_fResistanceGun
+                                            * this->m_sVehicle.m_fMass
+                                            * 0.27777779;
+  this->m_sVehicle.m_fFuelTankAbsoluteHealth = pCarStruct->m_sPhysics.m_sBody.m_sPart.m_fAbsoluteHealth;
+  return result;
+}
+
+char *__thiscall insert__Q23std78__vector_imp_19G_SaveGame_FileHead_Q23std32allocator_19G_SaveGame_FileHead__0_FP19G_SaveGame_FileHeadUiRC19G_SaveGame_FileHead(
+        _DWORD *this,
+        char *a2,
+        unsigned int a3,
+        const void *a4)
+{
+  _DWORD *v4; // edi
+  char *v6; // ebx
+  int v7; // esi
+  unsigned int v8; // ecx
+  int v9; // edx
+  unsigned int v10; // eax
+  char *v11; // edx
+  char *k; // eax
+  char *v13; // eax
+  unsigned int v14; // ebx
+  char *v15; // esi
+  char *v16; // ebx
+  char *v17; // eax
+  char *result; // eax
+  int v19; // ecx
+  int v20; // kr00_4
+  char *v21; // esi
+  unsigned int v22; // ecx
+  char *v23; // eax
+  char *v24; // edx
+  char *v25; // ebx
+  int j; // eax
+  char *v27; // edx
+  char *v28; // eax
+  char *v29; // edi
+  unsigned int v30; // ebp
+  char *v31; // eax
+  char *i; // edx
+  char *v33; // edx
+  char *v34; // eax
+  char *v35; // edi
+  char *v37; // [esp+14h] [ebp-4h]
+  unsigned int v38; // [esp+20h] [ebp+8h]
+  unsigned int v39; // [esp+20h] [ebp+8h]
+  char *v40; // [esp+24h] [ebp+Ch]
+
+  v4 = this;
+  v6 = this[2];
+  if ( (this[3] - v6) / 24 >= a3 )
+  {
+    v21 = a2;
+    result = (((715827883i64 * (v6 - a2)) >> 32) >> 31);
+    if ( (v6 - a2) / 24 >= a3 )
+    {
+      if ( a3 )
+      {
+        v30 = 24 * a3;
+        v31 = &v6[-24 * a3];
+        for ( i = this[2]; v31 != v6; i += 24 )
+        {
+          if ( i )
+          {
+            qmemcpy(i, v31, 0x18u);
+            v4 = this;
+            v21 = a2;
+          }
+          v31 += 24;
+        }
+        v33 = v4[2];
+        v34 = &v33[-v30];
+        if ( v21 != &v33[-v30] )
+        {
+          do
+          {
+            v34 -= 24;
+            v33 -= 24;
+            qmemcpy(v33, v34, 0x18u);
+          }
+          while ( v34 != a2 );
+          v4 = this;
+          v21 = a2;
+        }
+        result = v21;
+        if ( v21 != &v21[v30] )
+        {
+          do
+          {
+            v35 = result;
+            result += 24;
+            qmemcpy(v35, a4, 0x18u);
+          }
+          while ( result != &v21[v30] );
+          v4 = this;
+        }
+        v4[2] += v30;
+      }
+    }
+    else
+    {
+      v22 = 24 * a3;
+      v39 = 24 * a3;
+      v23 = &a2[24 * a3];
+      if ( a2 != v6 )
+      {
+        v24 = &v23[-v22];
+        do
+        {
+          if ( v23 )
+          {
+            qmemcpy(v23, v24, 0x18u);
+            v4 = this;
+            v21 = a2;
+          }
+          v24 += 24;
+          v23 += 24;
+        }
+        while ( v24 != v6 );
+      }
+      v25 = v4[2];
+      for ( j = a3 - (v25 - v21) / 24; j; --j )
+      {
+        if ( v25 )
+        {
+          qmemcpy(v25, a4, 0x18u);
+          v4 = this;
+          v21 = a2;
+        }
+        v25 += 24;
+      }
+      v27 = v4[2];
+      v28 = v21;
+      if ( v21 != v27 )
+      {
+        do
+        {
+          v29 = v28;
+          v28 += 24;
+          qmemcpy(v29, a4, 0x18u);
+        }
+        while ( v28 != v27 );
+        v4 = this;
+      }
+      result = (v39 + v4[2]);
+      v4[2] = result;
+    }
+  }
+  else
+  {
+    v7 = this[1];
+    if ( !v7 || (v8 = &v6[-v7] / 24, a3 >= v8) )
+      v8 = a3;
+    if ( v7 )
+      v9 = &v6[-v7] / 24;
+    else
+      v9 = 0;
+    v10 = v9 + v8;
+    v38 = v9 + v8;
+    if ( (v9 + v8) < 0 )
+      v10 = 0;
+    v37 = operator new(24 * v10);
+    v11 = v37;
+    for ( k = v4[1]; k != a2; v11 += 24 )
+    {
+      if ( v11 )
+      {
+        qmemcpy(v11, k, 0x18u);
+        v4 = this;
+      }
+      k += 24;
+    }
+    v13 = v11;
+    if ( a3 )
+    {
+      v14 = a3;
+      do
+      {
+        if ( v13 )
+        {
+          qmemcpy(v13, a4, 0x18u);
+          v4 = this;
+        }
+        v13 += 24;
+        --v14;
+      }
+      while ( v14 );
+    }
+    v15 = v4[2];
+    v40 = v15;
+    v16 = &v11[24 * a3];
+    if ( a2 != v15 )
+    {
+      v17 = a2;
+      do
+      {
+        if ( v16 )
+        {
+          qmemcpy(v16, v17, 0x18u);
+          v4 = this;
+          v15 = v40;
+        }
+        v17 += 24;
+        v16 += 24;
+      }
+      while ( v17 != v15 );
+    }
+    operator delete(v4[1]);
+    result = v4[1];
+    v4[3] = &v37[24 * v38];
+    if ( result )
+    {
+      v19 = v4[2];
+      v4[1] = v37;
+      v20 = v19 - result;
+      result = (((715827883i64 * (v19 - result)) >> 32) >> 31);
+      v4[2] = &v37[24 * (v20 / 24) + 24 * a3];
+    }
+    else
+    {
+      v4[1] = v37;
+      v4[2] = &v37[24 * a3];
+    }
+  }
+  return result;
+}
+
+// attributes: thunk
+int __thiscall C_actor::SaveGameGetSize(C_actor *this)
+{
+  return SaveGameGetSize__7C_actorFv(this);
+}
+
+char __thiscall C_door::SaveData(C_door *this, C_chunk *a2)
+{
+  bool m_bIsOpen; // al
+  int v5; // [esp+8h] [ebp-4h] BYREF
+
+  m_bIsOpen = a2->m_bIsOpen;
+  v5 = 8;
+  if ( m_bIsOpen )
+  {
+    if ( a2->m_bIsWritable )                    // Probably inlined C_chunk::Write(void* pBuf, size_t uSize)
+      dtaWrite(a2->m_uFileHandle, &v5, 4);
+    if ( a2->m_bIsOpen )
+    {
+      if ( a2->m_bIsWritable )
+        dtaWrite(a2->m_uFileHandle, &this->m_uUnk, 1);// uint8_t
+      if ( a2->m_bIsOpen )
+      {
+        if ( a2->m_bIsWritable )
+          dtaWrite(a2->m_uFileHandle, &this->m_bOpenInBothDirs, 1);// bool
+        if ( a2->m_bIsOpen )
+        {
+          if ( a2->m_bIsWritable )
+            dtaWrite(a2->m_uFileHandle, &this->m_uForcedOpenDirection, 1);// uint8_t
+          if ( a2->m_bIsOpen )
+          {
+            if ( a2->m_bIsWritable )
+              dtaWrite(a2->m_uFileHandle, &this->m_fMaxAngle, 4);// float
+            if ( a2->m_bIsOpen )
+            {
+              if ( a2->m_bIsWritable )
+                dtaWrite(a2->m_uFileHandle, &this->m_bOpened, 1);// bool
+              if ( a2->m_bIsOpen )
+              {
+                if ( a2->m_bIsWritable )
+                  dtaWrite(a2->m_uFileHandle, &this->m_bLocked, 1);// bool
+                if ( a2->m_bIsOpen )
+                {
+                  if ( a2->m_bIsWritable )
+                    dtaWrite(a2->m_uFileHandle, &this->m_fOpenSpeed, 4);// float
+                  if ( a2->m_bIsOpen )
+                  {
+                    if ( a2->m_bIsWritable )
+                      dtaWrite(a2->m_uFileHandle, &this->m_fCloseSpeed, 4);// float
+                    if ( a2->m_bIsOpen )
+                    {
+                      if ( a2->m_bIsWritable )
+                        dtaWrite(a2->m_uFileHandle, this->m_szOpenSoundName, 16);// char[16]
+                      if ( a2->m_bIsOpen )
+                      {
+                        if ( a2->m_bIsWritable )
+                          dtaWrite(a2->m_uFileHandle, this->m_szCloseSoundName, 16);// char[16]
+                        if ( a2->m_bIsOpen )
+                        {
+                          if ( a2->m_bIsWritable )
+                            dtaWrite(a2->m_uFileHandle, this->m_szLockedSoundName, 16);// char[16]
+                          if ( a2->m_bIsOpen && a2->m_bIsWritable )
+                            dtaWrite(a2->m_uFileHandle, &this->m_uUnk2, 1);// bool/uint8_t?
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return 1;
+}
+
+int __thiscall C_door::SaveGameGetSize(C_actor *this)
+{
+  return C_actor::SaveGameGetSize(this) + 12;
+}
+
+char __thiscall C_door::SaveGameSave(int this, void **a2)
+{
+  char result; // al
+  char *v4; // eax
+
+  result = C_actor::SaveGameSave(this, a2);
+  if ( result )
+  {
+    v4 = *a2;
+    *v4 = 1;
+    *(v4 + 2) = *(this + 116);
+    *(v4 + 6) = *(this + 272);
+    v4[1] = *(this + 112);
+    v4[10] = *(this + 286);
+    v4[11] = *(this + 293);
+    *a2 = *a2 + 12;
+    return 1;
+  }
+  return result;
+}
+
+// positive sp value has been detected, the output may be wrong!
+char __userpurge C_door::SaveGameLoad@<al>(char a1@<dl>, int a2@<ecx>, int a3@<ebp>, unsigned __int16 **a4)
+{
+  char result; // al
+  unsigned __int16 *v6; // eax
+  char v7; // al
+  int v8; // esi
+  int v9; // edx
+  float *v10; // eax
+  I3D_frame *v11; // ecx
+  int v12; // esi
+  int v13; // esi
+  _DWORD *v14; // eax
+  int v15; // [esp-E4h] [ebp-E4h]
+  struct S_vector v16; // [esp-D4h] [ebp-D4h] BYREF
+  S_quat v17; // [esp-C8h] [ebp-C8h] BYREF
+  float v18; // [esp-B8h] [ebp-B8h] BYREF
+  _DWORD v19[21]; // [esp-A8h] [ebp-A8h] BYREF
+  int v20; // [esp-54h] [ebp-54h] BYREF
+  struct S_matrix v21; // [esp-44h] [ebp-44h] BYREF
+
+  ++*(a2 + 54508);
+  *(a3 + 86) += a1;
+  result = C_actor::SaveGameLoad(a2, a2, a4);
+  if ( result )
+  {
+    v6 = *a4;
+    if ( **a4 == 1 )
+    {
+      *(a2 + 116) = *(v6 + 1);
+      *(a2 + 272) = *(v6 + 3);
+      *(a2 + 112) = *(v6 + 1);
+      *(a2 + 286) = *(v6 + 10);
+      *(a2 + 293) = *(v6 + 11);
+      *a4 += 6;
+      if ( (*(a2 + 272) & 4) == 0 )
+      {
+        switch ( *(a2 + 112) )
+        {
+          case 0:
+          case 2:
+            *(a2 + 428) = 2001;
+            break;
+          case 1:
+          case 3:
+            *(a2 + 428) = 2002;
+            break;
+          default:
+            break;
+        }
+      }
+      v7 = *(a2 + 286);
+      v16.x = 0.0;
+      v16.y = 1.0;
+      v16.z = 0.0;
+      if ( v7 )
+      {
+        v16.x = -0.0;
+        v16.y = -1.0;
+        v16.z = -0.0;
+      }
+      v8 = *(a2 + 104);
+      if ( (*(v8 + 172) & 0x20) == 0 )
+        I3D_frame::UpdateWMatrixProc(*(a2 + 104));
+      qmemcpy(v19, (v8 + 16), 0x40u);
+      memset(&v19[12], 0, 12);
+      S_vector::operator*=(&v16, v19);
+      S_quat::Make(&v17, &v16, *(a2 + 116));
+      v10 = sub_40C530((a2 + 256), v9, &v18, &v17.w);
+      v17.w = *v10;
+      v17.x = v10[1];
+      v17.y = v10[2];
+      v11 = *(a2 + 104);
+      v17.z = v10[3];
+      I3D_frame::SetRot(v11, &v17);
+      (*(**(a2 + 104) + 24))(*(a2 + 104));
+      if ( (*(a2 + 272) & 2) == 0 )
+      {
+        v12 = *(a2 + 104);
+        if ( (*(v12 + 172) & 0x20) == 0 )
+          I3D_frame::UpdateWMatrixProc(*(a2 + 104));
+        qmemcpy(&v21, (v12 + 16), sizeof(v21));
+        qmemcpy((a2 + 192), &v21, 0x40u);
+        qmemcpy(&v21, (a2 + 192), sizeof(v21));
+        S_matrix::Inverse((a2 + 192), &v21);
+        sub_401C60(&v19[15]);
+        sub_43BD30(*(a2 + 104), &v19[15]);
+        v13 = *(a2 + 104);
+        if ( (*(v13 + 172) & 0x20) == 0 )
+          I3D_frame::UpdateWMatrixProc(*(a2 + 104));
+        v14 = S_vector::operator*(&v20, &v17.z, v13 + 16);
+        *(a2 + 136) = *v14;
+        *(a2 + 140) = v14[1];
+        *(a2 + 144) = v14[2];
+        g_collision::DynUpdate(g_pCollisions, (a2 + 120));
+      }
+      v15 = a2 + 384;
+      if ( (*(a2 + 272) & 0x40) != 0 )
+        C_using_object::AddObject(&g_pMission->m_pGame->pad5[10396], v15);
+      else
+        C_using_object::DelObject(&g_pMission->m_pGame->pad5[10396], v15);
+      return 1;
+    }
+    else
+    {
+      return 0;
+    }
+  }
+  return result;
+}
+
+int __thiscall C_PhThing::SaveGameGetSize(C_actor *this)
+{
+  return C_actor::SaveGameGetSize(this) + 211;
+}
+
+char __thiscall C_program::SaveSourceCode(_DWORD *this, unsigned int a2)
+{
+  unsigned int v2; // esi
+  const char *v4; // edi
+  unsigned int v5; // ecx
+  char v6; // al
+  const char *v7; // edi
+  unsigned int v8; // ecx
+  char v9; // al
+  char v11; // [esp+1h] [ebp-1h] BYREF
+
+  v2 = a2;
+  v11 = 1;
+  if ( *(a2 + 16) && *(a2 + 24) )
+    dtaWrite(*(a2 + 20), &v11, 1);
+  v4 = this[1];
+  if ( v4 )
+    v5 = strlen(v4);
+  else
+    v5 = 0;
+  v6 = *(v2 + 16);
+  a2 = v5;
+  if ( v6 && *(v2 + 24) )
+  {
+    dtaWrite(*(v2 + 20), &a2, 4);
+    v5 = a2;
+  }
+  if ( v5 && *(v2 + 16) && *(v2 + 24) )
+    dtaWrite(*(v2 + 20), this[1], v5);
+  v7 = this[2];
+  if ( v7 )
+    v8 = strlen(v7);
+  else
+    v8 = 0;
+  v9 = *(v2 + 16);
+  a2 = v8;
+  if ( v9 && *(v2 + 24) )
+  {
+    dtaWrite(*(v2 + 20), &a2, 4);
+    v8 = a2;
+  }
+  if ( v8 && *(v2 + 16) && *(v2 + 24) )
+    dtaWrite(*(v2 + 20), this[2], v8);
+  return 1;
+}
+
+int __thiscall C_program::SaveGameGetSize(C_program *this)
+{
+  int m_iUnk11; // ecx
+  int v3; // eax
+  int v4; // edi
+  int i; // ebx
+  int m_iFrameCount; // eax
+  I3D_frame **m_pFrameVariables; // esi
+  int v8; // edx
+  char *m_pSzName; // eax
+
+  m_iUnk11 = this->m_iUnk11;
+  if ( m_iUnk11 )
+    v3 = (this->m_iUnk12 - m_iUnk11) >> 1;
+  else
+    v3 = 0;
+  v4 = 0;
+  for ( i = 2 * (v3 + 2 * this->m_iVariableCount) + 39; v4 < this->m_iActorCount; ++v4 )
+    i += C_actor::Actor_SaveGameGetSize(this->m_pActorVariables[v4]);
+  m_iFrameCount = this->m_iFrameCount;
+  if ( m_iFrameCount > 0 )
+  {
+    m_pFrameVariables = this->m_pFrameVariables;
+    v8 = m_iFrameCount;
+    do
+    {
+      i += 2;
+      if ( *m_pFrameVariables )
+      {
+        m_pSzName = (*m_pFrameVariables)->m_pSzName;
+        if ( !m_pSzName )
+          m_pSzName = g_szUnk;
+        i += strlen(m_pSzName) + 1;
+      }
+      ++m_pFrameVariables;
+      --v8;
+    }
+    while ( v8 );
+  }
+  return i;
+}
+
+char __thiscall C_program::SaveGameSave(C_program *this, void *buf)
+{
+  int v4; // eax
+  int m_iUnk11; // edx
+  int v6; // ecx
+  void *v7; // edx
+  int v8; // eax
+  int v9; // ecx
+  int v10; // eax
+  int v11; // ecx
+  float *v12; // edi
+  int m_iVariableCount; // ecx
+  int v14; // esi
+  int v15; // ecx
+  I3D_frame *v16; // eax
+  char *m_pSzName; // esi
+  unsigned int v18; // kr04_4
+  char *v19; // edx
+  void *bufa; // [esp+14h] [ebp+4h]
+
+  v4 = *buf;
+  *v4 = 2;
+  *(v4 + 1) = this->m_iCurInstructionID;
+  *(v4 + 5) = this->m_iCurInstructionIndex;
+  *(v4 + 9) = this->m_iUnk8;
+  *(v4 + 13) = this->m_iUnk9;
+  m_iUnk11 = this->m_iUnk11;
+  if ( m_iUnk11 )
+    v6 = (this->m_iUnk12 - m_iUnk11) >> 1;
+  else
+    LOWORD(v6) = 0;
+  *(v4 + 17) = v6;
+  *(v4 + 19) = this->m_iVariableCount;
+  *(v4 + 23) = this->m_iFrameCount;
+  *(v4 + 27) = this->m_iActorCount;
+  *(v4 + 31) = this->m_iUnk15;
+  *(v4 + 35) = this->m_bCommandBlock;
+  *(v4 + 36) = this->m_bUnk;
+  *(v4 + 37) = this->m_bUnk2;
+  *(v4 + 38) = *(&this->m_bUnk2 + 1);
+  v7 = (*buf + 39);
+  *buf = v7;
+  v8 = this->m_iUnk11;
+  if ( v8 && (this->m_iUnk12 - v8) >> 1 )
+    qmemcpy(v7, this->m_iUnk11, 2 * ((this->m_iUnk12 - v8) >> 1));
+  v9 = this->m_iUnk11;
+  if ( v9 )
+    v10 = (this->m_iUnk12 - v9) >> 1;
+  else
+    v10 = 0;
+  v11 = 2 * v10 + *buf;
+  *buf = v11;
+  v12 = v11;
+  m_iVariableCount = this->m_iVariableCount;
+  if ( m_iVariableCount )
+    qmemcpy(v12, this->m_fVariables, 4 * m_iVariableCount);
+  v14 = 0;
+  *buf += 4 * this->m_iVariableCount;
+  if ( this->m_iActorCount > 0 )
+  {
+    do
+      C_actor::Actor_SaveGameSave(buf, this->m_pActorVariables[v14++]);
+    while ( v14 < this->m_iActorCount );
+  }
+  v15 = 0;
+  for ( bufa = 0; v15 < this->m_iFrameCount; bufa = v15 )
+  {
+    v16 = this->m_pFrameVariables[v15];
+    if ( v16 )
+    {
+      m_pSzName = v16->m_pSzName;
+      if ( !m_pSzName )
+        m_pSzName = g_szUnk;
+      v18 = strlen(m_pSzName) + 1;
+      **buf = v18;
+      v19 = (*buf + 2);
+      *buf = v19;
+      qmemcpy(v19, m_pSzName, v18);
+      *buf += v18;
+      v15 = bufa;
+    }
+    else
+    {
+      **buf = 0;
+      *buf += 2;
+    }
+    ++v15;
+  }
+  return 1;
+}
+
+char __thiscall C_program::SaveGameLoad(int this, const void **a2)
+{
+  void *v3; // eax
+  const void **v4; // edi
+  _BYTE *v5; // ebp
+  int v7; // ecx
+  unsigned int v8; // eax
+  unsigned int v9; // edx
+  int v10; // edx
+  int v11; // eax
+  void *v12; // eax
+  int v13; // ecx
+  int v14; // eax
+  int i; // ebp
+  int v16; // eax
+  int j; // ebp
+  unsigned __int16 v18; // si
+  int v19; // ecx
+  int v20; // [esp+10h] [ebp-4h] BYREF
+
+  *(this + 56) = *(this + 52);
+  v3 = *(this + 72);
+  *(this + 92) = 0;
+  *(this + 84) = 0;
+  *(this + 76) = 0;
+  if ( v3 )
+  {
+    operator delete(v3);
+    *(this + 72) = 0;
+  }
+  if ( *(this + 80) )
+  {
+    operator delete(*(this + 80));
+    *(this + 80) = 0;
+  }
+  if ( *(this + 88) )
+  {
+    operator delete(*(this + 88));
+    *(this + 88) = 0;
+  }
+  v4 = a2;
+  v5 = *a2;
+  if ( **a2 != 2 )
+    return 0;
+  *(this + 28) = *(v5 + 1);
+  *(this + 36) = *(v5 + 5);
+  *(this + 40) = *(v5 + 9);
+  *(this + 44) = *(v5 + 13);
+  *(this + 76) = *(v5 + 19);
+  *(this + 84) = *(v5 + 23);
+  *(this + 92) = *(v5 + 27);
+  *(this + 96) = *(v5 + 31);
+  *(this + 100) = v5[35];
+  *(this + 101) = v5[36];
+  *(this + 102) = v5[37];
+  *(this + 103) = v5[38];
+  *a2 = *a2 + 39;
+  if ( *(v5 + 17) )
+  {
+    v7 = *(this + 52);
+    v8 = *(v5 + 17);
+    v20 = 0;
+    if ( v7 )
+      v9 = (*(this + 56) - v7) >> 1;
+    else
+      v9 = 0;
+    if ( v9 >= v8 )
+    {
+      if ( v7 && v8 < (*(this + 56) - v7) >> 1 )
+        *(this + 56) = v7 + 2 * v8;
+    }
+    else
+    {
+      if ( v7 )
+        v10 = (*(this + 56) - v7) >> 1;
+      else
+        v10 = 0;
+      data__Q23std38__vector_pod_Us_Q23std13allocator_Us(this + 48, *(this + 56), v8 - v10, &v20);
+    }
+    qmemcpy(*(this + 52), *a2, 2 * *(v5 + 17));
+    v4 = a2;
+  }
+  *v4 = *v4 + 2 * *(v5 + 17);
+  v11 = *(this + 76);
+  if ( v11 )
+  {
+    v12 = operator new(4 * v11);
+    v13 = *(this + 76);
+    *(this + 72) = v12;
+    qmemcpy(v12, *v4, 4 * v13);
+    v4 = a2;
+  }
+  *v4 = *v4 + 4 * *(this + 76);
+  v14 = *(this + 92);
+  if ( v14 )
+  {
+    *(this + 88) = operator new(4 * v14);
+    for ( i = 0; i < *(this + 92); *(*(this + 88) + 4 * i - 4) = sub_4066A0(v4) )
+      ++i;
+  }
+  v16 = *(this + 84);
+  if ( v16 )
+  {
+    *(this + 80) = operator new(4 * v16);
+    for ( j = 0; j < *(this + 84); ++j )
+    {
+      v18 = **v4;
+      v19 = *v4 + 2;
+      *v4 = v19;
+      if ( v18 )
+      {
+        *(*(this + 80) + 4 * j) = (g_pMission->m_pScene->pVtbl->Render)(g_pMission->m_pScene, v19, 0xFFFF);
+        *v4 = *v4 + v18;
+      }
+      else
+      {
+        *(*(this + 80) + 4 * j) = 0;
+      }
+    }
+  }
+  return 1;
+}
+
+int __thiscall C_sledovacka::SaveGameGetSize(_DWORD *this)
+{
+  int v1; // eax
+  int v2; // ebx
+  int v3; // edi
+  int v4; // kr00_4
+  int v5; // ebp
+  _DWORD *v6; // esi
+  int v7; // eax
+  int v8; // eax
+  int v9; // eax
+  _DWORD *v10; // eax
+  int v11; // ecx
+  int v12; // ecx
+  unsigned int v13; // ecx
+  unsigned int v14; // ecx
+  int v15; // edx
+
+  v1 = this[5];
+  v2 = 0;
+  v3 = 0;
+  if ( v1 )
+  {
+    v4 = this[6] - v1;
+    if ( v4 / 68 )
+    {
+      v5 = v4 / 68;
+      v6 = (this[5] + 68 * (v4 / 68));
+      do
+      {
+        v7 = *(v6 - 17);
+        v6 -= 17;
+        if ( !*(v7 + 101) && *(v7 + 28) != 2 )
+        {
+          v8 = v6[2];
+          if ( !v8 || !*(v8 + 101) )
+          {
+            v9 = v6[3];
+            if ( !v9 || !*(v9 + 101) )
+            {
+              v10 = v6[1];
+              v11 = v10[104];
+              if ( !v11 || !*(v11 + 101) )
+              {
+                v12 = v10[105];
+                if ( !v12 || !*(v12 + 101) )
+                {
+                  v13 = v10[127];
+                  if ( v13 <= 1 || !*(v13 + 101) )
+                  {
+                    v14 = v10[128];
+                    if ( v14 <= 1 || !*(v14 + 101) )
+                    {
+                      v15 = v10[89];
+                      ++v3;
+                      if ( v15 )
+                        v15 = (v10[90] - v15) / 112;
+                      v2 += 112 * v15;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        --v5;
+      }
+      while ( v5 );
+    }
+  }
+  return v2 + 184 * v3 + 4;
+}
+
+char __thiscall C_sledovacka::SaveGameSave(_DWORD *this, void **a2)
+{
+  void **v2; // edi
+  int v4; // ebx
+  _WORD *v5; // ecx
+  char *v6; // esi
+  int v7; // eax
+  int v8; // ecx
+  char *v9; // edx
+  int v10; // ebx
+  _DWORD *v11; // eax
+  int v12; // ecx
+  int v13; // ecx
+  _DWORD *v14; // eax
+  int v15; // ecx
+  int v16; // ecx
+  unsigned int v17; // ecx
+  unsigned int v18; // eax
+  int v19; // eax
+  int v20; // eax
+  _DWORD *v21; // eax
+  int v22; // eax
+  int v23; // eax
+  int v24; // eax
+  unsigned int v25; // eax
+  unsigned int v26; // eax
+  int v27; // ecx
+  int v28; // esi
+  int v29; // eax
+  int v30; // eax
+  int v31; // edx
+  _DWORD *v32; // eax
+  int v33; // ecx
+  int v34; // ecx
+  int v35; // esi
+  int v36; // eax
+  int v37; // eax
+  unsigned int v38; // eax
+  unsigned int v39; // eax
+  int v40; // eax
+  int v41; // edx
+  int v42; // edx
+  int v43; // ecx
+  int v45; // [esp+10h] [ebp-10h]
+  char *v46; // [esp+14h] [ebp-Ch]
+  int v47; // [esp+18h] [ebp-8h]
+  int v48; // [esp+18h] [ebp-8h]
+  _WORD *v49; // [esp+1Ch] [ebp-4h]
+  int v50; // [esp+1Ch] [ebp-4h]
+
+  v2 = a2;
+  v4 = 0;
+  v5 = *a2;
+  v45 = 0;
+  v49 = v5;
+  *v5 = 6;
+  v6 = *a2 + 4;
+  *a2 = v6;
+  v7 = this[5];
+  if ( v7 )
+  {
+    v8 = this[6] - v7;
+    if ( v8 / 68 )
+    {
+      v9 = v6 + 8;
+      v46 = v6 + 8;
+      v10 = 68 * (v8 / 68);
+      v47 = v8 / 68;
+      do
+      {
+        v10 -= 68;
+        v11 = (v10 + this[5]);
+        if ( !*(*v11 + 101) && *(*v11 + 28) != 2 )
+        {
+          v12 = v11[2];
+          if ( !v12 || !*(v12 + 101) )
+          {
+            v13 = v11[3];
+            if ( !v13 || !*(v13 + 101) )
+            {
+              v14 = v11[1];
+              v15 = v14[104];
+              if ( !v15 || !*(v15 + 101) )
+              {
+                v16 = v14[105];
+                if ( !v16 || !*(v16 + 101) )
+                {
+                  v17 = v14[127];
+                  if ( v17 <= 1 || !*(v17 + 101) )
+                  {
+                    v18 = v14[128];
+                    if ( v18 <= 1 || !*(v18 + 101) )
+                    {
+                      memset(v9 - 8, 0, 0xB8u);
+                      *(v9 - 2) = *(*(v10 + this[5]) + 24);
+                      v19 = *(v10 + this[5] + 8);
+                      if ( v19 )
+                        *(v9 - 1) = *(v19 + 24);
+                      v20 = *(v10 + this[5] + 12);
+                      if ( v20 )
+                        *v9 = *(v20 + 24);
+                      *(v9 + 1) = *(v10 + this[5] + 28);
+                      *(v9 + 2) = *(v10 + this[5] + 32);
+                      *(v9 + 3) = *(v10 + this[5] + 36);
+                      *(v9 + 4) = *(v10 + this[5] + 40);
+                      *(v9 + 5) = *(v10 + this[5] + 44);
+                      v21 = (*(v10 + this[5] + 4) + 292);
+                      *(v9 + 6) = *v21;
+                      *(v9 + 7) = v21[1];
+                      *(v9 + 8) = v21[2];
+                      qmemcpy(v9 + 36, (*(v10 + this[5] + 4) + 304), 0x1Cu);
+                      qmemcpy(v9 + 64, (*(v10 + this[5] + 4) + 332), 0x14u);
+                      *(v9 + 21) = *(*(v10 + this[5] + 4) + 368);
+                      *(v9 + 22) = *(*(v10 + this[5] + 4) + 372);
+                      *(v9 + 23) = *(*(v10 + this[5] + 4) + 380);
+                      *(v9 + 24) = *(*(v10 + this[5] + 4) + 384);
+                      *(v9 + 25) = *(*(v10 + this[5] + 4) + 388);
+                      *(v9 + 52) = *(*(v10 + this[5] + 4) + 392);
+                      *(v9 + 53) = *(*(v10 + this[5] + 4) + 394);
+                      *(v9 + 54) = *(*(v10 + this[5] + 4) + 396);
+                      v22 = *(v10 + this[5] + 4);
+                      *(v9 + 110) = *(v22 + 400);
+                      *(v9 + 114) = *(v22 + 404);
+                      *(v9 + 118) = *(*(v10 + this[5] + 4) + 412);
+                      v23 = *(*(v10 + this[5] + 4) + 416);
+                      if ( v23 )
+                        *(v9 + 122) = *(v23 + 24);
+                      v24 = *(*(v10 + this[5] + 4) + 420);
+                      if ( v24 )
+                        *(v9 + 126) = *(v24 + 24);
+                      *(v9 + 130) = *(*(v10 + this[5] + 4) + 444);
+                      *(v9 + 138) = *(*(v10 + this[5] + 4) + 452);
+                      *(v9 + 142) = *(*(v10 + this[5] + 4) + 472);
+                      *(v9 + 146) = *(*(v10 + this[5] + 4) + 476);
+                      *(v9 + 150) = *(*(v10 + this[5] + 4) + 480);
+                      *(v9 + 134) = *(*(v10 + this[5] + 4) + 536);
+                      v25 = *(*(v10 + this[5] + 4) + 508);
+                      if ( v25 > 1 )
+                        *(v9 + 154) = *(v25 + 24);
+                      v26 = *(*(v10 + this[5] + 4) + 512);
+                      if ( v26 > 1 )
+                        *(v9 + 158) = *(v26 + 24);
+                      *(v9 + 162) = *(*(v10 + this[5] + 4) + 520);
+                      v27 = this[5];
+                      v28 = *(*(v10 + v27 + 4) + 356);
+                      if ( v28 )
+                      {
+                        v29 = (*(*(v10 + v27 + 4) + 360) - v28) / 112;
+                        v9 = v46;
+                      }
+                      else
+                      {
+                        LOWORD(v29) = 0;
+                      }
+                      *(v9 + 83) = v29;
+                      v2 = a2;
+                      *(v9 + 42) = *(v10 + this[5] + 56);
+                      *(v9 + 43) = *(v10 + this[5] + 60);
+                      v9 += 184;
+                      ++v45;
+                      v46 = v9;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        --v47;
+      }
+      while ( v47 );
+      v4 = v45;
+    }
+    v5 = v49;
+  }
+  v5[1] = v4;
+  HIWORD(v30) = 0;
+  *v2 = *v2 + 184 * v4;
+  LOWORD(v30) = v5[1];
+  if ( v30 )
+  {
+    v48 = v30;
+    v31 = 68 * v30;
+    do
+    {
+      v31 -= 68;
+      v32 = (v31 + this[5]);
+      v50 = v31;
+      if ( !*(*v32 + 101) )
+      {
+        v33 = v32[2];
+        if ( !v33 || !*(v33 + 101) )
+        {
+          v34 = v32[3];
+          if ( !v34 || !*(v34 + 101) )
+          {
+            v35 = v32[1];
+            v36 = *(v35 + 416);
+            if ( !v36 || !*(v36 + 101) )
+            {
+              v37 = *(v35 + 420);
+              if ( !v37 || !*(v37 + 101) )
+              {
+                v38 = *(v35 + 508);
+                if ( v38 <= 1 || !*(v38 + 101) )
+                {
+                  v39 = *(v35 + 512);
+                  if ( v39 <= 1 || !*(v39 + 101) )
+                  {
+                    v40 = *(v35 + 356);
+                    if ( v40 )
+                      v41 = (*(v35 + 360) - v40) / 112;
+                    else
+                      v41 = 0;
+                    qmemcpy(*a2, *(v35 + 356), 112 * v41);
+                    v42 = *(*(v50 + this[5] + 4) + 356);
+                    if ( v42 )
+                      v42 = (*(*(v50 + this[5] + 4) + 360) - v42) / 112;
+                    v43 = 7 * v42;
+                    v31 = v50;
+                    *a2 = *a2 + 16 * v43;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      --v48;
+    }
+    while ( v48 );
+  }
+  return 1;
+}
+
+char __thiscall C_traffic_car::SaveData(_DWORD *this, int a2)
+{
+  int v3; // ebp
+  int v4; // ebx
+  int v6; // [esp+Ch] [ebp-4h] BYREF
+
+  v6 = 5;
+  if ( *(a2 + 16) )
+  {
+    if ( *(a2 + 24) )
+      dtaWrite(*(a2 + 20), &v6, 4);
+    if ( *(a2 + 16) )
+    {
+      if ( *(a2 + 24) )
+        dtaWrite(*(a2 + 20), this + 137, 4);
+      if ( *(a2 + 16) )
+      {
+        if ( *(a2 + 24) )
+          dtaWrite(*(a2 + 20), this + 138, 4);
+        if ( *(a2 + 16) )
+        {
+          if ( *(a2 + 24) )
+            dtaWrite(*(a2 + 20), this + 139, 4);
+          if ( *(a2 + 16) )
+          {
+            if ( *(a2 + 24) )
+              dtaWrite(*(a2 + 20), this + 135, 4);
+            if ( *(a2 + 16) && *(a2 + 24) )
+              dtaWrite(*(a2 + 20), this + 142, 4);
+          }
+        }
+      }
+    }
+  }
+  v3 = 0;
+  if ( this[142] > 0 )
+  {
+    v4 = 0;
+    do
+    {
+      if ( *(a2 + 16) && *(a2 + 24) )
+        dtaWrite(*(a2 + 20), v4 + this[141], 32);
+      ++v3;
+      v4 += 32;
+    }
+    while ( v3 < this[142] );
+  }
+  return 1;
+}
+
+int __thiscall C_traffic_car::SaveGameGetSize(C_actor *this)
+{
+  return C_actor::SaveGameGetSize(this) + 2;
+}
+
+char __thiscall C_traffic_car::SaveGameSave(C_actor *this, void **a2)
+{
+  char result; // al
+
+  result = C_actor::SaveGameSave(this, a2);
+  if ( result )
+  {
+    **a2 = 1;
+    *a2 = *a2 + 2;
+    return 1;
+  }
+  return result;
+}
+
+int __fastcall C_traffic_car::SaveGameLoad(int a1, void **a2)
+{
+  int v2; // ebp
+  int result; // eax
+  unsigned __int16 **v4; // [esp+8h] [ebp+4h]
+
+  LOBYTE(result) = C_actor::SaveGameLoad(a1, v2, v4);
+  if ( result )
+  {
+    result = *v4;
+    if ( **v4 == 1 )
+    {
+      result += 2;
+      *v4 = result;
+      LOBYTE(result) = 1;
+    }
+    else
+    {
+      LOBYTE(result) = 0;
+    }
+  }
+  return result;
+}
+
+int __thiscall C_turnout::SaveGameGetSize(C_actor *this)
+{
+  return C_actor::SaveGameGetSize(this) + 16;
+}
+
+int __fastcall C_turnout::SaveGameSave(int a1, int *a2)
+{
+  int v2; // esi
+  C_actor *v3; // ecx
+  C_actor *v4; // esi
+  int result; // eax
+  void **v6; // [esp+4h] [ebp+4h]
+
+  (*(v2 - 1 + 87))();
+  v4 = v3;
+  LOBYTE(result) = C_actor::SaveGameSave(v3, v6);
+  if ( result )
+  {
+    result = *v6;
+    *result = 2;
+    *(result + 4) = v4[3].m_vPosition.y;
+    *(result + 12) = *&v4[2].m_bUnk;
+    LOBYTE(result) = 1;
+  }
+  return result;
+}
+
+// positive sp value has been detected, the output may be wrong!
+int __fastcall C_turnout::SaveGameLoad(int a1, int *a2)
+{
+  int v2; // ebx
+  int v3; // ebp
+  int v4; // esi
+  unsigned __int16 **v5; // edi
+  int result; // eax
+  unsigned __int16 *v8; // edi
+  int v9; // eax
+  C_web_path *m_pWebPath; // ecx
+  int *v11; // eax
+  int v12; // ecx
+  int v13; // edx
+  int v14; // eax
+  int *v15; // eax
+  int v16; // edx
+  int v17; // eax
+  int *v18; // eax
+  int v19; // ecx
+  int v20; // eax
+  int v21; // [esp-10h] [ebp-2Ch] BYREF
+  int v22[2]; // [esp-Ch] [ebp-28h] BYREF
+  int v23[2]; // [esp-4h] [ebp-20h] BYREF
+  int v24; // [esp+14h] [ebp-8h] BYREF
+  float v25; // [esp+18h] [ebp-4h] BYREF
+  unsigned __int16 **v26; // [esp+20h] [ebp+4h] BYREF
+
+  ++*(v2 - 2084368192);
+  __inbyte(a2);
+  *(v4 + 87) |= a2;
+  v5 = v26;
+  LOBYTE(result) = C_actor::SaveGameLoad(a1, v3, v26);
+  if ( result )
+  {
+    v8 = *v5;
+    if ( *v8 != 2 )
+    {
+      LOBYTE(result) = 0;
+      return result;
+    }
+    v9 = *(a1 + 400);
+    if ( !v9 || v9 == 3 )
+    {
+      if ( C_turnout::NodesOK(a1, &v24, &v26, &v25) )
+      {
+        m_pWebPath = g_pMission->m_pWebPath;
+        goto LABEL_10;
+      }
+    }
+    else if ( C_turnout::NodesOK(a1, &v24, &v25, &v26) )
+    {
+      m_pWebPath = g_pMission->m_pWebPath;
+LABEL_10:
+      (*(m_pWebPath->m_pVtbl + 5))(m_pWebPath, v24, v26);
+    }
+    v11 = *(a1 + 104);
+    *(a1 + 400) = *(v8 + 1);
+    v23[1] = v2;
+    v25 = *(v8 + 3);
+    v12 = LODWORD(v25);
+    *(a1 + 324) = v25;
+    v13 = *v11;
+    v23[0] = v12;
+    (*(v13 + 12))(v11, a1 + 48);
+    v14 = *(a1 + 400);
+    if ( v14 == 3 || !v14 )
+    {
+      v18 = *(a1 + 412);
+      if ( v18 )
+      {
+        v19 = *v18;
+        v21 = 0;
+        (*(v19 + 36))(v18);
+      }
+      v20 = *(a1 + 408);
+      if ( v20 )
+        (*(*v20 + 36))(v20, 1);
+      if ( !C_turnout::NodesOK(a1, &v21, v23, v22) )
+        goto LABEL_25;
+    }
+    else
+    {
+      v15 = *(a1 + 412);
+      if ( v15 )
+      {
+        v16 = *v15;
+        v21 = 1;
+        (*(v16 + 36))(v15);
+      }
+      v17 = *(a1 + 408);
+      if ( v17 )
+        (*(*v17 + 36))(v17, 0);
+      if ( !C_turnout::NodesOK(a1, &v21, v22, v23) )
+        goto LABEL_25;
+    }
+    (*(g_pMission->m_pWebPath->m_pVtbl + 5))(g_pMission->m_pWebPath, v21, v23[0]);
+    (*(g_pMission->m_pWebPath->m_pVtbl + 13))(g_pMission->m_pWebPath);
+LABEL_25:
+    result = (*(*a1 + 56))(a1, 0);
+    LOBYTE(result) = 1;
+  }
+  return result;
+}
+
+char __userpurge C_Vehicle::SaveVehicleState@<al>(C_Vehicle *a1@<ecx>, int a2@<ebp>, int a3)
+{
+  I3D_frame *m_pCarFrame; // ebx
+  uint32_t m_uFlags; // eax
+  S_quat *p_m_aRot; // ebx
+  int m_pOpticsStart; // ecx
+  int v9; // eax
+  int v10; // ecx
+  int v11; // ebx
+  _DWORD *v12; // ebp
+  int v13; // ecx
+  float *v14; // eax
+  int m_pFirstMesh; // eax
+  int v16; // ebx
+  int v17; // ebp
+  float *i; // ebp
+  _DWORD *v19; // ebp
+  int v20; // edx
+  int v21; // eax
+  int v22; // ecx
+  int v23; // edx
+  __int16 v24; // fps
+  int v25; // ecx
+  float *v26; // eax
+  int *v27; // ecx
+  float *v28; // edx
+  float *v29; // ebp
+  __int16 v30; // fps
+  int v31; // eax
+  int v32; // eax
+  __int64 v33; // rax
+  _DWORD *v34; // eax
+  _DWORD *v35; // ebp
+  int v36; // eax
+  int v37; // ecx
+  int v38; // edx
+  int v39; // ecx
+  int v40; // ecx
+  int v41; // edx
+  __int16 v42; // fps
+  int v43; // ecx
+  int v44; // eax
+  int v45; // eax
+  int *v46; // ecx
+  float *v47; // ebp
+  float *v48; // edx
+  __int16 v49; // fps
+  int v50; // eax
+  int v51; // eax
+  __int64 v52; // rax
+  bool v53; // cc
+  C_CrewPlace *m_pCrewPlaceStart; // eax
+  int v55; // edx
+  int v56; // ebx
+  int v57; // eax
+  int v58; // ecx
+  int m_pDoor; // ebx
+  uint32_t m_iWheelCnt; // eax
+  int v61; // edi
+  int v62; // ecx
+  int v64; // [esp+44h] [ebp-50h]
+  int v65; // [esp+48h] [ebp-4Ch]
+  int v66; // [esp+48h] [ebp-4Ch]
+  int v67; // [esp+4Ch] [ebp-48h]
+  int v68; // [esp+60h] [ebp-34h]
+  int v69; // [esp+60h] [ebp-34h]
+  int v70; // [esp+64h] [ebp-30h]
+  int v71; // [esp+68h] [ebp-2Ch]
+  int v72; // [esp+6Ch] [ebp-28h]
+  float *v73; // [esp+6Ch] [ebp-28h]
+  int v74; // [esp+6Ch] [ebp-28h]
+  int v75; // [esp+6Ch] [ebp-28h]
+  int v76; // [esp+70h] [ebp-24h]
+  float *v77; // [esp+70h] [ebp-24h]
+  float *v78; // [esp+70h] [ebp-24h]
+  _DWORD *v79; // [esp+78h] [ebp-1Ch]
+  _DWORD *v80; // [esp+78h] [ebp-1Ch]
+  int v81; // [esp+7Ch] [ebp-18h]
+  signed int v82; // [esp+7Ch] [ebp-18h]
+  int v83; // [esp+80h] [ebp-14h]
+  int v84; // [esp+84h] [ebp-10h]
+  int v85[3]; // [esp+88h] [ebp-Ch] BYREF
+  int v86; // [esp+98h] [ebp+4h]
+  int v87; // [esp+9Ch] [ebp+8h]
+  int v88; // [esp+9Ch] [ebp+8h]
+
+  *a3 = 9;
+  *(a3 + 4) = C_Vehicle::GetVehicleStateSize(a1, a2);
+  *(a3 + 8) = a1->m_vCollisionPosition;
+  m_pCarFrame = a1->m_pCarFrame;
+  m_uFlags = m_pCarFrame->m_uFlags;
+  if ( (m_uFlags & 8) == 0 )
+  {
+    LOBYTE(m_uFlags) = m_uFlags | 8;
+    m_pCarFrame->m_uFlags = m_uFlags;
+    S_quat::Make(&m_pCarFrame->m_aRot, &m_pCarFrame->m_aLocalMat);
+  }
+  p_m_aRot = &m_pCarFrame->m_aRot;
+  *(a3 + 20) = p_m_aRot->w;
+  *(a3 + 24) = p_m_aRot->x;
+  *(a3 + 28) = p_m_aRot->y;
+  *(a3 + 32) = p_m_aRot->z;
+  *(a3 + 36) = a1->m_vVelocity;
+  *(a3 + 48) = a1->m_vAngularVelocity;
+  *(a3 + 60) = a1->m_bHandBrakeProp;
+  *(a3 + 61) = a1->m_iLockCount;
+  *(a3 + 65) = a1->m_iCollisionFrictionFlag;
+  *(a3 + 69) = a1->m_iLightFlags;
+  *(a3 + 73) = a1->m_iLightFlagsOut;
+  *(a3 + 77) = a1->m_fEnabledTurnLightTime;
+  *(a3 + 81) = a1->m_fDisabledTurnLightTime;
+  *(a3 + 85) = a1->m_fTurnLightLocalCounter;
+  *(a3 + 89) = a1->m_fTurnLightActivationAngle;
+  *(a3 + 93) = a1->m_fTurnLightUNK;
+  *(a3 + 97) = a1->m_fTurnLightTotalCounter;
+  *(a3 + 101) = a1->_pad140;
+  *(a3 + 105) = a1->m_fWheelA4Summ;
+  *(a3 + 109) = a1->m_fWheelA0Summ;
+  *(a3 + 113) = a1->m_iHandBrakePadUnk;
+  *(a3 + 117) = a1->m_fSteeringLinearity;
+  *(a3 + 121) = a1->m_fClutchLinearity;
+  *(a3 + 125) = a1->_pad1A0;
+  *(a3 + 129) = a1->m_uMagnitudeFlags;
+  *(a3 + 133) = a1->m_uMagnitudeCounter;
+  *(a3 + 137) = a1->m_fEngineHealthNorm;
+  *(a3 + 141) = a1->m_fEngineHealthCalc;
+  *(a3 + 145) = a1->m_fGerboxHealthCalc;
+  *(a3 + 149) = a1->m_iLooseAdhesionFactor;
+  *(a3 + 153) = a1->m_bHasABS;
+  *(a3 + 154) = a1->m_bPlayerInCar;
+  *(a3 + 155) = a1->m_bInsideCamView;
+  *(a3 + 156) = a1->m_fSideForceCalculation;
+  *(a3 + 160) = a1->m_fSideForceEthalon;
+  *(a3 + 164) = a1->m_fGasOnSkidd;
+  *(a3 + 168) = a1->m_VehGasPedalAdditional;
+  *(a3 + 172) = a1->m_fBrakeCurrentNormalized;
+  *(a3 + 176) = a1->m_vCarCOMCalcSeat;
+  *(a3 + 188) = a1->m_bSoundEnabled;
+  *(a3 + 189) = a1->m_fHandbrake;
+  *(a3 + 193) = a1->m_fBalance1;
+  *(a3 + 197) = a1->m_fBalance2;
+  *(a3 + 201) = a1->m_fBalance3;
+  *(a3 + 205) = a1->m_bSoundParam[0];
+  *(a3 + 206) = a1->m_bSoundParam[1];
+  *(a3 + 207) = a1->m_fcalcDeltaTick;
+  *(a3 + 211) = a1->m_fFuelFlow;
+  *(a3 + 215) = a1->m_fSpeedLimit;
+  *(a3 + 219) = a1->m_bDontInterpolateSteering;
+  *(a3 + 220) = a1->_pad13;
+  *(a3 + 221) = a1->m_bDontInterpolateBrake;
+  *(a3 + 222) = a1->m_bDontInterpolateClutch;
+  *(a3 + 223) = a1->m_fDeltaUpdateTime;
+  *(a3 + 227) = a1->m_bGearboxAutomatic;
+  *(a3 + 228) = a1->m_fAccelerating;
+  *(a3 + 232) = a1->m_fGasPedal;
+  *(a3 + 236) = a1->m_fRPS;
+  *(a3 + 240) = a1->m_bUnk550;
+  *(a3 + 241) = a1->m_fVehicleNewtonPow;
+  *(a3 + 245) = a1->m_iLastGear;
+  *(a3 + 249) = a1->m_iGear;
+  *(a3 + 253) = a1->m_fWheelAngleSpeed;
+  *(a3 + 257) = a1->m_fBrake;
+  *(a3 + 261) = a1->m_fAccelIncreaseValue;
+  *(a3 + 265) = a1->m_fClutchCalculation;
+  *(a3 + 269) = a1->m_fClutch;
+  *(a3 + 273) = a1->m_iEngineGearboxFlag;
+  *(a3 + 277) = a1->m_bInstantDisableEngine;
+  *(a3 + 278) = a1->m_fMass;
+  *(a3 + 282) = a1->m_fMaxSteerAngle;
+  *(a3 + 286) = a1->m_fSteerAngleCalcA;
+  *(a3 + 290) = a1->m_fSteerAngleCalcB;
+  *(a3 + 294) = a1->m_fSteerAngleCalcC;
+  *(a3 + 298) = a1->m_bEngineON;
+  *(a3 + 299) = a1->m_fDeltaTimeDivider;
+  *(a3 + 303) = a1->m_bIsEngineOn;
+  *(a3 + 304) = a1->m_fFuel;
+  *(a3 + 308) = a1->m_bCalmVehicle;
+  *(a3 + 309) = a1->m_fForwardXVelocityAngle;
+  *(a3 + 313) = a1->m_iEnumCarPropA;
+  *(a3 + 317) = a1->m_iEnumCarPropB;
+  *(a3 + 321) = a1->m_fUnkForces[0];
+  *(a3 + 325) = a1->m_fUnkForces[1];
+  *(a3 + 329) = a1->m_fUnkForces[2];
+  *(a3 + 333) = a1->m_fUnkForces[3];
+  *(a3 + 337) = a1->m_fUnkForces[4];
+  *(a3 + 341) = a1->m_fUnkAddAngSideForce;
+  *(a3 + 345) = a1->m_fOdometer;
+  *(a3 + 349) = *a1->m_bEngineParam_unk;
+  *(a3 + 351) = a1->m_bColliderSpecol_active;
+  *(a3 + 368) = !a1->m_bColliderBoxA_active;
+  m_pOpticsStart = a1->m_pOpticsStart;
+  if ( m_pOpticsStart )
+    v9 = (a1->m_pOpticsEnd - m_pOpticsStart) >> 5;
+  else
+    v9 = 0;
+  v67 = a2;
+  v10 = 12 * v9;
+  *(a3 + 352) = v9;
+  v83 = 12 * v9;
+  if ( v9 )
+  {
+    v11 = 32 * v9;
+    v12 = (a3 + 12 * v9 + 377);
+    v86 = v9;
+    do
+    {
+      v11 -= 32;
+      v12 -= 3;
+      v13 = *(v11 + a1->m_pOpticsStart);
+      v81 = v13;
+      if ( (*(v13 + 172) & 0x20) == 0 )
+      {
+        I3D_frame::UpdateWMatrixProc(v13);
+        v13 = v81;
+      }
+      v14 = S_vector::operator*(v13 + 64, v85, &a1->m_mGlobMatrixAInv);
+      *(v12 - 2) = C_Vehicle::ComputeMass(a1, 32, v14);
+      *(v12 - 1) = *(v11 + a1->m_pOpticsStart + 20);
+      *v12 = *(v11 + a1->m_pOpticsStart + 24);
+      --v86;
+    }
+    while ( v86 );
+    v10 = v83;
+  }
+  m_pFirstMesh = a1->m_pFirstMesh;
+  if ( m_pFirstMesh )
+    m_pFirstMesh = (a1->m_pLastMesh - m_pFirstMesh) / 52;
+  v16 = v10 + a3 + 369;
+  v17 = 18 * m_pFirstMesh;
+  *(a3 + 356) = m_pFirstMesh;
+  v82 = 0;
+  if ( m_pFirstMesh > 0 )
+  {
+    for ( i = 0; ; i = v78 )
+    {
+      *v16 = C_Vehicle::DecodePos(a1, v82);
+      *(v16 + 4) = *(a1->m_pFirstMesh + i + 14);
+      *(v16 + 6) = *(a1->m_pFirstMesh + i + 32);
+      *(v16 + 10) = 0;
+      *(v16 + 14) = 0;
+      v64 = *(a1->m_pDoors + i + 4);
+      v70 = (*(*v64 + 4))(v64, 0, v67);
+      v19 = (*(**(a1->m_pFirstMesh + i + 4) + 4))(v65, 0);
+      v79 = v19;
+      v87 = (*(*v70 + 4))(v70, 0);
+      v20 = (*(*v19 + 4))(v19, 0);
+      v21 = v19[2];
+      v76 = v20;
+      if ( v21 )
+      {
+        v72 = v19[2];
+        v85[0] = 32 * v21 + v20;
+        v22 = 32 * v21 + v87 + 4;
+        v23 = v85[0];
+        do
+        {
+          v23 -= 32;
+          v22 -= 32;
+          if ( (v24 & 0x4100) == 0 )
+            ++*(v16 + 10);
+          --v72;
+        }
+        while ( v72 );
+        v20 = v76;
+      }
+      v25 = 4 * *(v16 + 10);
+      v71 += v25;
+      v26 = v19[2];
+      v77 = v26;
+      if ( v26 )
+      {
+        v27 = (v25 + v16 + 18);
+        v68 = v20 - v87;
+        v28 = (v20 + 32 * v26);
+        v29 = (v87 + 32 * v26 + 4);
+        do
+        {
+          v28 -= 8;
+          v29 -= 8;
+          v77 = (v77 - 1);
+          v73 = v28;
+          if ( (v30 & 0x4100) == 0 )
+          {
+            *--v27 = v77 << 6;
+            v31 = ((v77 << 6) | ((*v28 - *(v29 - 1)) * 50.0) & 0x3F) << 6;
+            *v27 = v31;
+            v85[0] = v31;
+            v32 = (v31 | ((*(v29 + v68) - *v29) * 50.0) & 0x3F) << 6;
+            *v27 = v32;
+            v85[0] = v32;
+            v33 = ((v28[2] - v29[1]) * 50.0);
+            v28 = v73;
+            v16 = v82;
+            *v27 = v85[0] | v33 & 0x3F;
+          }
+        }
+        while ( v77 );
+        v19 = v79;
+      }
+      v67 = v70;
+      (*(*v70 + 8))();
+      (*(*v19 + 8))(v19);
+      v34 = *(a1->m_pDoors + v77 + 4);
+      if ( v34[2] > 1u )
+      {
+        v70 = (*(*v34 + 4))(v34, 1, v70);
+        v66 = *(a1->m_pFirstMesh + v77 + 4);
+        v35 = (*(*v66 + 4))(v66, 1);
+        v80 = v35;
+        v88 = (*(*v70 + 4))(v70, 0);
+        v36 = (*(*v35 + 4))(v35, 0);
+        v37 = v35[2];
+        v38 = v36;
+        v77 = v36;
+        if ( v37 )
+        {
+          v39 = 32 * v37;
+          v85[0] = v39 + v36;
+          v40 = v39 + v88 + 4;
+          v74 = v35[2];
+          v41 = v85[0];
+          do
+          {
+            v41 -= 32;
+            v40 -= 32;
+            if ( (v42 & 0x4100) == 0 )
+              ++*(v16 + 14);
+            --v74;
+          }
+          while ( v74 );
+          v38 = v36;
+        }
+        v43 = 4 * *(v16 + 14);
+        v71 += v43;
+        v85[0] = v16 + 4 * *(v16 + 10) + 18;
+        v44 = v35[2];
+        v75 = v44;
+        if ( v44 )
+        {
+          v45 = 32 * v44;
+          v46 = (v85[0] + v43);
+          v47 = (v45 + v88 + 4);
+          v69 = v38 - v88;
+          v48 = (v45 + v38);
+          do
+          {
+            v48 -= 8;
+            v47 -= 8;
+            --v75;
+            v77 = v48;
+            if ( (v49 & 0x4100) == 0 )
+            {
+              *--v46 = v75 << 6;
+              v50 = ((v75 << 6) | ((*v48 - *(v47 - 1)) * 50.0) & 0x3F) << 6;
+              *v46 = v50;
+              v85[0] = v50;
+              v51 = (v50 | ((*(v47 + v69) - *v47) * 50.0) & 0x3F) << 6;
+              *v46 = v51;
+              v85[0] = v51;
+              v52 = ((v48[2] - v47[1]) * 50.0);
+              v48 = v77;
+              v16 = v82;
+              *v46 = v85[0] | v52 & 0x3F;
+            }
+          }
+          while ( v75 );
+          v35 = v80;
+        }
+        v67 = v70;
+        (*(*v70 + 8))();
+        (*(*v35 + 8))(v35);
+      }
+      v16 += 4 * (*(v16 + 10) + *(v16 + 14)) + 18;
+      v53 = ++v82 < *(a3 + 356);
+      v78 = v77 + 13;
+      if ( !v53 )
+        break;
+    }
+    v17 = v70;
+    v10 = v83;
+  }
+  m_pCrewPlaceStart = a1->m_pCrewPlaceStart;
+  if ( m_pCrewPlaceStart )
+    v55 = a1->m_pCrewPlaceEnd - m_pCrewPlaceStart;
+  else
+    v55 = 0;
+  v56 = 18 * v55;
+  *(a3 + 360) = v55;
+  v84 = 18 * v55;
+  if ( v55 )
+  {
+    v57 = v55;
+    v58 = v10 + v17 + a3 + 369 + 18 * v55 + 8;
+    do
+    {
+      --v57;
+      v58 -= 18;
+      *(v58 - 4) = a1->m_pCrewPlaceStart[v57].m_fUnk1C;
+      *(v58 - 8) = a1->m_pCrewPlaceStart[v57].m_fCrewPlaceMass;
+      m_pDoor = a1->m_pCrewPlaceStart[v57].m_pDoor;
+      if ( m_pDoor )
+      {
+        *v58 = *(m_pDoor + 32);
+        *(v58 + 4) = *(a1->m_pCrewPlaceStart[v57].m_pDoor + 36);
+        *(v58 + 8) = *(a1->m_pCrewPlaceStart[v57].m_pDoor + 48);
+      }
+      --v55;
+    }
+    while ( v55 );
+    v10 = v83;
+    v56 = v84;
+  }
+  m_iWheelCnt = a1->m_iWheelCnt;
+  *(a3 + 364) = m_iWheelCnt;
+  v61 = v10 + v17 + v56 + a3 + 369;
+  if ( m_iWheelCnt )
+  {
+    v62 = v61 + 100 * m_iWheelCnt + 24;
+    do
+    {
+      --m_iWheelCnt;
+      v62 -= 100;
+      *(v62 - 24) = a1->m_pWheels[m_iWheelCnt]->m_vWheelUnkPressure;
+      *(v62 - 12) = a1->m_pWheels[m_iWheelCnt]->m_vUp;
+      *v62 = a1->m_pWheels[m_iWheelCnt]->m_vSpeed;
+      *(v62 + 12) = a1->m_pWheels[m_iWheelCnt]->m_vRotation;
+      *(v62 + 24) = a1->m_pWheels[m_iWheelCnt]->m_vWhlPressure;
+      *(v62 + 36) = a1->m_pWheels[m_iWheelCnt]->m_fWheelVerticalSlideCalc;
+      *(v62 + 40) = a1->m_pWheels[m_iWheelCnt]->m_fCalcA0;
+      *(v62 + 44) = a1->m_pWheels[m_iWheelCnt]->m_fCalcA4;
+      *(v62 + 48) = a1->m_pWheels[m_iWheelCnt]->m_iColliderID;
+      *(v62 + 52) = a1->m_pWheels[m_iWheelCnt]->m_iMaterialID;
+      *(v62 + 56) = a1->m_pWheels[m_iWheelCnt]->m_fWhlAngleDif;
+      *(v62 + 60) = a1->m_pWheels[m_iWheelCnt]->m_fRadialWheelRotation;
+      *(v62 + 68) = a1->m_pWheels[m_iWheelCnt]->m_fWobbling;
+      *(v62 + 72) = a1->m_pWheels[m_iWheelCnt]->m_fHealthCalc;
+      *(v62 + 64) = a1->m_pWheels[m_iWheelCnt]->m_eWheelFlag & 0xFFFFFFEF;
+    }
+    while ( m_iWheelCnt );
+  }
+  return 1;
+}
+
+char __thiscall C_entity::SaveData(C_entity *this, C_chunk *a2)
+{
+  C_chunk *v2; // esi
+  char result; // al
+  bool m_bIsOpen; // al
+
+  v2 = a2;
+  result = C_human::SaveData(this, a2);
+  if ( result )
+  {
+    m_bIsOpen = v2->m_bIsOpen;
+    LOBYTE(a2) = 1;
+    if ( m_bIsOpen && v2->m_bIsWritable )
+      dtaWrite(v2->m_uFileHandle, &a2, 1);
+    return C_program::SaveSourceCode(this->pad10, v2);
+  }
+  return result;
+}
+
+char __thiscall ai_groups::Save(_DWORD *this, int a2)
+{
+  void **v3; // edi
+  int v4; // eax
+  unsigned int v5; // ebp
+  int i; // ebx
+  int v7; // eax
+  int v8; // edx
+  int v9; // ecx
+  int v10; // eax
+  int v11; // edx
+  char *v12; // eax
+  int v13; // ecx
+  int v14; // eax
+  int v15; // ecx
+  unsigned int j; // ebp
+  int v17; // ecx
+  int v18; // edx
+  char *v19; // eax
+  int v20; // eax
+  int v21; // ecx
+  int v22; // eax
+  unsigned int v23; // ebp
+  int v24; // ecx
+  int v25; // edx
+  int v26; // ebp
+  char *v27; // eax
+  int v28; // eax
+  unsigned int m; // ebx
+  int v30; // ecx
+  char *v31; // eax
+  unsigned int k; // [esp+10h] [ebp-28h]
+  unsigned int v34; // [esp+14h] [ebp-24h]
+  char v35[32]; // [esp+18h] [ebp-20h] BYREF
+
+  v3 = a2;
+  ai_follow_manager::MemWrite(a2, this + 1, 1, 4);// ai_follow_manager -> ai_groups
+                                                // 
+                                                // for some reason both of these classes use the same MemWrite function (maybe optimization?)
+  v4 = this[3];
+  v5 = 0;
+  if ( v4 )
+    a2 = (this[4] - v4) / 96;
+  else
+    a2 = 0;
+  ai_follow_manager::MemWrite(v3, &a2, 1, 4);
+  v34 = 0;
+  for ( i = 0; ; i += 96 )
+  {
+    v7 = this[3];
+    if ( !v7 || v34 >= (this[4] - v7) / 96 )
+      break;
+    ai_follow_manager::MemWrite(v3, (i + this[3]), 1, 4);
+    ai_follow_manager::MemWrite(v3, (i + this[3] + 4), 1, 4);
+    ai_follow_manager::MemWrite(v3, (i + this[3] + 8), 1, 4);
+    ai_follow_manager::MemWrite(v3, (i + this[3] + 12), 1, 4);
+    v8 = this[3];
+    v9 = *(i + v8 + 20);
+    if ( v9 )
+      a2 = (*(i + v8 + 24) - v9) >> 3;
+    else
+      a2 = 0;
+    ai_follow_manager::MemWrite(v3, &a2, 1, 4);
+    while ( 1 )
+    {
+      v10 = i + this[3];
+      v11 = *(v10 + 20);
+      if ( !v11 || v5 >= (*(v10 + 24) - v11) >> 3 )
+        break;
+      ai_follow_manager::MemWrite(v3, (v11 + 8 * v5 + 4), 1, 4);
+      v12 = *(*(*(*(i + this[3] + 20) + 8 * v5) + 104) + 256);
+      if ( !v12 )
+        v12 = g_szUnk;
+      sprintf(v35, v12);
+      ai_follow_manager::MemWrite(v3, v35, 32, 1);
+      ++v5;
+    }
+    v13 = this[3];
+    v14 = i + v13 + 32;
+    v15 = *(i + v13 + 36);
+    if ( v15 )
+      a2 = (*(v14 + 8) - v15) >> 2;
+    else
+      a2 = 0;
+    ai_follow_manager::MemWrite(v3, &a2, 1, 4);
+    for ( j = 0; ; ++j )
+    {
+      v17 = i + this[3];
+      v18 = *(v17 + 36);
+      if ( !v18 || j >= (*(v17 + 40) - v18) >> 2 )
+        break;
+      v19 = *(*(*(v18 + 4 * j) + 104) + 256);
+      if ( !v19 )
+        v19 = g_szUnk;
+      sprintf(v35, v19);
+      ai_follow_manager::MemWrite(v3, v35, 32, 1);
+    }
+    v20 = this[3];
+    v21 = *(i + v20 + 68);
+    v22 = i + v20 + 64;
+    if ( v21 )
+      a2 = (*(v22 + 8) - v21) >> 2;
+    else
+      a2 = 0;
+    ai_follow_manager::MemWrite(v3, &a2, 1, 4);
+    v23 = 0;
+    for ( k = 0; ; v23 = k )
+    {
+      v24 = i + this[3];
+      v25 = *(v24 + 68);
+      if ( !v25 || v23 >= (*(v24 + 72) - v25) >> 2 )
+        break;
+      v26 = 4 * v23;
+      v27 = *(*(*(v25 + v26) + 104) + 256);
+      if ( !v27 )
+        v27 = g_szUnk;
+      sprintf(v35, v27);
+      ai_follow_manager::MemWrite(v3, v35, 32, 1);
+      ai_follow_manager::MemWrite(v3, (v26 + *(i + this[3] + 84)), 1, 4);
+      ++k;
+    }
+    v5 = 0;
+    ++v34;
+  }
+  v28 = this[7];
+  if ( v28 )
+    a2 = (this[8] - v28) >> 2;
+  else
+    a2 = 0;
+  ai_follow_manager::MemWrite(v3, &a2, 1, 4);
+  for ( m = 0; ; ++m )
+  {
+    v30 = this[7];
+    if ( !v30 || m >= (this[8] - v30) >> 2 )
+      break;
+    v31 = *(*(*(v30 + 4 * m) + 104) + 256);
+    if ( !v31 )
+      v31 = g_szUnk;
+    sprintf(v35, v31);
+    ai_follow_manager::MemWrite(v3, v35, 32, 1);
+  }
+  return 1;
+}
+
+char __thiscall ai_follow_manager::Save(_DWORD *this, unsigned int a2)
+{
+  void **v2; // ebx
+  int v4; // eax
+  int v5; // ebp
+  int v6; // edi
+  int v7; // eax
+  char *v8; // eax
+  char *v9; // eax
+  int v10; // edi
+  char *v11; // eax
+  unsigned int j; // [esp+10h] [ebp-28h]
+  unsigned int i; // [esp+14h] [ebp-24h]
+  char v15[32]; // [esp+18h] [ebp-20h] BYREF
+
+  v2 = a2;
+  ai_follow_manager::MemWrite(a2, this + 4, 4, 1);
+  v4 = this[1];
+  v5 = 0;
+  if ( v4 )
+    a2 = (this[2] - v4) / 56;
+  else
+    a2 = 0;
+  ai_follow_manager::MemWrite(v2, &a2, 4, 1);
+  for ( i = 0; ; ++i )
+  {
+    v6 = this[1];
+    if ( !v6 || i >= (this[2] - v6) / 56 )
+      break;
+    v7 = *(v6 + v5 + 4);
+    if ( v7 )
+      a2 = (*(v6 + v5 + 8) - v7) >> 2;
+    else
+      a2 = 0;
+    ai_follow_manager::MemWrite(v2, &a2, 4, 1);
+    for ( j = 0; j < a2; ++j )
+    {
+      v8 = *(*(*(*(v6 + v5 + 4) + 4 * j) + 104) + 256);
+      if ( !v8 )
+        v8 = g_szUnk;
+      sprintf(v15, v8);
+      ai_follow_manager::MemWrite(v2, v15, 1, 32);
+    }
+    ai_follow_manager::MemWrite(v2, (v6 + v5 + 16), 12, 1);
+    ai_follow_manager::MemWrite(v2, (v6 + v5 + 28), 4, 1);
+    ai_follow_manager::MemWrite(v2, (v6 + v5 + 32), 4, 1);
+    ai_follow_manager::MemWrite(v2, (v6 + v5 + 36), 4, 1);
+    ai_follow_manager::MemWrite(v2, (v6 + v5 + 40), 4, 1);
+    ai_follow_manager::MemWrite(v2, (v6 + v5 + 44), 4, 1);
+    v9 = *(*(*(v6 + v5 + 48) + 104) + 256);
+    if ( !v9 )
+      v9 = g_szUnk;
+    sprintf(v15, v9);
+    ai_follow_manager::MemWrite(v2, v15, 1, 32);
+    v10 = *(v6 + v5 + 52);
+    if ( v10 )
+    {
+      v11 = *(*(v10 + 104) + 256);
+      if ( !v11 )
+        v11 = g_szUnk;
+      sprintf(v15, v11);
+    }
+    else
+    {
+      sprintf(v15, "<NONE>");
+    }
+    ai_follow_manager::MemWrite(v2, v15, 1, 32);
+    v5 += 56;
+  }
+  return 1;
+}
+
+// #STR: "savegame\\mr%03u.sav"
+char __thiscall C_racing::SaveChampsProfile(_DWORD *this)
+{
+  int v2; // ebx
+  unsigned int i; // edi
+  int v5; // ecx
+  char v6[40]; // [esp+Ch] [ebp-28h] BYREF
+
+  sprintf(v6, "savegame\\mr%03u.sav", dword_6D4650);
+  v2 = dtaOpenWrite(v6, 0x10000);
+  if ( v2 == -1 )
+    return 0;
+  for ( i = 0; ; ++i )
+  {
+    v5 = this[6];
+    if ( !v5 || i >= (this[7] - v5) >> 2 )
+      break;
+    if ( !sub_54E580(*(v5 + 4 * i), v2) )
+    {
+      dtaClose(v2);
+      return 0;
+    }
+  }
+  dtaClose(v2);
+  return 1;
+}
+
+char __thiscall C_roads::SaveData(C_roads *this, C_chunk *chunk)
+{
+  C_chunk *v2; // esi
+  bool m_bIsOpen; // al
+  void *first; // eax
+  C_chunk *v6; // edx
+  bool v7; // al
+  void *v8; // eax
+  C_chunk *v9; // edx
+  bool v10; // al
+  int v12; // [esp+8h] [ebp-4h] BYREF
+
+  v2 = chunk;
+  m_bIsOpen = chunk->m_bIsOpen;
+  v12 = 2;
+  if ( m_bIsOpen && chunk->m_bIsWritable )
+    dtaWrite(chunk->m_uFileHandle, &v12, 4);
+  first = this->m_vCrossings.first;
+  if ( first )
+    v6 = ((this->m_vCrossings.last - first) / 236);
+  else
+    v6 = 0;
+  v7 = v2->m_bIsOpen;
+  chunk = v6;
+  if ( v7 && v2->m_bIsWritable )
+  {
+    dtaWrite(v2->m_uFileHandle, &chunk, 4);
+    v6 = chunk;
+  }
+  if ( v6 > 0 && v2->m_bIsOpen && v2->m_bIsWritable )
+    dtaWrite(v2->m_uFileHandle, this->m_vCrossings.first, 236 * v6);
+  v8 = this->m_vNodes.first;
+  if ( v8 )
+    v9 = ((this->m_vNodes.last - v8) / 24);
+  else
+    v9 = 0;
+  v10 = v2->m_bIsOpen;
+  chunk = v9;
+  if ( v10 && v2->m_bIsWritable )
+  {
+    dtaWrite(v2->m_uFileHandle, &chunk, 4);
+    v9 = chunk;
+  }
+  if ( v9 > 0 && v2->m_bIsOpen && v2->m_bIsWritable )
+    dtaWrite(v2->m_uFileHandle, this->m_vNodes.first, 24 * v9);
+  return 1;
+}
+
+char __thiscall C_using_object::SaveGameSave(_DWORD *this, float **a2)
+{
+  float **v2; // eax
+  float *v4; // ecx
+  int v5; // edx
+  int v6; // esi
+  int v7; // edx
+  float *v8; // edi
+  float *v9; // ecx
+  int v10; // eax
+  int v11; // ebx
+  float *v12; // ebx
+  int v13; // ecx
+  int v14; // ebx
+  float x; // edx
+  float y; // ecx
+  float z; // edx
+  _DWORD *first; // esi
+  int v19; // edx
+  int v20; // edi
+  float *v21; // esi
+  int v22; // ebx
+  float *v23; // ebx
+  int v24; // ebp
+  float w; // ecx
+  float v26; // edx
+  float v27; // ecx
+  float v28; // edx
+  int v29; // eax
+  bool v30; // zf
+  float *v32; // [esp+10h] [ebp-40h]
+  int v33; // [esp+14h] [ebp-3Ch]
+  float v34[3]; // [esp+18h] [ebp-38h] BYREF
+  float v35[3]; // [esp+24h] [ebp-2Ch] BYREF
+  S_quat v36; // [esp+30h] [ebp-20h] BYREF
+  S_quat v37; // [esp+40h] [ebp-10h] BYREF
+
+  v2 = a2;
+  v4 = *a2;
+  v32 = v4;
+  ++*a2;
+  *v4 = 0.0;
+  v5 = this[1];
+  if ( v5 )
+  {
+    v6 = (this[2] - v5) >> 2;
+    while ( v6 )
+    {
+      --v6;
+      v7 = *(this[1] + 4 * v6);
+      if ( !*(v7 + 36) && *(v7 + 40) > 1u && *(v7 + 20) == 3 )
+      {
+        v8 = *v2;
+        *v2 += 12;
+        ++*v4;
+        v9 = (*(this[1] + 4 * v6) + 40);
+        *v8 = *v9;
+        v8[1] = v9[1];
+        v8[2] = v9[2];
+        v8[3] = v9[3];
+        v10 = *(this[1] + 4 * v6);
+        v11 = *(v10 + 24);
+        if ( (*(v11 + 172) & 0x20) == 0 )
+          I3D_frame::UpdateWMatrixProc(*(v10 + 24));
+        v12 = (v11 + 64);
+        v8[4] = *v12;
+        v8[5] = v12[1];
+        v8[6] = v12[2];
+        v13 = *(this[1] + 4 * v6);
+        v14 = *(v13 + 24);
+        if ( (*(v14 + 172) & 0x20) == 0 )
+          I3D_frame::UpdateWMatrixProc(*(v13 + 24));
+        S_quat::Make(&v36, (v14 + 16));
+        x = v36.x;
+        v8[7] = v36.w;
+        y = v36.y;
+        v8[8] = x;
+        z = v36.z;
+        v8[9] = y;
+        v8[10] = z;
+        v2 = a2;
+        v4 = v32;
+        v8[11] = *(*(this[1] + 4 * v6) + 12);
+      }
+    }
+  }
+  first = g_vActors.first;
+  if ( g_vActors.first )
+  {
+    v19 = (g_vActors.last - g_vActors.first) >> 2;
+    while ( v19 )
+    {
+      v20 = first[--v19];
+      v33 = v19;
+      if ( *(v20 + 16) == 37 && *(v20 + 104) && *(v20 + 908) > 1u )
+      {
+        v21 = *v2;
+        *v2 += 12;
+        ++*v4;
+        *v21 = *(v20 + 908);
+        v21[1] = *(v20 + 912);
+        v21[2] = *(v20 + 916);
+        v21[3] = *(v20 + 920);
+        v22 = *(v20 + 104);
+        if ( (*(v22 + 172) & 0x20) == 0 )
+          I3D_frame::UpdateWMatrixProc(*(v20 + 104));
+        v23 = (v22 + 64);
+        v21[4] = *v23;
+        v21[5] = v23[1];
+        v21[6] = v23[2];
+        v24 = *(v20 + 104);
+        if ( (*(v24 + 172) & 0x20) == 0 )
+          I3D_frame::UpdateWMatrixProc(v24);
+        S_quat::Make(&v37, (v24 + 16));
+        w = v37.w;
+        v26 = v37.x;
+        v21[11] = 0.5;
+        v21[7] = w;
+        v27 = v37.y;
+        v34[0] = 0.0;
+        v21[8] = v26;
+        v28 = v37.z;
+        v34[1] = -50.0;
+        v34[2] = 0.0;
+        v21[9] = v27;
+        v21[10] = v28;
+        v35[0] = v21[4];
+        v35[1] = v21[5] + 1.0;
+        v35[2] = v21[6];
+        v29 = unknown_libname_121(v35, v34, &v36, 0, -1, 0);
+        v19 = v33;
+        v4 = v32;
+        v30 = v29 == 0;
+        v2 = a2;
+        if ( !v30 )
+          v21[5] = v36.x + 0.2;
+        first = g_vActors.first;
+      }
+    }
+  }
+  return 1;
+}
+
+char __thiscall C_human::SaveData(C_human *this, C_chunk *a2)
+{
+  bool m_bIsOpen; // al
+  char v5; // [esp+Bh] [ebp-1h] BYREF
+
+  m_bIsOpen = a2->m_bIsOpen;
+  v5 = 6;
+  if ( m_bIsOpen )
+  {
+    if ( a2->m_bIsWritable )
+      dtaWrite(a2->m_uFileHandle, &v5, 1);
+    if ( a2->m_bIsOpen )
+    {
+      if ( a2->m_bIsWritable )
+        dtaWrite(a2->m_uFileHandle, &this->pad5_1[20], 4);
+      if ( a2->m_bIsOpen )
+      {
+        if ( a2->m_bIsWritable )
+          dtaWrite(a2->m_uFileHandle, &this->m_eVoice, 4);
+        if ( a2->m_bIsOpen && a2->m_bIsWritable )
+          dtaWrite(a2->m_uFileHandle, &this->m_sInitProperties, 64);
+      }
+    }
+  }
+  return 1;
+}
+
+unsigned int __thiscall C_human::SaveGameGetSize(C_human *this)
+{
+  int v2; // esi
+  unsigned int v3; // esi
+  unsigned int v4; // esi
+
+  v2 = C_actor::SaveGameGetSize(this) + 382;
+  v3 = C_actor::Actor_SaveGameGetSize(this->m_pUsedActor) + v2;
+  v4 = C_actor::Actor_SaveGameGetSize(this->m_pUsedActor2) + v3;
+  return v4 + G_Inventory::SaveGameGetSize();
+}
+
+char __thiscall C_human::SaveGameSave(C_human *this, void **buffer)
+{
+  char result; // al
+  char *v4; // eax
+
+  result = C_actor::SaveGameSave(this, buffer);
+  if ( result )
+  {
+    v4 = *buffer;
+    *v4 = 6;
+    *(v4 + 1) = this->m_vWorldPos;
+    *(v4 + 13) = this->m_vWorldDir;
+    *(v4 + 25) = this->m_iAnimID;
+    *(v4 + 29) = *this->pad0;
+    *(v4 + 33) = this->m_iSeatID;
+    v4[37] = this->m_bIsCrouching;
+    v4[38] = this->m_bIsAiming;
+    v4[39] = this->pad3_0_1[0];
+    v4[40] = this->pad3_0_1[6];
+    *(v4 + 41) = this->m_vShootTarget;
+    *(v4 + 53) = *&this->pad3_0_2[12];
+    v4[57] = this->pad3_0_2[16];
+    *(v4 + 58) = *&this->pad3_0_2[20];
+    *(v4 + 62) = *&this->pad3_0_2[28];
+    v4[66] = this->pad3_0_2[32];
+    v4[67] = this->pad3_0_2[33];
+    *(v4 + 17) = *&this->pad3_0_3[7];
+    v4[72] = this->pad3_0_4[108];
+    *(v4 + 73) = *&this->pad3_0_4[112];
+    *(v4 + 77) = *&this->pad3_0_4[116];
+    *(v4 + 81) = *&this->pad3_0_4[120];
+    *(v4 + 85) = *&this->pad3_0_4[124];
+    *(v4 + 89) = *&this->pad3_0_4[128];
+    *(v4 + 93) = *&this->pad3_0_4[132];
+    *(v4 + 97) = *&this->pad3_0_4[136];
+    *(v4 + 101) = *&this->pad3_0_4[140];
+    *(v4 + 105) = *&this->pad3_0_4[144];
+    *(v4 + 109) = this->m_iCanWork;
+    *(v4 + 111) = *this->pad3_0_6;
+    *(v4 + 113) = *&this->pad3_0_6[8];
+    *(v4 + 117) = *&this->pad3_0_6[16];
+    *(v4 + 121) = *&this->pad3_0_6[20];
+    *(v4 + 125) = *&this->pad3_0_6[24];
+    *(v4 + 129) = *&this->pad3_0_6[28];
+    *(v4 + 133) = *&this->pad3_0_6[32];
+    *(v4 + 137) = *&this->pad3_0_6[36];
+    *(v4 + 141) = *&this->pad3_0_6[40];
+    *(v4 + 145) = *&this->pad3_0_6[44];
+    *(v4 + 149) = *&this->pad3_0_6[48];
+    *(v4 + 153) = *&this->pad3_0_6[52];
+    *(v4 + 157) = *&this->pad3_0_6[56];
+    *(v4 + 161) = *&this->pad3_0_6[60];
+    *(v4 + 165) = *&this->pad3_0_6[64];
+    *(v4 + 169) = *&this->pad3_0_6[72];
+    *(v4 + 173) = *&this->pad3_0_6[76];
+    *(v4 + 177) = this->m_iUnk2;
+    *(v4 + 181) = *this->pad3_0_7;
+    *(v4 + 185) = *&this->pad3_0_7[4];
+    *(v4 + 189) = *&this->pad3_0_7[8];
+    *(v4 + 193) = *&this->pad3_0_7[12];
+    *(v4 + 197) = *&this->pad4[3];
+    *(v4 + 201) = *this->pad5;
+    *(v4 + 205) = *&this->pad5[4];
+    qmemcpy(v4 + 229, &this->m_sProperties, 0x40u);
+    qmemcpy(v4 + 293, &this->m_sInitProperties, 0x40u);
+    *(v4 + 357) = *&this->pad7[63];
+    *(v4 + 361) = this->m_iWingmanID;
+    *(v4 + 365) = *this->pad7_0_2;
+    *(v4 + 369) = *this->pad7_0_1;
+    *(v4 + 373) = *&this->pad7_0_1[4];
+    *(v4 + 377) = *&this->pad7_0_1[8];
+    *(v4 + 379) = *&this->pad7_0_1[10];
+    v4[381] = this->pad7_0_1[12];
+    *buffer = *buffer + 382;
+    C_actor::Actor_SaveGameSave(buffer, this->m_pUsedActor);
+    C_actor::Actor_SaveGameSave(buffer, this->m_pUsedActor2);
+    G_Inventory::SaveGameSave(this->sInventory.pad0, buffer);
+    return 1;
+  }
+  return result;
+}
+
+char __thiscall C_human::SaveGameLoad(C_human *this, void **a2)
+{
+  int v2; // edi
+  int **v3; // esi
+  char result; // al
+  C_actor *m_pUsedActor; // eax
+  C_game *m_pGame; // ecx
+  EActorType m_eActorType; // eax
+  int *v9; // ebx
+  float v10; // eax
+  I3D_frame *m_pFrame; // eax
+  C_actor *v12; // eax
+  double z; // st7
+  int v14; // eax
+  int v15; // edx
+  I3D_frame *v16; // eax
+  C_actor *m_pUsedActor2; // edi
+  int v18; // eax
+  double v19; // st7
+  int v20; // eax
+  I3D_frame *v21; // esi
+  uint32_t m_uFlags; // eax
+  int v23; // eax
+  I3D_frame *v24; // eax
+  int m_iWingmanID; // eax
+  int v26; // eax
+  __int64 v27; // rax
+  bool m_bIsActive; // cl
+  bool v29; // cc
+  void ***v30; // eax
+  C_actor *v31; // eax
+  C_actor *v32; // ebp
+  int v33; // [esp+24h] [ebp-64h]
+  int v34; // [esp+28h] [ebp-60h]
+  float *v35; // [esp+34h] [ebp-54h]
+  int v36[2]; // [esp+38h] [ebp-50h] BYREF
+  float v37; // [esp+40h] [ebp-48h] BYREF
+  float v38; // [esp+44h] [ebp-44h]
+  float v39[16]; // [esp+48h] [ebp-40h] BYREF
+
+  v3 = a2;
+  result = C_actor::SaveGameLoad(this, this, a2);
+  if ( !result )
+    return result;
+  m_pUsedActor = this->m_pUsedActor;
+  if ( m_pUsedActor )
+  {
+    m_pGame = g_pMission->m_pGame;
+    if ( m_pGame->m_eCamera.m_pPlayerUnkA == this )
+    {
+      m_eActorType = m_pUsedActor->m_eActorType;
+      if ( m_eActorType == ACT_Car )
+      {
+        if ( this->m_bIsAiming )
+        {
+          C_human::Do_Aimed(this, 0);
+          BYTE1(this[1].m_eActorType) = 0;
+          G_Camera::EnableFreeLook(&g_pMission->m_pGame->m_eCamera, 0, 0);
+        }
+        G_Camera::LezeDoToyoty(&g_pMission->m_pGame->m_eCamera, v2, 0);
+        G_Camera::SetCar(&g_pMission->m_pGame->m_eCamera, v2, 0);
+      }
+      else if ( m_eActorType == ACT_Railway )
+      {
+        G_Camera::Link(&m_pGame->m_eCamera.m_pSalinaFrame, 0);
+      }
+    }
+    this->m_pFrame->m_pVtable->LinkTo(this->m_pFrame, g_pMission->m_pScene[132].pVtbl, 0);
+  }
+  v9 = *v3;
+  if ( **v3 != 6 )
+    return 0;
+  v33 = v2;
+  *v3 = (v9 + 382);
+  this->m_pUsedActor = sub_4066A0(v3);
+  this->m_pUsedActor2 = sub_4066A0(v3);
+  v35 = (v9 + 1);
+  LODWORD(this->m_vWorldPos.x) = *(v9 + 1);
+  LODWORD(this->m_vWorldPos.y) = *(v9 + 5);
+  v10 = *(v9 + 9);
+  v36[0] = v9 + 13;
+  this->m_vWorldPos.z = v10;
+  this->m_vWorldDir = *(v9 + 13);
+  this->m_iAnimState = *(v9 + 25);
+  this->m_iAnimID = 0;
+  *this->pad0 = *(v9 + 29);
+  this->m_iSeatID = *(v9 + 33);
+  this->m_bIsCrouching = *(v9 + 37);
+  this->m_bIsAiming = *(v9 + 38);
+  this->pad3_0_1[0] = *(v9 + 39);
+  this->pad3_0_1[6] = *(v9 + 40);
+  this->m_vShootTarget = *(v9 + 41);
+  *&this->pad3_0_2[12] = *(v9 + 53);
+  this->pad3_0_2[16] = *(v9 + 57);
+  *&this->pad3_0_2[20] = *(v9 + 58);
+  *&this->pad3_0_2[28] = *(v9 + 62);
+  this->pad3_0_2[32] = *(v9 + 66);
+  this->pad3_0_2[33] = *(v9 + 67);
+  *&this->pad3_0_3[7] = v9[17];
+  this->pad3_0_4[108] = *(v9 + 72);
+  *&this->pad3_0_4[112] = *(v9 + 73);
+  *&this->pad3_0_4[116] = *(v9 + 77);
+  *&this->pad3_0_4[120] = *(v9 + 81);
+  *&this->pad3_0_4[124] = *(v9 + 85);
+  *&this->pad3_0_4[128] = *(v9 + 89);
+  *&this->pad3_0_4[132] = *(v9 + 93);
+  *&this->pad3_0_4[136] = *(v9 + 97);
+  *&this->pad3_0_4[140] = *(v9 + 101);
+  *&this->pad3_0_4[144] = *(v9 + 105);
+  this->m_iCanWork = *(v9 + 109);
+  *this->pad3_0_6 = *(v9 + 111);
+  *&this->pad3_0_6[8] = *(v9 + 113);
+  *&this->pad3_0_6[16] = *(v9 + 117);
+  *&this->pad3_0_6[20] = *(v9 + 121);
+  *&this->pad3_0_6[24] = *(v9 + 125);
+  *&this->pad3_0_6[28] = *(v9 + 129);
+  *&this->pad3_0_6[32] = *(v9 + 133);
+  *&this->pad3_0_6[36] = *(v9 + 137);
+  *&this->pad3_0_6[40] = *(v9 + 141);
+  *&this->pad3_0_6[44] = *(v9 + 145);
+  *&this->pad3_0_6[48] = *(v9 + 149);
+  *&this->pad3_0_6[52] = *(v9 + 153);
+  *&this->pad3_0_6[56] = *(v9 + 157);
+  *&this->pad3_0_6[60] = *(v9 + 161);
+  *&this->pad3_0_6[64] = *(v9 + 165);
+  *&this->pad3_0_6[72] = *(v9 + 169);
+  *&this->pad3_0_6[76] = *(v9 + 173);
+  this->m_iUnk2 = *(v9 + 177);
+  *this->pad3_0_7 = *(v9 + 181);
+  *&this->pad3_0_7[4] = *(v9 + 185);
+  *&this->pad3_0_7[8] = *(v9 + 189);
+  *&this->pad3_0_7[12] = *(v9 + 193);
+  *&this->pad4[3] = *(v9 + 197);
+  *this->pad5 = *(v9 + 201);
+  *&this->pad5[4] = *(v9 + 205);
+  qmemcpy(&this->m_sProperties, v9 + 229, sizeof(this->m_sProperties));
+  qmemcpy(&this->m_sInitProperties, v9 + 293, sizeof(this->m_sInitProperties));
+  *&this->pad7[63] = *(v9 + 357);
+  this->m_iWingmanID = *(v9 + 361);
+  *this->pad7_0_2 = *(v9 + 365);
+  *this->pad7_0_1 = *(v9 + 369);
+  *&this->pad7_0_1[4] = *(v9 + 373);
+  *&this->pad7_0_1[8] = *(v9 + 377);
+  *&this->pad7_0_1[10] = *(v9 + 379);
+  this->pad7_0_1[12] = *(v9 + 381);
+  m_pFrame = this->m_pFrame;
+  *&this->pad3_0_6[4] = 0;
+  if ( SLOBYTE(m_pFrame->m_uFlags) >= 0 )
+  {
+    m_pFrame->m_aLocalMat.e[12] = *v35;
+    LODWORD(m_pFrame->m_aLocalMat.e[13]) = *(v9 + 5);
+    LODWORD(m_pFrame->m_aLocalMat.e[14]) = *(v9 + 9);
+    m_pFrame->m_uFlags = m_pFrame->m_uFlags & 0xBFFFFEDF | 0x40000000;
+  }
+  (this->m_pFrame->m_pVtable->SetDir)(this->m_pFrame, v9 + 13, 0);
+  this->m_pFrame->m_pVtable->Update(this->m_pFrame);
+  C_human::PersonAnim(this, 0.0, 1, 0);
+  v12 = this->m_pUsedActor;
+  if ( v12 )
+  {
+    if ( v12->m_eActorType == ACT_Car )
+    {
+      C_human::Intern_UseCar(this, v12, this->m_iSeatID);
+      z = this->m_pUsedActor[11].m_vPosition.z;
+      v14 = g_uUIFlags;
+      if ( (z < 800.0) | __UNORDERED__(z, 800.0) )
+        BYTE1(v14) = BYTE1(g_uUIFlags) | 1;
+      else
+        BYTE1(v14) = BYTE1(g_uUIFlags) & 0xFE;
+      g_uUIFlags = v14;
+      goto LABEL_26;
+    }
+    if ( v12->m_eActorType == ACT_Railway )
+    {
+      this->m_pUsedActor2 = v12;
+      C_human::Intern_UseRailway(this, 1);
+      this->m_vWorldPos.x = *v35;
+      LODWORD(this->m_vWorldPos.y) = *(v9 + 5);
+      LODWORD(this->m_vWorldPos.z) = *(v9 + 9);
+      v15 = v36[0];
+      this->m_vWorldDir = *v36[0];
+      v16 = this->m_pFrame;
+      if ( (v16->m_uFlags & 0x80) == 0 )
+      {
+        v16->m_aLocalMat.e[12] = *v35;
+        LODWORD(v16->m_aLocalMat.e[13]) = *(v9 + 5);
+        LODWORD(v16->m_aLocalMat.e[14]) = *(v9 + 9);
+        v16->m_uFlags = v16->m_uFlags & 0xBFFFFEDF | 0x40000000;
+      }
+      (this->m_pFrame->m_pVtable->SetDir)(this->m_pFrame, v15, 0);
+      this->m_pFrame->m_pVtable->Update(this->m_pFrame);
+      goto LABEL_26;
+    }
+  }
+  this->m_pUsedActor = 0;
+LABEL_26:
+  m_pUsedActor2 = this->m_pUsedActor2;
+  if ( m_pUsedActor2 && m_pUsedActor2->m_eActorType == ACT_Car )
+  {
+    v18 = *this->pad3_0_6;
+    this->m_pUsedActor2 = 0;
+    if ( v18 == 1 )
+    {
+      this->m_pUsedActor = m_pUsedActor2;
+      C_Vehicle::LockVehicle(&m_pUsedActor2[1], 0);
+      C_Vehicle::OpenDoor(&this->m_pUsedActor[1], this->m_iSeatID, 0.0, 1);
+      C_human::Intern_UseCar(this, this->m_pUsedActor, this->m_iSeatID);
+      v19 = this->m_pUsedActor[11].m_vPosition.z;
+      v20 = g_uUIFlags;
+      if ( (v19 < 800.0) | __UNORDERED__(v19, 800.0) )
+        BYTE1(v20) = BYTE1(g_uUIFlags) | 1;
+      else
+        BYTE1(v20) = BYTE1(g_uUIFlags) & 0xFE;
+      g_uUIFlags = v20;
+    }
+    else
+    {
+      *this->pad3_0_6 = 0;
+      this->m_pUsedActor = 0;
+      v36[1] = 1065353216;
+      v37 = 0.0;
+      v38 = 0.0;
+      v21 = m_pUsedActor2->m_pFrame;
+      m_uFlags = v21->m_uFlags;
+      if ( (m_uFlags & 8) == 0 )
+      {
+        LOBYTE(m_uFlags) = m_uFlags | 8;
+        v21->m_uFlags = m_uFlags;
+        S_quat::Make(&v21->m_aRot, &v21->m_aLocalMat);
+      }
+      v23 = S_quat::RotationMatrix(&v21->m_aRot, v39, v33, v34);
+      S_vector::operator*=(&v37, v23);
+      if ( C_car::IsSeatLeft(m_pUsedActor2, this->m_iSeatID) )
+      {
+        v37 = v37 * -1.0;
+        v38 = v38 * -1.0;
+        v39[0] = v39[0] * -1.0;
+      }
+      this->m_vWorldPos.x = v37 + this->m_vWorldPos.x;
+      this->m_vWorldPos.y = v38 + this->m_vWorldPos.y;
+      this->m_vWorldPos.z = v39[0] + this->m_vWorldPos.z;
+      v24 = this->m_pFrame;
+      if ( (v24->m_uFlags & 0x80) == 0 )
+      {
+        *&v24->m_aLocalMat.e[12] = this->m_vWorldPos;
+        v24->m_uFlags = v24->m_uFlags & 0xBFFFFEDF | 0x40000000;
+      }
+      (this->m_pFrame->m_pVtable->Update)(this->m_pFrame);
+    }
+  }
+  sub_60A130(&this->sInventory, a2);
+  C_human::ChangeWeaponModel(this);
+  m_iWingmanID = this->m_iWingmanID;
+  if ( m_iWingmanID > -1 )
+  {
+    G_IndicatorsClass::PlayerSetWingmanName(g_pIndicators, m_iWingmanID, *this->pad7_0_2);
+    switch ( this->m_iWingmanID )
+    {
+      case 0:
+        v26 = g_uUIFlags | 0x10000000;
+        goto LABEL_46;
+      case 1:
+        v26 = g_uUIFlags | 0x20000000;
+        goto LABEL_46;
+      case 2:
+        v26 = g_uUIFlags | 0x40000000;
+        goto LABEL_46;
+      case 3:
+        v26 = g_uUIFlags | 0x80000000;
+LABEL_46:
+        g_uUIFlags = v26;
+        break;
+      default:
+        break;
+    }
+    v27 = (this->m_sProperties.m_fPropHealth / this->m_sInitProperties.m_fPropHealth * 100.0);
+    m_bIsActive = this->m_bIsActive;
+    a2 = v27;
+    if ( m_bIsActive )
+    {
+      v29 = v27 <= 1;
+      v36[0] = 1;
+      v30 = &a2;
+      if ( v29 )
+        v30 = v36;
+      LODWORD(v27) = *v30;
+    }
+    G_IndicatorsClass::PlayerSetWingmanLives(g_pIndicators, this->m_iWingmanID, v27);
+  }
+  if ( !this->m_pUsedActor
+    && (this->m_sProperties.m_fPropHealth < 0.0099999998) | __UNORDERED__(
+                                                              this->m_sProperties.m_fPropHealth,
+                                                              0.0099999998) )
+  {
+    C_human::intern_ForceDeath(this);
+  }
+  if ( this->m_iState )
+  {
+    if ( this->m_bHasCollisions )
+      C_human::DeactivateColls(this, 0);
+  }
+  else if ( !this->m_bHasCollisions )
+  {
+    C_human::ActivateColls(this, 0);
+  }
+  v31 = this->m_pUsedActor;
+  if ( v31 && v31->m_eActorType == ACT_Car )
+    G_GarageClass::CarIsStolen(g_pLoadSaveClass, this->m_pUsedActor);
+  v32 = this->m_pUsedActor2;
+  if ( v32 )
+  {
+    if ( v32->m_eActorType == ACT_Car )
+      G_GarageClass::CarIsStolen(g_pLoadSaveClass, v32);
+  }
+  return 1;
+}
+
+int __thiscall C_game::SaveGameGetSize(_DWORD *this, char a2)
+{
+  int Size; // eax
+  int v4; // edx
+  int v5; // eax
+  int v6; // ecx
+  int v7; // ebp
+  unsigned int i; // edi
+  int v9; // ecx
+  int v10; // ecx
+  int v11; // eax
+  int v12; // ebp
+  int v13; // ecx
+  int v14; // eax
+  int v15; // ebp
+  int v16; // eax
+  int v17; // edx
+  int v18; // eax
+  int v19; // edx
+  const char **v20; // ebx
+  char v21; // al
+  int v23; // [esp+10h] [ebp+4h]
+
+  Size = C_sledovacka::SaveGameGetSize(this + 2758);
+  v4 = this[2969];
+  v5 = Size + 67;
+  if ( v4 )
+    v6 = (this[2970] - v4) >> 2;
+  else
+    v6 = 0;
+  v7 = v5 + 4 * v6;
+  for ( i = 0; ; ++i )
+  {
+    v9 = this[2965];
+    if ( !v9 || i >= (this[2966] - v9) >> 2 )
+      break;
+    v7 += G_Inventory::SaveGameGetSize();
+  }
+  v10 = this[2973];
+  if ( v10 )
+    v11 = (this[2974] - v10) >> 2;
+  else
+    v11 = 0;
+  v12 = v7 + 4 * v11;
+  if ( a2 )
+  {
+    v13 = this[3019];
+    v14 = v13 ? (this[3020] - v13) >> 4 : 0;
+    v15 = 16 * v14 + v12;
+    v16 = this[3015];
+    v17 = v16 ? (this[3016] - v16) / 20 : 0;
+    v12 = 5 * v17 + v15 + 20 * v17;
+    v18 = this[3015];
+    if ( v18 )
+    {
+      v19 = (this[3016] - v18) / 20;
+      if ( v19 )
+      {
+        v23 = (this[3016] - v18) / 20;
+        v20 = (this[3015] + 20 * v19 + 12);
+        do
+        {
+          v21 = *(v20 - 24);
+          v20 -= 5;
+          if ( (v21 & 2) == 0 && *v20 )
+            v12 += strlen(*v20) + 1;
+          --v23;
+        }
+        while ( v23 );
+      }
+    }
+  }
+  return v12 + sub_55E660(this + 2683);
+}
+
+char __thiscall C_game::SaveGameSave(int this, void **a2, char a3)
+{
+  void **v3; // edi
+  char *v5; // ebx
+  int v6; // ecx
+  int v7; // eax
+  int v8; // ecx
+  int v9; // eax
+  int v10; // ecx
+  int v11; // eax
+  int v12; // ecx
+  int v13; // eax
+  char result; // al
+  int v15; // esi
+  int v16; // eax
+  _DWORD *v17; // ebx
+  int v18; // edx
+  int v19; // eax
+  bool v20; // al
+  __int16 v21; // fps
+  bool v22; // c0
+  bool v23; // c2
+  bool v24; // c3
+  double v25; // st7
+  double v26; // st7
+  __int16 v27; // fps
+  bool v28; // c0
+  bool v29; // c2
+  bool v30; // c3
+  int v31; // eax
+  int v32; // ecx
+  char *v33; // ecx
+  unsigned int v34; // edx
+  int v35; // ecx
+  _DWORD *v36; // ecx
+  _DWORD *v37; // eax
+  int v38; // ecx
+  int v39; // ecx
+  int v40; // eax
+  int v41; // eax
+  int v42; // esi
+  int v43; // ebx
+  int v44; // ecx
+  int v45; // eax
+  char *v46; // [esp+10h] [ebp-Ch]
+  int v47; // [esp+18h] [ebp-4h] BYREF
+  unsigned int i; // [esp+24h] [ebp+8h]
+  int j; // [esp+24h] [ebp+8h]
+
+  v3 = a2;
+  v5 = *a2;
+  v46 = v5;
+  *v5 = 10;
+  *(v5 + 1) = *(this + 11020);
+  *(v5 + 5) = *(this + 11024);
+  *(v5 + 9) = g_pMission->m_iMissionID;
+  v5[13] = (g_uUIFlags & 8) != 0;
+  v6 = *(this + 11860);
+  if ( v6 )
+    v7 = (*(this + 11864) - v6) >> 2;
+  else
+    v7 = 0;
+  *(v5 + 30) = v7;
+  v8 = *(this + 11876);
+  if ( v8 )
+    v9 = (*(this + 11880) - v8) >> 2;
+  else
+    v9 = 0;
+  *(v5 + 34) = v9;
+  v10 = *(this + 11892);
+  if ( v10 )
+    v11 = (*(this + 11896) - v10) >> 2;
+  else
+    v11 = 0;
+  *(v5 + 38) = v11;
+  *(v5 + 42) = 0;
+  if ( a3 )
+  {
+    v12 = *(this + 12076);
+    if ( v12 )
+      v13 = (*(this + 12080) - v12) >> 4;
+    else
+      v13 = 0;
+    *(v5 + 46) = v13;
+    *(v5 + 50) = *(this + 12088);
+    *(v5 + 54) = *(this + 12216);
+    *(v5 + 58) = *(this + 12220);
+  }
+  else
+  {
+    *(v5 + 46) = 0;
+    *(v5 + 50) = 0;
+    *(v5 + 54) = -1;
+    *(v5 + 58) = -1;
+  }
+  v5[62] = *(this + 13886);
+  *(v5 + 63) = *(this + 13888);
+  G_IndicatorsClass::TimerGetInterval(g_pIndicators, (v5 + 14));
+  G_IndicatorsClass::TimerGetTime(g_pIndicators, (v5 + 18), (v5 + 22), (v5 + 26));
+  *a2 = *a2 + 67;
+  result = C_sledovacka::SaveGameSave((this + 11032), a2);
+  if ( result )
+  {
+    if ( a3 )
+    {
+      v15 = 0;
+      for ( i = 0; ; ++i )
+      {
+        v16 = *(this + 12060);
+        if ( !v16 || i >= (*(this + 12064) - v16) / 20 )
+          break;
+        if ( (*(v15 + *(this + 12060) + 8) & 2) == 0 )
+        {
+          ++*(v5 + 42);
+          v17 = *v3;
+          v17[1] = *(v15 + *(this + 12060) + 8);
+          v18 = *(v15 + *(this + 12060) + 4);
+          *(v17 + 12) = 0;
+          *v17 = v18;
+          *(v17 + 13) = 0;
+          *(v17 + 17) = 0;
+          *(v17 + 21) = 1065353216;
+          v19 = *(v15 + *(this + 12060));
+          if ( v19 )
+          {
+            (*(*v19 + 44))(*(v15 + *(this + 12060)));
+            v20 = (*(**(v15 + *(this + 12060)) + 44))(*(v15 + *(this + 12060))) == 0;
+            *(v17 + 12) = v20;
+            if ( v20 )
+            {
+              v22 = flt_6D4B10 < 0.0099999998;
+              v23 = __UNORDERED__(flt_6D4B10, 0.0099999998);
+              v24 = flt_6D4B10 == 0.0099999998;
+              if ( (v21 & 0x4100) != 0 )
+              {
+                *(v17 + 21) = 0;
+              }
+              else
+              {
+                v25 = (*(**(v15 + *(this + 12060)) + 60))(*(v15 + *(this + 12060)));
+                *(v17 + 21) = v25;
+                v26 = v25 / flt_6D4B10;
+                *(v17 + 21) = v26;
+                v28 = v26 < 1.0;
+                v29 = __UNORDERED__(v26, 1.0);
+                v30 = v26 == 1.0;
+                if ( (v27 & 0x4100) == 0 )
+                  *(v17 + 21) = 1065353216;
+              }
+              (*(**(v15 + *(this + 12060)) + 52))(*(v15 + *(this + 12060)), &v47);
+              v31 = v47;
+              *(v17 + 17) = 0;
+              *(v17 + 13) = v31;
+            }
+          }
+          v32 = *(this + 12060);
+          if ( *(v15 + v32 + 12) )
+            v17[2] = strlen(*(v15 + v32 + 12));
+          else
+            v17[2] = 0;
+          v33 = *a2 + 25;
+          *a2 = v33;
+          if ( v17[2] )
+          {
+            qmemcpy(v33, *(v15 + *(this + 12060) + 12), v17[2]);
+            *a2 = *a2 + v17[2];
+          }
+          v5 = v46;
+          v3 = a2;
+        }
+        v15 += 20;
+      }
+      v34 = 0;
+      for ( j = 0; ; j += 16 )
+      {
+        v35 = *(this + 12076);
+        if ( !v35 || v34 >= (*(this + 12080) - v35) >> 4 )
+          break;
+        v36 = (v35 + j);
+        v37 = *v3;
+        *v37 = *v36;
+        v37[1] = v36[1];
+        v37[2] = v36[2];
+        v37[3] = v36[3];
+        ++v34;
+        *v3 = *v3 + 16;
+      }
+    }
+    v38 = *(v5 + 34);
+    if ( v38 )
+    {
+      qmemcpy(*v3, *(this + 11876), 4 * v38);
+      v39 = *(this + 11876);
+      if ( v39 )
+        v40 = (*(this + 11880) - v39) >> 2;
+      else
+        v40 = 0;
+      v3 = a2;
+      *a2 = *a2 + 4 * v40;
+    }
+    v41 = *(v5 + 30);
+    if ( v41 )
+    {
+      v42 = 0;
+      if ( v41 > 0 )
+      {
+        do
+          G_Inventory::SaveGameSave(*(*(this + 11860) + 4 * v42++), v3);
+        while ( v42 < *(v5 + 30) );
+      }
+    }
+    v43 = *(v5 + 38);
+    if ( v43 )
+    {
+      qmemcpy(*v3, *(this + 11892), 4 * v43);
+      v44 = *(this + 11892);
+      if ( v44 )
+        v45 = (*(this + 11896) - v44) >> 2;
+      else
+        v45 = 0;
+      v3 = a2;
+      *a2 = *a2 + 4 * v45;
+    }
+    C_using_object::SaveGameSave((this + 10732), v3);
+    return 1;
+  }
+  return result;
+}
+
+// #STR: "00menu"
+char __thiscall G_LoadSaveClass::Init(int this)
+{
+  GM_Menu *v2; // eax
+  GM_Menu *v3; // edi
+  GM_Menu *v4; // ecx
+  int v5; // edi
+
+  *(this + 144) = 1;
+  *(this + 148) = 0;
+  *(this + 496) = 0;
+  *(this + 156) = 0;
+  *(this + 488) = 0;
+  G_LoadSaveClass::AllDefault(g_pLoadSaveClass);
+  G_IndicatorsClass::Create(g_pIndicators);
+  LoadMaterialsFromBin();
+  sub_607A60(g_pLoadSaveClass);
+  G_IndicatorsClass::ResolutionChanged(g_pIndicators);
+  g_uUIFlags = 0;
+  G_LoadSaveClass::ProfileEnumFiles(this);
+  (*(g_pIGraph->lpVtbl.CreateIShow + 63))(g_pIGraph);
+  C_mission::Open(g_pMission, "00menu", 0, 0xFFFFFFFF, 0);
+  v2 = operator new(0x54u);
+  v3 = v2;
+  if ( v2 )
+  {
+    GM_Menu::GM_Menu(v2);
+    *v3 = off_6279DC;
+    v4 = v3;
+  }
+  else
+  {
+    v4 = 0;
+  }
+  v5 = GM_Menu::ExecuteMenu(v4, 0, v3, 1);
+  G_LoadSaveClass::ProfileEnumRelease(this);
+  if ( v5 == 15 )
+  {
+    byte_639320 = 1;
+    return 0;
+  }
+  else
+  {
+    G_LoadSaveClass::ProfileLoad(this);
+    sub_607A60(g_pLoadSaveClass);
+    byte_639320 = 0;
+    return 1;
+  }
+}
+
+void G_LoadSaveClass::Close()
+{
+  void *v0; // eax
+
+  if ( !byte_639320 )
+    G_LoadSaveClass::ProfileSave(g_pLoadSaveClass);
+  G_IndicatorsClass::Destroy(g_pIndicators);
+  UnloadMaterials();
+  G_TextDatabase::Unload(g_pTextDB);
+  if ( g_pCarDatabase[1] )
+    operator delete(g_pCarDatabase[1]);
+  v0 = g_pCarDatabase[3];
+  g_pCarDatabase[1] = 0;
+  g_pCarDatabase[0] = 0;
+  if ( v0 )
+    operator delete(v0);
+  g_pCarDatabase[3] = 0;
+  g_pCarDatabase[2] = 0;
+}
+
+_DWORD *__thiscall G_LoadSaveClass::AllDefault(_DWORD *this)
+{
+  sub_60A350(g_pCarDatabase);
+  sub_607600(this, 255);
+  sub_607AB0(this, 255);
+  memset(this + 328, 0, 0x9Cu);
+  G_LoadSaveClass::RaceCarsDisable(this, -1);
+  G_LoadSaveClass::RaceCarsEnable(this, 1);
+  dword_6D4B1C = 1;
+  dword_6D4B20 = 7;
+  this[124] = 0;
+  this[39] = 0;
+  return G_LoadSaveClass::SaveGameNewGame(this);
+}
+
+// #STR: "savegame\\mafia%03d.sav"
+int __thiscall G_LoadSaveClass::ProfileEnumFiles(int this)
+{
+  int v2; // esi
+  char *v3; // ecx
+  unsigned int v4; // edx
+  char *v5; // ebp
+  int v6; // esi
+  unsigned int v7; // edi
+  int v8; // edx
+  int v9; // edi
+  int v10; // ecx
+  char *v11; // esi
+  int v12; // eax
+  int v13; // eax
+  char *v14; // eax
+  char *v15; // edi
+  int v17; // [esp+10h] [ebp-124h]
+  char *v18; // [esp+14h] [ebp-120h]
+  G_Stream v19; // [esp+18h] [ebp-11Ch] BYREF
+  int v20[21]; // [esp+54h] [ebp-E0h] BYREF
+  char v21[128]; // [esp+A8h] [ebp-8Ch] BYREF
+  int v22; // [esp+130h] [ebp-4h]
+
+  *(this + 8) = *(this + 4);
+  G_Stream::G_Stream(&v19);
+  v2 = 0;
+  v22 = 0;
+  G_Stream::SetParams(&v19, 0x50726F66u, 1, 0);
+  v17 = 0;
+  do
+  {
+    sprintf(v21, "savegame\\mafia%03d.sav", v2);
+    if ( G_Stream::OpenRead(&v19, v21) )
+    {
+      if ( G_Stream::ReadAdr(&v19, v20, 0x54u) == 84 )
+      {
+        v3 = *(this + 8);
+        v4 = ((818089009i64 * (*(this + 12) - v3)) >> 32) >> 4;
+        v20[2] = v2;
+        v5 = v3;
+        if ( (v4 >> 31) + v4 )
+        {
+          sub_60F520(v3, v3, v3 + 84);
+          sub_60F560(*(this + 8), (1 - (*(this + 8) - v5) / 84), v20);
+          v14 = *(this + 8);
+          while ( v5 != v14 )
+          {
+            v15 = v5;
+            v5 += 84;
+            qmemcpy(v15, v20, 0x54u);
+          }
+          v13 = *(this + 8) + 84;
+        }
+        else
+        {
+          v6 = *(this + 4);
+          if ( !v6 || (v7 = &v3[-v6] / 84, v7 <= 1) )
+            v7 = 1;
+          if ( v6 )
+            v8 = &v3[-v6] / 84;
+          else
+            v8 = 0;
+          v9 = v8 + v7;
+          v10 = v9;
+          if ( v9 < 0 )
+            v10 = 0;
+          v11 = operator new(84 * v10);
+          v18 = sub_60F520(*(this + 4), v5, v11);
+          sub_60F560(v18, 1, v20);
+          sub_60F520(v5, *(this + 8), v18 + 84);
+          nullsub_5(*(this + 4), *(this + 8));
+          operator delete(*(this + 4));
+          *(this + 12) = &v11[84 * v9];
+          v12 = sub_60EFA0(this);
+          *(this + 4) = v11;
+          v13 = &v11[84 * v12 + 84];
+        }
+        *(this + 8) = v13;
+      }
+      G_Stream::Close(&v19);
+      v2 = v17;
+    }
+    v17 = ++v2;
+  }
+  while ( v2 < 32 );
+  v22 = -1;
+  G_Stream::Close(&v19);
+  return this;
+}
+
+int __thiscall G_LoadSaveClass::ProfileEnumRelease(_DWORD *this)
+{
+  int result; // eax
+
+  result = this[2];
+  this[2] = this[1];
+  return result;
+}
+
+// #STR: "savegame\\mafia%03d.sav"
+bool __thiscall G_LoadSaveClass::ProfileLoad(_DWORD *this)
+{
+  int v2; // edi
+  int v3; // eax
+  int v4; // ecx
+  int v5; // edx
+  int v7; // [esp+Ch] [ebp-D8h] BYREF
+  __int16 v8; // [esp+10h] [ebp-D4h]
+  __int16 v9; // [esp+12h] [ebp-D2h]
+  int v10; // [esp+14h] [ebp-D0h]
+  char v11[4]; // [esp+18h] [ebp-CCh] BYREF
+  G_Stream v12; // [esp+1Ch] [ebp-C8h] BYREF
+  char v13[128]; // [esp+58h] [ebp-8Ch] BYREF
+  int v14; // [esp+E0h] [ebp-4h]
+
+  G_Stream::G_Stream(&v12);
+  v2 = this[10];
+  v14 = 0;
+  G_Stream::SetParams(&v12, 0x50726F66u, 1, 0);
+  sprintf(v13, "savegame\\mafia%03d.sav", v2);
+  *(this + 145) = 1;
+  if ( G_Stream::OpenRead(&v12, v13) )
+  {
+    if ( G_Stream::ReadAdr(&v12, this + 8, 0x54u) == 84 )
+    {
+      v3 = this[8];
+      this[10] = v2;
+      if ( v3 == 0x50726F66 && this[9] == 1 )
+      {
+        G_Stream::ReadAdr(&v12, this + 125, 0x2D0u);
+        G_Stream::ReadAdr(&v12, this + 305, 0x5Cu);
+        if ( G_Stream::ReadAdr(&v12, this + 328, 0x9Cu) == 156 && !G_Stream::ReadAdr(&v12, v11, 4u) )
+        {
+          v4 = this[25];
+          v5 = this[26];
+          this[37] = this[28];
+          this[124] = v4;
+          this[39] = v5;
+          *(this + 145) = 0;
+          if ( sub_607460(this, 29, (this + 212), 0, 60) )
+          {
+            v8 = 1;
+            v9 = 19;
+            v10 = 0;
+            v7 = 0;
+            if ( sub_607460(g_pLoadSaveClass, 29, &v7, 0, -1) )
+              sub_6073C0(this, 29, 0, 0, 0, 0);
+            else
+              sub_6073C0(this, 29, 1, 19, 0, 0);
+            sub_607A60(this);
+          }
+        }
+      }
+    }
+    G_Stream::Close(&v12);
+  }
+  if ( *(this + 145) )
+    G_LoadSaveClass::AllDefault(this);
+  G_LoadSaveClass::Refresh(this, -1);
+  G_LoadSaveClass::FreerideStoreA(1u, 0, 1.0, 1.0, 1.0);
+  G_LoadSaveClass::FreerideStoreB(this, 0);
+  *(this + 468) = 0;
+  v14 = -1;
+  return G_Stream::Close(&v12);
+}
+
+// #STR: "savegame\\mafia%03d.sav"
+bool __thiscall G_LoadSaveClass::ProfileSave(_DWORD *this)
+{
+  int v2; // edx
+  G_Stream v4; // [esp+4h] [ebp-C8h] BYREF
+  char v5[128]; // [esp+40h] [ebp-8Ch] BYREF
+  int v6; // [esp+C8h] [ebp-4h]
+
+  G_Stream::G_Stream(&v4);
+  v6 = 0;
+  G_Stream::SetParams(&v4, 0x50726F66u, 1, 0);
+  sprintf(v5, "savegame\\mafia%03d.sav", this[10]);
+  if ( G_Stream::OpenWrite(&v4, v5) )
+  {
+    v2 = this[124];
+    this[28] = this[37];
+    this[26] = this[39];
+    this[8] = 1349676902;
+    this[9] = 1;
+    this[11] = 0;
+    this[27] = 0;
+    this[25] = v2;
+    G_Stream::WriteAdr(&v4, this + 8, 84u);
+    G_Stream::WriteAdr(&v4, this + 125, 720u);
+    G_Stream::WriteAdr(&v4, this + 305, 92u);
+    G_Stream::WriteAdr(&v4, this + 328, 156u);
+    G_Stream::Close(&v4);
+  }
+  v6 = -1;
+  return G_Stream::Close(&v4);
+}
+
+int __thiscall G_LoadSaveClass::SaveGameEnumRelease(_DWORD *this)
+{
+  int result; // eax
+
+  result = this[6];
+  this[6] = this[5];
+  return result;
+}
+
+unsigned int __thiscall G_LoadSaveClass::SaveGameSelect(_DWORD *this, unsigned int saveId)
+{
+  unsigned int result; // eax
+  unsigned int maxSaveId; // edx
+
+  result = this[5];
+  if ( result )
+  {
+    maxSaveId = (this[6] - result) / 24;
+    result = saveId;
+    if ( saveId < maxSaveId )
+    {
+      result = 3 * saveId;
+      qmemcpy(this + 29, (this[5] + 24 * saveId), 24u);
+    }
+  }
+  return result;
+}
+
+int __thiscall G_LoadSaveClass::SaveGameCreate(_DWORD *this, unsigned int a2)
+{
+  int v2; // ebx
+  _DWORD *v3; // esi
+  unsigned int v4; // edi
+  int v5; // ebp
+  int v6; // eax
+  __int64 v7; // rax
+  int v8; // eax
+  int v9; // edx
+  int v10; // ebp
+  int v11; // eax
+  char *v13; // [esp-Ch] [ebp-38h]
+  int v15[6]; // [esp+14h] [ebp-18h] BYREF
+
+  v2 = this[5];
+  memset(v15, 0, sizeof(v15));
+  v3 = this + 4;
+  v4 = 0;
+  if ( a2 >= 0x186A0 )
+  {
+    v10 = 1;
+    while ( v2 && v4 < (this[6] - v2) / 24 )
+    {
+      if ( *(this[5] + 24 * v4 + 8) == v10 )
+      {
+        ++v10;
+        v4 = -1;
+      }
+      ++v4;
+    }
+    v13 = this[6];
+    v15[2] = v10;
+    insert__Q23std78__vector_imp_19G_SaveGame_FileHead_Q23std32allocator_19G_SaveGame_FileHead__0_FP19G_SaveGame_FileHeadUiRC19G_SaveGame_FileHead(
+      v3,
+      v13,
+      1u,
+      v15);
+    v11 = v3[1];
+    if ( v11 )
+      v9 = (v3[2] - v11) / 24;
+    else
+      v9 = 0;
+    goto LABEL_22;
+  }
+  v15[2] = a2;
+  v5 = 0;
+  while ( v2 && v4 < (this[6] - v2) / 24 )
+  {
+    if ( *(this[5] + v5 + 8) == a2 )
+    {
+      G_LoadSaveClass::SaveGameSelect(this, v4);
+      break;
+    }
+    ++v4;
+    v5 += 24;
+  }
+  v6 = v3[1];
+  if ( !v6 || (v7 = 715827883i64 * (v3[2] - v6), v4 >= (HIDWORD(v7) >> 31) + (SHIDWORD(v7) >> 2)) )
+  {
+    insert__Q23std78__vector_imp_19G_SaveGame_FileHead_Q23std32allocator_19G_SaveGame_FileHead__0_FP19G_SaveGame_FileHeadUiRC19G_SaveGame_FileHead(
+      v3,
+      v3[2],
+      1u,
+      v15);
+    v8 = v3[1];
+    if ( v8 )
+      v9 = (v3[2] - v8) / 24;
+    else
+      v9 = 0;
+LABEL_22:
+    LODWORD(v7) = G_LoadSaveClass::SaveGameSelect(this, v9 - 1);
+  }
+  return v7;
+}
+
+_DWORD *__thiscall G_LoadSaveClass::SaveGameNewGame(_DWORD *this)
+{
+  _DWORD *result; // eax
+
+  this[122] = 0;
+  this[38] = 0;
+  result = G_LoadSaveClass::ObjectivesGetList(this);
+  LOBYTE(dword_6D4558) = 0;
+  return result;
+}
+
+// #STR: "missions\\%s\\tree.klz", "GameAfterLoad", "savegame\\mafia%03d.%03d"
+int __thiscall G_LoadSaveClass::SaveGameLoad(int this)
+{
+  _DWORD *v2; // eax
+  int v3; // ecx
+  int v4; // eax
+  GM_LoadProgress *v5; // eax
+  GM_LoadProgress *Progress; // eax
+  GM_LoadProgress *v7; // eax
+  GM_LoadProgress *v8; // eax
+  int v9; // edi
+  int v10; // esi
+  int v11; // ebp
+  int v12; // eax
+  void *v13; // esi
+  unsigned int v14; // edi
+  unsigned int v15; // ebp
+  int v16; // eax
+  char *v17; // eax
+  int v18; // eax
+  _BYTE *start; // ecx
+  char *end; // edx
+  int v21; // esi
+  int v22; // eax
+  int v23; // edi
+  unsigned int i; // edi
+  bool v25; // al
+  bool v26; // bl
+  int v27; // ebp
+  _DWORD *v28; // eax
+  void (__cdecl **v29)(_DWORD); // edi
+  void *v30; // eax
+  int v31; // edi
+  int v32; // edi
+  _DWORD *v33; // eax
+  int v34; // edi
+  void (__cdecl **v35)(_DWORD); // edx
+  C_actor *Actor; // eax
+  C_actor *v37; // edi
+  int v38; // edi
+  int (__cdecl *GetAnimTime)(uint32_t); // esi
+  void *v40; // eax
+  vector *p_m_vSceneActors; // ebx
+  void **first; // edi
+  void **last; // ebp
+  int v44; // eax
+  char *v45; // eax
+  void *v46; // eax
+  void *v47; // esi
+  void *v48; // eax
+  void *v49; // eax
+  vector *v50; // ebx
+  C_human **v51; // edi
+  C_human **v52; // ebp
+  I3D_frame *m_pFrame; // eax
+  char *m_pSzName; // eax
+  C_human *v55; // eax
+  C_game *m_pGame; // ecx
+  void *v57; // esi
+  void *v58; // esi
+  int result; // eax
+  int v60; // [esp+14h] [ebp-3C4h]
+  int v61; // [esp+18h] [ebp-3C0h]
+  int v62; // [esp+2Ch] [ebp-3ACh] BYREF
+  I3D_sceneVtbl *pVtbl; // [esp+30h] [ebp-3A8h]
+  int v64[2]; // [esp+34h] [ebp-3A4h]
+  int *v65; // [esp+3Ch] [ebp-39Ch] BYREF
+  unsigned int v66; // [esp+40h] [ebp-398h]
+  G_Stream v67; // [esp+44h] [ebp-394h] BYREF
+  char v68[4]; // [esp+88h] [ebp-350h] BYREF
+  char v69[4]; // [esp+90h] [ebp-348h] BYREF
+  int v70; // [esp+98h] [ebp-340h] BYREF
+  _DWORD *v71; // [esp+9Ch] [ebp-33Ch]
+  int v72[3]; // [esp+A4h] [ebp-334h] BYREF
+  char v73[36]; // [esp+B4h] [ebp-324h] BYREF
+  char v74[20]; // [esp+D8h] [ebp-300h] BYREF
+  char v75[16]; // [esp+F4h] [ebp-2E4h] BYREF
+  EActorType v76; // [esp+10Ch] [ebp-2CCh]
+  unsigned int v77; // [esp+110h] [ebp-2C8h]
+  size_t v78; // [esp+114h] [ebp-2C4h]
+  char v79[32]; // [esp+11Ch] [ebp-2BCh] BYREF
+  size_t v80; // [esp+13Ch] [ebp-29Ch]
+  char *v81; // [esp+140h] [ebp-298h]
+  size_t v82; // [esp+144h] [ebp-294h] BYREF
+  char v83[28]; // [esp+148h] [ebp-290h] BYREF
+  size_t size; // [esp+168h] [ebp-270h]
+  int v85[25]; // [esp+16Ch] [ebp-26Ch]
+  int v86[25]; // [esp+1D0h] [ebp-208h] BYREF
+  size_t v87; // [esp+238h] [ebp-1A0h]
+  size_t v88; // [esp+23Ch] [ebp-19Ch]
+  int v89; // [esp+240h] [ebp-198h]
+  float v90; // [esp+244h] [ebp-194h]
+  char v91[4]; // [esp+248h] [ebp-190h]
+  float saveFileName[31]; // [esp+24Ch] [ebp-18Ch] BYREF
+  char v93[212]; // [esp+2D0h] [ebp-108h] BYREF
+  int v94; // [esp+3ACh] [ebp-2Ch]
+  char v95; // [esp+3BCh] [ebp-1Ch]
+  char v96; // [esp+3D0h] [ebp-8h]
+  int v97; // [esp+3D4h] [ebp-4h]
+
+  *&v67.m_bHeader[4] = this;
+  G_Stream::G_Stream(&v67.m_hFile);
+  v97 = 0;
+  *v67.m_bHeader = 0;
+  G_LoadSaveClass::FreerideStoreB(this, 0);
+  G_Stream::SetParams(&v67.m_hFile, 0x53617647u, 1, 0);
+  sprintf(saveFileName, "savegame\\mafia%03d.%03d", *(this + 40), *(this + 124));
+  if ( G_Stream::OpenRead(&v67.m_hFile, saveFileName) )
+  {
+    if ( G_Stream::ReadAdr(&v67.m_hFile, (this + 116), 24u) == 24 )
+    {
+      C_game::Done(g_pMission->m_pGame);
+      if ( *(this + 120) == 16 )
+      {
+        v2 = G_Stream::Read(&v67.m_hFile, 32u);
+        v3 = v2[7];
+        v66 = v2;
+        *(this + 152) = v3;
+        operator delete(v66);
+        G_Stream::ReadAdr(&v67.m_hFile, &v82, 264u);
+        v4 = strcmp(&v82, g_pMission->m_szMissionName);
+        v66 = 64;
+        if ( v4 )
+        {
+          v5 = operator new(v66);
+          *&v67.m_bHeader[20] = v5;
+          LOBYTE(v97) = 1;
+          if ( v5 )
+            Progress = GM_LoadProgress::GM_LoadProgress(v5, 0, 1060320051, &v82);
+          else
+            Progress = 0;
+          LOBYTE(v97) = 0;
+          *(*&v67.m_bHeader[4] + 1492) = Progress;
+          C_mission::Close(g_pMission, *&v67.m_bIsEncrypted);
+          C_mission::Open(g_pMission, v83, 0, 0xFFFFFFFF, 1);
+        }
+        else
+        {
+          v7 = operator new(v66);
+          *&v67.m_bHeader[20] = v7;
+          LOBYTE(v97) = 2;
+          if ( v7 )
+            v8 = GM_LoadProgress::GM_LoadProgress(v7, 0, 0, &v82);
+          else
+            v8 = 0;
+          LOBYTE(v97) = 0;
+          *(*&v67.m_bHeader[4] + 1492) = v8;
+        }
+        sprintf(v93, "missions\\%s\\tree.klz", v83);
+        g_collision::LoadCollision(g_pCollisions, v93, 1);
+        G_CarDatabase::LoadDetails(g_pCarDatabase);
+        v9 = 0;
+        v10 = *&v67.m_bHeader[8] + 160;
+        v11 = *&v67.m_bHeader[8] + 360;
+        do
+        {
+          v12 = v86[v9 + 1];
+          *v10 = v85[v9 + 1];
+          *v11 = v12;
+          *&v67.m_bIsEncrypted = v11;
+          *(v11 + 2) = 0;
+          *(v10 + 4) = 0;
+          *(v10 + 2) = 0;
+          G_CarDatabase::RepairIndex(g_pCarDatabase, *&v67.m_bIsEncrypted);
+          G_CarDatabase::RepairIndex(g_pCarDatabase, v10);
+          ++v9;
+          v10 += 8;
+          v11 += 4;
+        }
+        while ( v9 < 25 );
+        G_CarDatabase::UnloadDetails(g_pCarDatabase);
+        g_fFreerideZ = v90;
+        LOBYTE(dword_6D4558) = v89 != 0;
+        g_fFreerideX = *v91;
+        g_fFreerideY = saveFileName[0];
+        if ( size )
+        {
+          *&v67.m_bHeader[4] = G_Stream::Read(&v67.m_bUnk2, size);
+          v13 = *&v67.m_bHeader[4];
+          sub_5B5410(&v67.m_bHeader[4]);
+          operator delete(v13);
+        }
+        if ( v87 )
+        {
+          *&v67.m_bHeader[4] = G_Stream::Read(&v67.m_bUnk2, v87);
+          operator delete(*&v67.m_bHeader[4]);
+        }
+        if ( v88 )
+        {
+          *&v67.m_bHeader[4] = G_Stream::Read(&v67.m_bUnk2, v88);
+          operator delete(*&v67.m_bHeader[4]);
+        }
+        *&v67.m_bHeader[12] = &g_pMission->m_vSceneActors;
+        if ( G_Stream::ReadAdr(&v67.m_bUnk2, &v73[8], 0x8Cu) == 140 )
+        {
+          do
+          {
+            *&v67.m_bHeader[4] = G_Stream::Read(&v67.m_bUnk2, v81);
+            *&v67.m_bHeader[20] = *&v67.m_bHeader[4];
+            v14 = *(*&v67.m_bHeader[12] + 4);
+            v15 = *(*&v67.m_bHeader[12] + 8);
+            if ( v14 < v15 )
+            {
+              while ( 1 )
+              {
+                v16 = *(*v14 + 104);
+                if ( v16 )
+                {
+                  v17 = *(v16 + 256);
+                  if ( !v17 )
+                    v17 = g_szUnk;
+                  if ( !strcmp(&v73[8], v17) )
+                    break;
+                }
+                v14 += 4;
+                if ( v14 >= v15 )
+                  goto LABEL_31;
+              }
+              if ( v82 < 0x19 )
+                *(*&v67.m_bHeader[8] + 8 * v82 + 164) = *v14;
+            }
+LABEL_31:
+            if ( v14 < *(*&v67.m_bHeader[12] + 8) )
+              goto LABEL_72;
+            v18 = (g_pI3DDriver->m_pVTable->CreateFrame)(g_pI3DDriver, 9);
+            start = g_pFrames.start;
+            end = g_pFrames.end;
+            v21 = v18;
+            if ( g_pFrames.start )
+            {
+              v22 = (g_pFrames.end - g_pFrames.start) >> 3;
+              while ( v22 )
+              {
+                v23 = *(g_pFrames.start + 2 * v22-- - 2);
+                if ( v23 == v21 )
+                  goto LABEL_38;
+              }
+            }
+            else
+            {
+              v22 = 0;
+            }
+            --v22;
+LABEL_38:
+            if ( v22 != -1 )
+            {
+              data__Q23std104__vector_deleter_Q223C_I3D_cache_9I3D_model_5S_itm_Q23std44allocator_Q223C_I3D_cache_9I3D_model_5S_itm(
+                g_pFrames.start + 2 * v22 + 2,
+                g_pFrames.end,
+                g_pFrames.start + 2 * v22);
+              erase__Q23std102__vector_imp_Q223C_I3D_cache_9I3D_model_5S_itm_Q23std44allocator_Q223C_I3D_cache_9I3D_model_5S_itm__0_FPQ223C_I3D_cache_9I3D_model_5S_itm(
+                g_pFrames.end - 2,
+                g_pFrames.end);
+              start = g_pFrames.start;
+              end = g_pFrames.end - 8;
+              g_pFrames.end = g_pFrames.end - 8;
+            }
+            for ( i = 0; start && i < (end - start) >> 3; ++i )
+            {
+              strcasecmp(&v67.m_bHeader[8], v75);
+              v96 = 3;
+              v25 = sub_4035D0((g_pFrames.start + 8 * i + 4), &v67.m_bHeader[8]);
+              v96 = 0;
+              v26 = !v25;
+              if ( *&v67.m_bHeader[8] )
+                I3D_animation_set::Release(*&v67.m_bHeader[8]);
+              if ( !v26 )
+              {
+                (*(vtable_105936 + 48))(&vtable_105936, v21, *(g_pFrames.start + 2 * i));
+                goto LABEL_66;
+              }
+              end = g_pFrames.end;
+              start = g_pFrames.start;
+            }
+            v72[0] = 0;
+            v72[1] = 0;
+            v27 = 0;
+            if ( sub_598390(&unk_647DE4) )
+            {
+              while ( 1 )
+              {
+                v28 = I3D_animation_set::Open((dword_647DE8 + 4 * v27), &v67.m_bHeader[16], v75);
+                v29 = *v21;
+                v65 = v72;
+                v96 = 4;
+                v30 = sub_4033C0(v28);
+                v31 = (v29[20])(v21, v30, 16, sub_410C50);
+                v95 = 0;
+                if ( v67.m_uSignature )
+                  I3D_animation_set::Release(v67.m_uSignature);
+                if ( v31 != -2147483647 )
+                {
+                  if ( v31 == -2147483646 || v31 == -2147483638 )
+                    goto LABEL_66;
+                  if ( v31 >= 0 )
+                    break;
+                }
+                if ( ++v27 >= sub_598390(&unk_647DE4) )
+                  goto LABEL_66;
+              }
+              if ( S_Collection::NumElements(&g_pFrames) >= dword_647DF4 )
+              {
+                v32 = 0;
+                if ( S_Collection::NumElements(&g_pFrames) )
+                {
+                  while ( *(*(g_pFrames.start + 2 * v32) + 4) != 1 )
+                  {
+                    if ( ++v32 >= S_Collection::NumElements(&g_pFrames) )
+                      goto LABEL_63;
+                  }
+                  (***(g_pFrames.start + 2 * v32))(*(g_pFrames.start + 2 * v32));
+                  sub_481890(&g_pFrames, g_pFrames.start + 8 * v32);
+                }
+              }
+LABEL_63:
+              v33 = sub_403730(&v70);
+              v95 = 5;
+              sub_410E80(&g_pFrames, g_pFrames.end, v33);
+              v95 = 0;
+              if ( v71 )
+                I3D_animation_set::Release(v71);
+              sub_4033D0(g_pFrames.end - 1, &v74[8]);
+              v34 = (*(vtable_105936 + 12))(&vtable_105936);
+              (*(vtable_105936 + 48))(&vtable_105936, v34, v21);
+              *(g_pFrames.end - 2) = v34;
+            }
+LABEL_66:
+            v35 = *v21;
+            v64[0] = 0;
+            pVtbl = g_pMission->m_pScene[132].pVtbl;
+            v35[11](v21);
+            (g_pMission->m_pScene->pVtbl->FindFrame)(g_pMission->m_pScene);
+            (**v21)(v21);
+            v61 = v21;
+            (*(*v21 + 40))();
+            Actor = C_mission::CreateActor(g_pMission, v76);
+            v37 = Actor;
+            if ( Actor )
+            {
+              v60 = v21;
+              if ( (*(Actor->m_pVTable + 72))(Actor) )
+              {
+                if ( v77 >= 0x19 )
+                {
+                  C_mission::AddActor(g_pMission, v37, 0);
+                }
+                else
+                {
+                  C_mission::AddActor(g_pMission, v37, 1);
+                  *(v21 + 8 * v77 + 164) = v37;
+                }
+              }
+              else
+              {
+                (*(v37->m_pVTable + 64))(v37, 1);
+              }
+            }
+LABEL_72:
+            operator delete(v64[0]);
+          }
+          while ( G_Stream::ReadAdr(&v65, v68, 0x8Cu) == 140 );
+        }
+      }
+    }
+    G_Stream::Close(&v65);
+    C_game::Init(g_pMission->m_pGame, v60, v61);
+    v38 = pVtbl;
+    GetAnimTime = pVtbl[5].GetAnimTime;
+    if ( GetAnimTime )
+    {
+      GM_Menu::~GM_Menu(pVtbl[5].GetAnimTime);
+      operator delete(GetAnimTime);
+      pVtbl[5].GetAnimTime = 0;
+    }
+    if ( G_Stream::OpenRead(&v67, &v86[21]) )
+    {
+      if ( G_Stream::ReadAdr(&v67, (v38 + 116), 0x18u) == 24 && pVtbl->TransformPoints == 16 )
+      {
+        v40 = G_Stream::Read(&v67, 0x20u);
+        operator delete(v40);
+        G_Stream::ReadAdr(&v67, v79, 0x108u);
+        if ( v80 )
+        {
+          v62 = G_Stream::Read(&v67, v80);
+          operator delete(v62);
+        }
+        if ( v86[15] )
+        {
+          v62 = G_Stream::Read(&v67, v86[15]);
+          operator delete(v62);
+        }
+        if ( v86[16] )
+        {
+          v62 = G_Stream::Read(&v67, v86[16]);
+          operator delete(v62);
+        }
+        p_m_vSceneActors = &g_pMission->m_vSceneActors;
+        while ( G_Stream::ReadAdr(&v67, v69, 0x8Cu) == 140 )
+        {
+          v62 = G_Stream::Read(&v67, v78);
+          first = p_m_vSceneActors->first;
+          last = p_m_vSceneActors->last;
+          v65 = v62;
+          if ( first < last )
+          {
+            while ( 1 )
+            {
+              v44 = *(*first + 26);
+              if ( v44 )
+              {
+                v45 = *(v44 + 256);
+                if ( !v45 )
+                  v45 = g_szUnk;
+                if ( !strcmp(v69, v45) )
+                  break;
+              }
+              if ( ++first >= last )
+                goto LABEL_93;
+            }
+            C_actor::SaveGameLoadGuid(*first, &v62);
+          }
+LABEL_93:
+          operator delete(v65);
+        }
+      }
+      G_Stream::Close(&v67);
+      v38 = pVtbl;
+    }
+    if ( G_Stream::OpenRead(&v67, &v86[21]) )
+    {
+      if ( G_Stream::ReadAdr(&v67, (v38 + 116), 0x18u) == 24 && pVtbl->TransformPoints == 16 )
+      {
+        v64[1] = 0;
+        v64[0] = 0;
+        v46 = G_Stream::Read(&v67, 0x20u);
+        operator delete(v46);
+        G_Stream::ReadAdr(&v67, v79, 0x108u);
+        if ( v80 )
+        {
+          v62 = G_Stream::Read(&v67, v80);
+          v47 = v62;
+          sub_5B4D10(g_pMission->m_pGame->pad0, &v62);
+          operator delete(v47);
+        }
+        if ( v86[15] )
+        {
+          v62 = G_Stream::Read(&v67, v86[15]);
+          v48 = operator new(v86[15]);
+          qmemcpy(v48, v62, v86[15]);
+          v64[1] = v48;
+          operator delete(v62);
+        }
+        if ( v86[16] )
+        {
+          v62 = G_Stream::Read(&v67, v86[16]);
+          v49 = operator new(v86[16]);
+          qmemcpy(v49, v62, v86[16]);
+          v64[0] = v49;
+          operator delete(v62);
+        }
+        v50 = &g_pMission->m_vSceneActors;
+        while ( G_Stream::ReadAdr(&v67, v69, 0x8Cu) == 140 )
+        {
+          v62 = G_Stream::Read(&v67, v78);
+          v51 = v50->first;
+          v52 = v50->last;
+          v65 = v62;
+          if ( v51 < v52 )
+          {
+            while ( 1 )
+            {
+              m_pFrame = (*v51)->m_pFrame;
+              if ( m_pFrame )
+              {
+                m_pSzName = m_pFrame->m_pSzName;
+                if ( !m_pSzName )
+                  m_pSzName = g_szUnk;
+                if ( !strcmp(v69, m_pSzName) )
+                  break;
+              }
+              if ( ++v51 >= v52 )
+                goto LABEL_116;
+            }
+            v55 = *v51;
+            if ( (*v51)->m_eActorType == ACT_Player )
+            {
+              m_pGame = g_pMission->m_pGame;
+              if ( !m_pGame->m_eCamera.m_pPlayerUnkA )
+              {
+                m_pGame->m_eCamera.m_pPlayerUnkB = v55;
+                m_pGame->m_eCamera.m_pPlayerUnkA = v55;
+                G_Camera::SetPlayer(&m_pGame->m_eCamera, v51, v55);
+              }
+            }
+            (*((*v51)->m_pVTable + 96))(*v51, &v62);
+          }
+LABEL_116:
+          operator delete(v65);
+        }
+        if ( v86[15] )
+        {
+          v57 = v64[1];
+          if ( v64[1] )
+          {
+            v62 = v64[1];
+            ai_groups::Load(g_pAIGroups, &v62);
+            operator delete(v57);
+          }
+        }
+        if ( v86[16] )
+        {
+          v58 = v64[0];
+          if ( v64[0] )
+          {
+            v62 = v64[0];
+            ai_follow_manager::Load(g_pAIFollowManager, &v62);
+            operator delete(v58);
+          }
+        }
+      }
+      G_Stream::Close(&v67);
+    }
+  }
+  LOBYTE(pVtbl[1].Close) = 1;
+  C_game::ChangeActState(g_pMission->m_pGame);
+  C_mission::GlobalProgramRun(g_pMission, "GameAfterLoad");
+  v94 = -1;
+  LOBYTE(result) = G_Stream::Close(&v67);
+  return result;
+}
+
+void __thiscall G_LoadSaveClass::SaveProc(char *this, G_Stream *a2, _DWORD *a3, char *a4, int a5)
+{
+  _DWORD *v5; // edi
+  char *v6; // eax
+  char *v7; // edi
+  char *v8; // eax
+  const char *v9; // eax
+  int v10; // eax
+  int v11; // eax
+  _DWORD *v12; // ecx
+  LPVOID v13; // [esp+Ch] [ebp-8h] BYREF
+  char *v14; // [esp+10h] [ebp-4h]
+
+  v14 = this;
+  v5 = a3[26];
+  v13 = 0;
+  if ( v5 )
+  {
+    v6 = v5[64];
+    if ( !v6 )
+      v6 = g_szUnk;
+    strncpy(a4, v6, 0x40u);
+    a4[63] = 0;
+    *(a4 + 33) = a5;
+    *(a4 + 32) = a3[4];
+    if ( v5[68] == 9 )
+    {
+      v7 = v5[85];
+      if ( !v7 )
+        v7 = g_szUnk;
+      v8 = strrchr(v7, 92);
+      if ( v8 || (v8 = strrchr(v7, 47)) != 0 )
+        v9 = v8 + 1;
+      else
+        v9 = v7;
+      strncpy(a4 + 64, v9, 0x40u);
+      a4[127] = 0;
+    }
+    else
+    {
+      a4[64] = 0;
+    }
+    v10 = *(a4 + 32);
+    *(a4 + 34) = -1;
+    if ( v10 == 4 )
+    {
+      v11 = 0;
+      v12 = v14 + 164;
+      while ( *v12 != a3 )
+      {
+        ++v11;
+        v12 += 2;
+        if ( v11 >= 25 )
+          goto LABEL_19;
+      }
+      *(a4 + 34) = v11;
+    }
+LABEL_19:
+    G_Stream::WriteAdr(a2, a4, 140u);
+    v13 = G_Stream::WantWrite(a2, a5);
+    (*(*a3 + 0x5C))(a3, &v13);
+    G_Stream::Write(a2);
+  }
+}
+
+// #STR: "savegame\\mafia%03d.%03d"
+bool __thiscall G_LoadSaveClass::SaveGameSave(_DWORD *this, char a2)
+{
+  C_game *m_pGame; // eax
+  __int64 v4; // rax
+  int Size; // ebp
+  char *v6; // eax
+  int *v7; // edx
+  int *v8; // ecx
+  int v9; // edi
+  int v10; // ebx
+  int v11; // ebx
+  C_game *v12; // eax
+  void *first; // ecx
+  vector *p_m_vTempActors; // ebx
+  _DWORD **i; // edi
+  _BYTE *v16; // ecx
+  int v17; // eax
+  int v18; // eax
+  _DWORD **j; // edi
+  _BYTE *v20; // ecx
+  int v21; // eax
+  int v22; // eax
+  LPVOID v24; // [esp+Ch] [ebp-294h] BYREF
+  struct _SYSTEMTIME SystemTime; // [esp+10h] [ebp-290h] BYREF
+  int v26[8]; // [esp+20h] [ebp-280h] BYREF
+  G_Stream v27; // [esp+40h] [ebp-260h] BYREF
+  int v28; // [esp+7Ch] [ebp-224h]
+  char v29[264]; // [esp+80h] [ebp-220h] BYREF
+  char v30[128]; // [esp+188h] [ebp-118h] BYREF
+  char v31[140]; // [esp+208h] [ebp-98h] BYREF
+  int v32; // [esp+29Ch] [ebp-4h]
+
+  G_Stream::G_Stream(&v27);
+  v32 = 0;
+  v24 = 0;
+  G_Stream::SetParams(&v27, 0x53617647u, 1, 0);
+  memset(v26, 0, sizeof(v26));
+  memset(v29, 0, sizeof(v29));
+  sprintf(v30, "savegame\\mafia%03d.%03d", this[10], this[31]);
+  if ( G_Stream::OpenWrite(&v27, v30) )
+  {
+    this[34] = this[116];
+    this[29] = 1198940499;
+    this[30] = 16;
+    G_Stream::WriteAdr(&v27, this + 29, 24u);
+    v26[0] = this[31];
+    m_pGame = g_pMission->m_pGame;
+    if ( m_pGame->m_eCamera.m_pPlayerUnkA && m_pGame->pad0[64] )
+    {
+      v4 = (m_pGame->m_eCamera.m_pPlayerUnkA->m_sProperties.m_fPropHealth
+          / m_pGame->m_eCamera.m_pPlayerUnkA->m_sInitProperties.m_fPropHealth
+          * 100.0);
+      v26[4] = v4;
+      if ( !g_pMission->m_pGame->m_eCamera.m_pPlayerUnkA->m_bDoRemove && !v4 )
+        v26[4] = 1;
+    }
+    else
+    {
+      v26[4] = 100;
+    }
+    v26[5] = dword_6C405C;
+    GetLocalTime(&SystemTime);
+    v26[2] = SystemTime.wSecond | ((SystemTime.wMinute | (SystemTime.wHour << 8)) << 8);
+    v26[3] = SystemTime.wDay | ((SystemTime.wMonth | (SystemTime.wYear << 8)) << 8);
+    v26[7] = this[38];
+    G_Stream::WriteAdr(&v27, v26, 0x20u);
+    Size = C_game::SaveGameGetSize(g_pMission->m_pGame->pad0, a2);
+    strncpy(v29, g_pMission->m_szMissionName, 0x20u);
+    v29[31] = 0;
+    v6 = &v29[142];
+    v7 = this + 90;
+    v8 = this + 40;
+    v9 = 25;
+    do
+    {
+      v10 = *v8;
+      v8 += 2;
+      *(v6 - 102) = v10;
+      v11 = *v7;
+      *(v6 - 100) = 0;
+      *(v6 - 2) = v11;
+      *v6 = 0;
+      ++v7;
+      v6 += 4;
+      --v9;
+    }
+    while ( v9 );
+    *&v29[32] = Size;
+    *&v29[240] = ai_groups::GetSize(g_pAIGroups);
+    *&v29[244] = ai_follow_manager::GetSize(g_pAIFollowManager);
+    *&v29[252] = g_fFreerideZ;
+    *&v29[248] = dword_6D4558;
+    *&v29[256] = g_fFreerideX;
+    *&v29[260] = g_fFreerideY;
+    G_Stream::WriteAdr(&v27, v29, 0x108u);
+    v24 = G_Stream::WantWrite(&v27, Size);
+    C_game::SaveGameSave(g_pMission->m_pGame->pad0, &v24, a2);
+    G_Stream::Write(&v27);
+    if ( *&v29[240] )
+    {
+      v24 = G_Stream::WantWrite(&v27, *&v29[240]);
+      ai_groups::Save(g_pAIGroups, &v24);
+      G_Stream::Write(&v27);
+    }
+    if ( *&v29[244] )
+    {
+      v24 = G_Stream::WantWrite(&v27, *&v29[244]);
+      ai_follow_manager::Save(g_pAIFollowManager, &v24);
+      G_Stream::Write(&v27);
+    }
+    if ( a2 )
+    {
+      p_m_vTempActors = &g_vActors;
+    }
+    else
+    {
+      v12 = g_pMission->m_pGame;
+      first = v12->m_vTempActors.first;
+      if ( !first || (v28 = (v12->m_vTempActors.last - first) >> 2) == 0 )
+      {
+LABEL_32:
+        G_Stream::Close(&v27);
+        goto LABEL_33;
+      }
+      p_m_vTempActors = &v12->m_vTempActors;
+    }
+    for ( i = p_m_vTempActors->first; i < p_m_vTempActors->last; ++i )
+    {
+      v16 = *i;
+      v17 = (*i)[4];
+      if ( (v17 == 4 || v17 == 8) && !v16[101] )
+      {
+        v18 = (*(*v16 + 88))(v16);
+        if ( v18 )
+          G_LoadSaveClass::SaveProc(this, &v27, *i, v31, v18);
+      }
+    }
+    for ( j = p_m_vTempActors->first; j < p_m_vTempActors->last; ++j )
+    {
+      v20 = *j;
+      v21 = (*j)[4];
+      if ( v21 != 4 && v21 != 8 && !v20[101] )
+      {
+        v22 = (*(*v20 + 88))(v20);
+        if ( v22 )
+          G_LoadSaveClass::SaveProc(this, &v27, *j, v31, v22);
+      }
+    }
+    goto LABEL_32;
+  }
+LABEL_33:
+  v32 = -1;
+  return G_Stream::Close(&v27);
+}
+
+unsigned __int8 __thiscall G_LoadSaveClass::SaveGameFromScript(int this, int saveId, char a3, unsigned __int8 a4)
+{
+  unsigned __int8 result; // al
+
+  result = *(this + 468);
+  if ( result )
+  {
+    *(this + 468) = 0;
+  }
+  else
+  {
+    *(this + 464) = saveId;
+    G_LoadSaveClass::SaveGameCreate(this, saveId - 5000);
+    G_LoadSaveClass::SaveGameSave(this, a3);
+    G_LoadSaveClass::SaveGameEnumRelease(this);
+    G_LoadSaveClass::ProfileSave(this);
+    result = a4;
+    if ( a4 )
+      return G_IndicatorsClass::ConsoleAddTextByID(g_pIndicators, 2203u, 0xFFFFFFu);
+  }
+  return result;
+}
+
+signed int G_Inventory::SaveGameGetSize()
+{
+  return 196;
+}
+
+char __thiscall G_Inventory::SaveGameSave(_DWORD *this, _DWORD **a2)
+{
+  _DWORD *v3; // esi
+  _DWORD *v4; // ecx
+  _DWORD *v5; // eax
+  _DWORD *v6; // edi
+  _DWORD *v7; // ebx
+  unsigned int v8; // edi
+  _DWORD *v9; // ecx
+  _DWORD *v10; // eax
+  _DWORD *v11; // esi
+  _DWORD *v12; // ebx
+  int v14; // [esp+10h] [ebp-4h]
+
+  **a2 = *this;
+  if ( this[1] )
+    **a2 |= 0x80u;
+  v14 = 5;
+  v3 = *a2 + 1;
+  *a2 = v3;
+  memset(v3, 0, 0xC0u);
+  *v3 = this[8];
+  v3[1] = this[9];
+  v3[2] = this[10];
+  v3[3] = this[11];
+  v3[4] = this[52];
+  v3[5] = this[53];
+  v3[6] = this[54];
+  v3[7] = this[55];
+  v4 = v3 + 8;
+  v5 = this + 12;
+  do
+  {
+    v6 = v5;
+    v7 = v4;
+    v5 += 4;
+    v4 += 4;
+    *v7 = *v6;
+    v7[1] = v6[1];
+    v7[2] = v6[2];
+    v7[3] = v6[3];
+    --v14;
+  }
+  while ( v14 );
+  v3[28] = this[32];
+  v3[29] = this[33];
+  v3[30] = this[34];
+  v8 = 0;
+  v3[31] = this[35];
+  if ( this[2] )
+  {
+    v9 = v3 + 32;
+    v10 = this + 36;
+    do
+    {
+      v11 = v10;
+      v12 = v9;
+      ++v8;
+      v10 += 4;
+      v9 += 4;
+      *v12 = *v11;
+      v12[1] = v11[1];
+      v12[2] = v11[2];
+      v12[3] = v11[3];
+    }
+    while ( v8 < this[2] );
+  }
+  *a2 += 48;
+  return 1;
+}
+
+int __thiscall G_LoadSaveClass::ReplayTick(_DWORD *this, int *a2)
+{
+  int result; // eax
+
+  result = this[35];
+  if ( result )
+  {
+    if ( result >= 0 )
+    {
+      Next = G_LoadSaveClass::replayGetNext();
+      result = Next & 0x7F;
+      *a2 = result;
+    }
+    else
+    {
+      if ( result >= -1 )
+        G_LoadSaveClass::replayPutNext(Next);
+      else
+        this[35] = -1;
+      Next = 0;
+      if ( *a2 > 127 )
+        *a2 = 127;
+      result = *a2 | Next;
+      Next = result;
+    }
+  }
+  return result;
+}
+
+signed int __thiscall G_LoadSaveClass::ReplaySet(int this, char a2, char a3)
+{
+  signed int result; // eax
+
+  result = 0;
+  dword_6D4C04 = 0;
+  Next = 0;
+  if ( a2 )
+  {
+    dword_6D4C08 = 0;
+    *(this + 140) = -2;
+    *(this + 144) = 1;
+  }
+  else
+  {
+    if ( a3 )
+    {
+      result = 1;
+      *(this + 140) = 1;
+    }
+    else
+    {
+      *(this + 140) = 0;
+    }
+    *(this + 144) = 1;
+  }
+  return result;
+}
+
+// #STR: "savegame\\reply%03d.r%02d"
+char __thiscall G_LoadSaveClass::ReplayLoad(_DWORD *this, int a2)
+{
+  FILE *v2; // eax
+  FILE *v3; // esi
+  _DWORD *v5; // edi
+  size_t v6; // [esp+4h] [ebp-104h] BYREF
+  char v7[256]; // [esp+8h] [ebp-100h] BYREF
+
+  sprintf(v7, "savegame\\reply%03d.r%02d", this[10], a2);
+  v2 = fopen(v7, "rb");
+  v3 = v2;
+  if ( !v2 )
+    return 0;
+  fread(&v6, 1u, 4u, v2);
+  if ( v6 )
+  {
+    v5 = operator new(v6);
+    fread(v5, 1u, v6, v3);
+    if ( g_pRacing )
+      sub_5571D0(g_pRacing, v6, v5);
+    operator delete(v5);
+  }
+  fread(dword_6C4540, 4u, 0x4000u, v3);
+  fclose(v3);
+  dword_6D4C08 = 0x4000;
+  return 1;
+}
+
+int G_LoadSaveClass::replayGetNext()
+{
+  int result; // eax
+  unsigned int v1; // ecx
+
+  result = dword_6C4540[dword_6D4C04];
+  v1 = ++dword_6D4C04;
+  if ( dword_6D4C04 >= dword_6D4C08 )
+  {
+    v1 = dword_6D4C08 - 1;
+    dword_6D4C04 = dword_6D4C08 - 1;
+  }
+  if ( v1 >= 0x4000 )
+    dword_6D4C04 = 0x3FFF;
+  return result;
+}
+
+unsigned int __stdcall G_LoadSaveClass::replayPutNext(int a1)
+{
+  int v1; // eax
+  unsigned int result; // eax
+
+  v1 = dword_6D4C04;
+  dword_6C4540[dword_6D4C04] = a1;
+  result = v1 + 1;
+  dword_6D4C04 = result;
+  if ( result >= 0x4000 )
+  {
+    result = 0x3FFF;
+    dword_6D4C04 = 0x3FFF;
+  }
+  dword_6D4C08 = result;
+  return result;
+}
+
+int __thiscall G_LoadSaveClass::RaceCarsEnable(_DWORD *this, int a2)
+{
+  int result; // eax
+
+  result = a2;
+  this[37] |= a2;
+  return result;
+}
+
+int __thiscall G_LoadSaveClass::RaceCarsDisable(_DWORD *this, int a2)
+{
+  int result; // eax
+
+  result = ~a2;
+  this[37] &= ~a2;
+  return result;
+}
+
+int __thiscall G_LoadSaveClass::RaceCarsGetEnabled(_DWORD *this)
+{
+  return this[37];
+}
+
+int __thiscall G_LoadSaveClass::RaceCarsAddWin(_DWORD *this, unsigned __int16 a2)
+{
+  int result; // eax
+
+  result = sub_60A460(g_pCarDatabase, a2)[33] | this[37];
+  this[37] = result;
+  return result;
+}
+
+int __thiscall G_LoadSaveClass::ObjectivesClear(_DWORD *this)
+{
+  int result; // eax
+
+  result = this[120];
+  this[120] = this[119];
+  return result;
+}
+
+_DWORD *__thiscall G_LoadSaveClass::ObjectivesAdd(_DWORD *this, int a2)
+{
+  _DWORD *v2; // ebx
+  _DWORD *result; // eax
+  unsigned int v4; // ecx
+  int *v5; // eax
+  int *v6; // esi
+  int *v7; // edi
+  int v8; // edx
+  unsigned int v9; // ecx
+  int v10; // eax
+  int v11; // eax
+  int *v12; // eax
+  int *v13; // ebp
+  int *j; // ebx
+  int v15; // eax
+  int v16; // eax
+  int v17; // ecx
+  int *i; // eax
+  int *v19; // [esp+8h] [ebp-Ch]
+  int v20; // [esp+Ch] [ebp-8h]
+
+  v2 = this;
+  result = this[119];
+  v4 = this[120];
+  if ( result >= v4 )
+  {
+LABEL_4:
+    v5 = v2[120];
+    v6 = v2 + 118;
+    v7 = v5;
+    if ( (v2[121] - v5) >> 2 )
+    {
+      sub_563CC0(v5, v5, v5 + 1);
+      sub_59E6D0(v2[120], (1 - ((v2[120] - v7) >> 2)), &a2);
+      for ( i = v2[120]; v7 != i; ++v7 )
+        *v7 = a2;
+      v16 = v2[120] + 4;
+    }
+    else
+    {
+      v8 = v2[119];
+      if ( !v8 || (v9 = (v5 - v8) >> 2, v9 <= 1) )
+        v9 = 1;
+      if ( v8 )
+        v10 = (v5 - v8) >> 2;
+      else
+        v10 = 0;
+      v11 = v9 + v10;
+      v20 = v11;
+      if ( v11 < 0 )
+        v11 = 0;
+      v12 = operator new(4 * v11);
+      v13 = v2[119];
+      v19 = v12;
+      for ( j = v12; v13 != v7; ++j )
+        sub_499050(j, v13++);
+      sub_59E6D0(j, 1, &a2);
+      sub_563CC0(v7, v6[2], j + 1);
+      nullsub_5(v6[1], v6[2]);
+      operator delete(v6[1]);
+      v15 = v6[1];
+      v6[3] = &v19[v20];
+      v2 = this;
+      if ( v15 )
+      {
+        v17 = v6[2] - v15;
+        v6[1] = v19;
+        v16 = &v19[(v17 >> 2) + 1];
+      }
+      else
+      {
+        v6[1] = v19;
+        v16 = (v19 + 1);
+      }
+    }
+    v6[2] = v16;
+    G_LoadSaveClass::ObjectivesDisplay(v2);
+    return G_IndicatorsClass::MissionHelpSetTime(g_pIndicators, 5000);
+  }
+  else
+  {
+    while ( *result != a2 )
+    {
+      if ( ++result >= v4 )
+        goto LABEL_4;
+    }
+  }
+  return result;
+}
+
+_DWORD *__thiscall G_LoadSaveClass::ObjectivesComplete(_DWORD *this, int a2)
+{
+  _DWORD *v2; // edx
+  _DWORD *result; // eax
+  _DWORD *v4; // esi
+
+  v2 = this[119];
+  result = this[120];
+  if ( v2 < result )
+  {
+    while ( *v2 != a2 )
+    {
+      if ( ++v2 >= result )
+        return result;
+    }
+    v4 = this[120];
+    for ( result = v2 + 1; result != v4; ++result )
+      *(result - 1) = *result;
+    this[120] -= 4;
+  }
+  return result;
+}
+
+unsigned int __thiscall G_LoadSaveClass::ObjectivesDisplay(_DWORD *this)
+{
+  int *i; // esi
+
+  G_IndicatorsClass::MissionHelpClear(g_pIndicators);
+  for ( i = this[119]; i < this[120]; ++i )
+    G_IndicatorsClass::MissionHelpAdd(g_pIndicators, *i);
+  return G_IndicatorsClass::MissionHelpSetTime(g_pIndicators, 3000);
+}
+
+_DWORD *__thiscall G_LoadSaveClass::ObjectivesGetList(_DWORD *this)
+{
+  _DWORD *v1; // edx
+  _DWORD *result; // eax
+  int v3; // ecx
+
+  v1 = this + 0x5A;
+  result = this + 0x29;
+  v3 = 25;
+  do
+  {
+    *(result - 1) = 0;
+    *result = 0;
+    *v1++ = 0;
+    result += 2;
+    --v3;
+  }
+  while ( v3 );
+  return result;
+}
+
+unsigned int __thiscall G_LoadSaveClass::Refresh(int this, char a2)
+{
+  int v3; // esi
+  __int64 v4; // rax
+  __int16 v5; // ax
+  unsigned int v6; // eax
+  unsigned int result; // eax
+  int v8; // [esp+8h] [ebp-614h]
+  int v9; // [esp+14h] [ebp-608h]
+  float v10; // [esp+18h] [ebp-604h]
+  __int16 v11[256]; // [esp+1Ch] [ebp-600h] BYREF
+  __int16 v12[256]; // [esp+21Ch] [ebp-400h]
+  __int16 v13[256]; // [esp+41Ch] [ebp-200h]
+
+  if ( (a2 & 1) != 0 && g_pISndDriver )
+    (g_pISndDriver->pVtbl->SetVolume)(g_pISndDriver, *(this + 0x4E4));
+  if ( (a2 & 2) != 0 )
+    sub_5B6600(g_pMission->m_pGame->pad0);
+  if ( (a2 & 0x21) != 0 )
+  {
+    *&v8 = *(this + 0x4EC) / (*(this + 0x4E4) + 0.0099999998);
+    sub_4EF0D0(v8);
+  }
+  if ( (a2 & 4) != 0 )
+  {
+    v3 = 0;
+    v9 = 0;
+    v10 = 1.0 / (*(this + 1276) + *(this + 1276) + 1.0);
+    do
+    {
+      v4 = (pow(v9 * 0.00392156862745098, v10) * 255.0 + 0.5);
+      if ( v4 > 0xFF )
+        LOWORD(v4) = 255;
+      v5 = v4 << 8;
+      v13[v3] = v5;
+      v12[v3] = v5;
+      v11[v3++] = v5;
+      v9 = v3;
+    }
+    while ( v3 < 256 );
+    (*(g_pIGraph->lpVtbl.CreateIShow + 72))(g_pIGraph, v11, 0);
+  }
+  if ( (a2 & 8) != 0 )
+    sub_42BB90(*(this + 1280), *(this + 1296), *(this + 1288), *(this + 1284), *(this + 1292));
+  v6 = *(this + 1268);
+  if ( !v6 || v6 >= 4 )
+    *(this + 1268) = 1;
+  result = *(this + 1272);
+  if ( result < 7 || result >= 0x10 )
+    *(this + 1272) = 7;
+  return result;
+}
+
+// #STR: "tables\\credits.def"
+void __cdecl G_LoadSaveClass::ExecuteCredits()
+{
+  IGraph *v0; // ebx MAPDST
+  int v1; // eax
+  int v2; // esi
+  int v3; // edi
+  unsigned int v4; // esi
+  int v5; // edi
+  double v6; // st7
+  __int16 v7; // fps
+  double v8; // st6
+  double v9; // st7
+  bool v10; // c0
+  bool v11; // c2
+  bool v12; // c3
+  float v14; // [esp+48h] [ebp-8h]
+  float v15; // [esp+4Ch] [ebp-4h]
+  int retaddr; // [esp+50h] [ebp+0h]
+
+  v1 = dtaOpen("tables\\credits.def", 0);
+  v2 = v1;
+  if ( v1 >= 0 )
+  {
+    v3 = dtaSeek(v1, 0, 2);
+    if ( v3 > 0 )
+    {
+      G_IndicatorsClass::LoadFont(g_pIndicators, 1, 0);
+      dword_6C4530 = v3 / 140u;
+      dword_6C4534 = operator new(140 * (v3 / 140u));
+      dtaSeek(v2, 0, 0);
+      dtaRead(v2, dword_6C4534, v3);
+      dtaClose(v2);
+      ParseCredits();
+      v14 = 0.0;
+      if ( dword_6C4530 )
+      {
+        do
+        {
+          (*(g_pIGraph->lpVtbl.CreateIShow + 11))(g_pIGraph);
+          (*(g_pIGraph->lpVtbl.CreateIShow + 55))(g_pIGraph);
+          (*(g_pIGraph->lpVtbl.CreateIShow + 38))(g_pIGraph);
+          if ( (*(g_pIGraph->lpVtbl.CreateIShow + 39))(g_pIGraph) )
+            break;
+          retaddr = (*(g_pIGraph->lpVtbl.CreateIShow + 64))(g_pIGraph, 1, 200, v0);
+          (*(g_pIGraph->lpVtbl.CreateIShow + 16))(g_pIGraph);
+          (*(g_pIGraph->lpVtbl.CreateIShow + 12))(g_pIGraph, 0, 1065353216, 3);
+          (*(g_pIGraph->lpVtbl.CreateIShow + 13))(g_pIGraph);
+          (*(g_pIGraph->lpVtbl.CreateIShow + 17))(g_pIGraph, 0, 1);
+          v4 = 0;
+          if ( dword_6C4530 )
+          {
+            v5 = 0;
+            do
+            {
+              RenderOneCredit(dword_6C4534 + v5, v15);
+              ++v4;
+              v5 += 140;
+            }
+            while ( v4 < dword_6C4530 );
+          }
+          v0 = g_pIGraph;
+          (*(g_pIGraph->lpVtbl.CreateIShow + 14))();
+          (*(g_pIGraph->lpVtbl.CreateIShow + 15))(g_pIGraph);
+          v6 = SLODWORD(v15) * 0.029999999 + v14;
+          v14 = v6;
+          v8 = v6;
+          v9 = *(dword_6C4534 + 35 * dword_6C4530 - 34) + 100.0;
+          v10 = v8 < v9;
+          v11 = __UNORDERED__(v8, v9);
+          v12 = v8 == v9;
+        }
+        while ( (v7 & 0x4100) != 0 );
+      }
+      operator delete(dword_6C4534);
+      G_IndicatorsClass::LoadFont(g_pIndicators, 0, 0);
+    }
+    else
+    {
+      dtaClose(v2);
+    }
+  }
+}
+
+int __stdcall G_LoadSaveClass::FreerideStoreA(uint32_t a1, uint32_t flags, float x, float y, float z)
+{
+  int result; // eax
+
+  g_iFreerideCarModelID = a1;
+  result = LODWORD(y);
+  g_iFreerideFlags = flags;
+  g_fFreerideX = x;
+  g_fFreerideY = y;
+  g_fFreerideZ = z;
+  return result;
+}
+
+void __thiscall G_LoadSaveClass::FreerideStoreB(int this, uint32_t spawnNumber)
+{
+  g_iSpawnNumber = spawnNumber;
+}
+
+// #STR: "TomyhoAuto", "emeth_%d", "emeth_1", "Tommy.i3d", "Tommy"
+char G_LoadSaveClass::FreerideSetup()
+{
+  C_actor *car; // ebx
+  I3D_driverVtbl *m_pVTable; // ecx
+  char *playerFrame; // edi
+  I3D_model *carFrame; // esi
+  int v4; // ebp
+  double v5; // st7
+  double v6; // st7
+  long double v7; // st7
+  I3D_modelVtbl *v8; // edx
+  double v9; // st7
+  double v10; // st7
+  long double v11; // st7
+  int v12; // edx
+  C_actor *player2; // esi
+  int v15; // [esp+60h] [ebp-134h]
+  int v16; // [esp+64h] [ebp-130h]
+  float v17; // [esp+70h] [ebp-124h]
+  float v18; // [esp+70h] [ebp-124h]
+  float v19; // [esp+74h] [ebp-120h]
+  float v20; // [esp+74h] [ebp-120h]
+  float v21; // [esp+78h] [ebp-11Ch]
+  float v22; // [esp+78h] [ebp-11Ch]
+  float v23; // [esp+7Ch] [ebp-118h]
+  float v24; // [esp+7Ch] [ebp-118h]
+  float v25; // [esp+80h] [ebp-114h] BYREF
+  float v26; // [esp+84h] [ebp-110h]
+  float v27; // [esp+88h] [ebp-10Ch]
+  C_actor *player; // [esp+8Ch] [ebp-108h]
+  C_actor *v29; // [esp+90h] [ebp-104h]
+  char v30[248]; // [esp+9Ch] [ebp-F8h] BYREF
+
+  LOBYTE(dword_6D4558) = 1;
+  player = C_mission::CreateActor(g_pMission, ACT_Player);
+  car = C_mission::CreateActor(g_pMission, ACT_Car);
+  m_pVTable = g_pI3DDriver->m_pVTable;
+  v29 = car;
+  playerFrame = (m_pVTable->CreateFrame)(g_pI3DDriver, FRAME_MODEL, v15, v16);
+  (*(*playerFrame + 40))(playerFrame, "Tommy");
+  carFrame = (g_pI3DDriver->m_pVTable->CreateFrame)(g_pI3DDriver, FRAME_MODEL);
+  carFrame->m_pVtable->SetName(carFrame, "TomyhoAuto");
+  G_CarDatabase::GetCarModel(g_pCarDatabase, g_iFreerideCarModelID, v30, 0);
+  C_I3D_cache_9I3D_model_::Open(&vtable_105936, carFrame, v30, 0, 0, 0, 0);
+  sprintf(v30, "emeth_%d", g_iSpawnNumber);
+  v4 = (g_pMission->m_pScene->pVtbl->FindChildFrame)(g_pMission->m_pScene);
+  if ( v4 || (v4 = (g_pMission->m_pScene->pVtbl->FindChildFrame)(g_pMission->m_pScene, "emeth_1", 0xFFFF)) != 0 )
+  {
+    if ( (*(v4 + 172) & 0x20) == 0 )
+      I3D_frame::UpdateWMatrixProc(v4);
+    if ( SLOBYTE(carFrame->m_uFlags) >= 0 )
+    {
+      carFrame->m_aLocalMat.e[12] = *(v4 + 64);
+      carFrame->m_aLocalMat.e[13] = *(v4 + 68);
+      carFrame->m_aLocalMat.e[14] = *(v4 + 72);
+      carFrame->m_uFlags = carFrame->m_uFlags & 0xBFFFFEDF | 0x40000000;
+    }
+    if ( (*(v4 + 172) & 0x20) == 0 )
+      I3D_frame::UpdateWMatrixProc(v4);
+    v17 = *(v4 + 48);
+    v19 = *(v4 + 52);
+    v21 = *(v4 + 56);
+    v5 = v19 * v19 + v21 * v21 + v17 * v17;
+    v23 = v5;
+    v6 = fabs(v5 - 1.0);
+    if ( !((v6 < 0.00000000999999993922529) | __UNORDERED__(v6, 0.00000000999999993922529)) )
+    {
+      if ( (v23 < 0.0000000099999999) | __UNORDERED__(v23, 0.0000000099999999) )
+      {
+        if ( (v17 == 0.0) | __UNORDERED__(v17, 0.0) )
+        {
+          if ( (v21 == 0.0) | __UNORDERED__(v21, 0.0) )
+          {
+            if ( (v19 < 0.0) | __UNORDERED__(v19, 0.0) )
+              v19 = -1.0;
+            else
+              v19 = 1.0;
+          }
+          else if ( (v21 < 0.0) | __UNORDERED__(v21, 0.0) )
+          {
+            v21 = -1.0;
+          }
+          else
+          {
+            v21 = 1.0;
+          }
+        }
+        else if ( (v17 < 0.0) | __UNORDERED__(v17, 0.0) )
+        {
+          v17 = -1.0;
+        }
+        else
+        {
+          v17 = 1.0;
+        }
+      }
+      else
+      {
+        v7 = 1.0 / sqrt(v23);
+        v17 = v17 * v7;
+        v19 = v19 * v7;
+        v21 = v21 * v7;
+      }
+    }
+    v26 = v19;
+    v25 = v17;
+    v8 = carFrame->m_pVtable;
+    v27 = v21;
+    (v8->SetDir)(carFrame, &v25, 0);
+    carFrame->m_pVtable->LinkTo(carFrame, g_pMission->m_pScene[132].pVtbl, 0);
+    if ( (*(v4 + 172) & 0x20) == 0 )
+      I3D_frame::UpdateWMatrixProc(v4);
+    if ( playerFrame[172] >= 0 )
+    {
+      *(playerFrame + 32) = *(v4 + 64);
+      *(playerFrame + 33) = *(v4 + 68);
+      *(playerFrame + 34) = *(v4 + 72);
+      *(playerFrame + 43) = *(playerFrame + 43) & 0xBFFFFEDF | 0x40000000;
+    }
+    if ( (*(v4 + 172) & 0x20) == 0 )
+      I3D_frame::UpdateWMatrixProc(v4);
+    v20 = *(v4 + 52);
+    v22 = *(v4 + 56);
+    v18 = *(v4 + 48);
+    v9 = v20 * v20 + v22 * v22 + v18 * v18;
+    v24 = v9;
+    v10 = fabs(v9 - 1.0);
+    if ( !((v10 < 0.00000000999999993922529) | __UNORDERED__(v10, 0.00000000999999993922529)) )
+    {
+      if ( (v24 < 0.0000000099999999) | __UNORDERED__(v24, 0.0000000099999999) )
+      {
+        if ( (v18 == 0.0) | __UNORDERED__(v18, 0.0) )
+        {
+          if ( (v22 == 0.0) | __UNORDERED__(v22, 0.0) )
+          {
+            if ( (v20 < 0.0) | __UNORDERED__(v20, 0.0) )
+              v20 = -1.0;
+            else
+              v20 = 1.0;
+          }
+          else if ( (v22 < 0.0) | __UNORDERED__(v22, 0.0) )
+          {
+            v22 = -1.0;
+          }
+          else
+          {
+            v22 = 1.0;
+          }
+        }
+        else if ( (v18 < 0.0) | __UNORDERED__(v18, 0.0) )
+        {
+          v18 = -1.0;
+        }
+        else
+        {
+          v18 = 1.0;
+        }
+      }
+      else
+      {
+        v11 = 1.0 / sqrt(v24);
+        v18 = v18 * v11;
+        v20 = v20 * v11;
+        v22 = v22 * v11;
+      }
+    }
+    v26 = v20;
+    v25 = v18;
+    v12 = *playerFrame;
+    v27 = v22;
+    (*(v12 + 12))(playerFrame, &v25, 0);
+    (*(*playerFrame + 44))(playerFrame, g_pMission->m_pScene[132].pVtbl, 0);
+    car = v29;
+  }
+  (carFrame->m_pVtable->Update)(carFrame, v30, 0xFFFF);
+  (*(*playerFrame + 24))(playerFrame);
+  (g_pMission->m_pScene->pVtbl->FindFrame)(g_pMission->m_pScene, carFrame);
+  g_pMission->m_pScene->pVtbl->FindFrame(g_pMission->m_pScene, playerFrame);
+  carFrame->m_pVtable->Release(carFrame);
+  (**playerFrame)(playerFrame);
+  (*(car->m_pVTable + 72))(car, carFrame);
+  if ( (g_iFreerideFlags & 0x100) != 0 )
+    C_car::OdjebajTuStrechu(carFrame, 1);
+  C_I3D_cache_9I3D_model_::Open(&vtable_105936, playerFrame, "Tommy.i3d", 0, 0, 0, 0);
+  player2 = player;
+  (*(player->m_pVTable + 72))(player, playerFrame);
+  C_mission::AddActor(g_pMission, car, 0);
+  return C_mission::AddActor(g_pMission, player2, 0);
+}
+
+// #STR: "TomyhoAuto", "Tommy"
+C_mission *__cdecl G_LoadSaveClass::FreerideSetupAfter()
+{
+  C_human *ActorByName; // esi
+  C_car *v1; // eax
+  C_mission *result; // eax
+  int v3; // ecx
+
+  ActorByName = C_mission::FindActorByName(g_pMission, "Tommy");
+  v1 = C_mission::FindActorByName(g_pMission, "TomyhoAuto");
+  if ( v1 && ActorByName )
+    C_human::Intern_UseCar(ActorByName, v1, 0);
+  *g_pMission->pad7 = 0;
+  result = g_pMission;
+  v3 = *g_pMission->pad7;
+  *g_pMission->pad7 = 0;
+  result->m_iMissionID = v3;
+  g_iSpawnNumber = 0;
+  return result;
+}
